@@ -4,26 +4,25 @@ interface CardProps {
   image: string;
   tag: string;
   title: string;
-
   time: string;
 }
 
 function MiniCard({ image, tag, title, time }: CardProps) {
   return (
-    <div className="flex  gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition cursor-pointer group">
+    <div className="flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition cursor-pointer group hover:bg-gray-200 transition-all duration-250">
       {/* Image */}
-      <div className=" group: w-[45%]  rounded-md overflow-hidden">
+      <div className="w-full sm:w-[45%] rounded-md overflow-hidden">
         <img
           src={image}
-          className="w-full h-full object-cover group-hover:scale-120  transition-all duration-250  "
+          className="w-full h-full object-cover group-hover:scale-110 transition-all duration-250"
           alt={title}
         />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col w-[55%] justify-between">
+      <div className="flex flex-col w-full sm:w-[55%] justify-between">
         {/* Tag */}
-        <span className=" font-primary text-xs bg-gray-100 border border-gray-200 px-2 py-[2px] rounded-full text-gray-700 w-fit">
+        <span className="font-primary text-xs bg-gray-100 border border-gray-200 px-2 py-[2px] rounded-full text-gray-700 w-fit">
           {tag}
         </span>
 
@@ -33,7 +32,7 @@ function MiniCard({ image, tag, title, time }: CardProps) {
         </h3>
 
         {/* Time */}
-        <div className="flex font-primary  items-center gap-1 text-xs text-gray-500">
+        <div className="flex font-primary items-center gap-1 text-xs text-gray-500">
           <i className="ri-time-line text-sm"></i>
           <span>{time}</span>
         </div>
