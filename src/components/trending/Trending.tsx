@@ -32,7 +32,7 @@ const Trending: React.FC = () => {
   return (
     <Container>
       <div className=" py-5">
-        <div className="flex flex-col md:flex-row  justify-between items-center  gap-5">
+        <div className="flex flex-col md:flex-row  justify-between items-start  gap-5">
           {/* Main trending card */}
           <div className="relative md:w-[70%] overflow-hidden rounded-lg">
             <div className="relative group  ">
