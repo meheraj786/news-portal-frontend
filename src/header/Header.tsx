@@ -16,11 +16,11 @@ export default function Header() {
   // const dateString = today.toLocaleDateString("en-US", options);
 
   return (
-    <header className="w-full shadow-md">
+    <header className="w-full bg-white shadow-lg fixed top-9 left-0 z-50 shadow-gray-200">
       <Container>
       {/* Main Header */}
 
-      <div className="w-full bg-white">
+      <div className="w-full ">
         <div className=" mx-auto  py-5 flex justify-between items-center">
           {/* Logo */}
           <Logo />

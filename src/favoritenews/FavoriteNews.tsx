@@ -35,12 +35,12 @@ const FavoriteNews = () => {
         <div className="py-8 ">
           <div className="flex flex-col gap-x-2">
             <div className="flex items-center gap-x-2">
-              <div className="w-[5px] bg-red-500 h-7 "></div>
+              <div className="w-[5px]  bg-red-500 h-7 "></div>
               <h2 className=" font-extrabold text-[27px] font-primary text-black  ">
                 সম্পাদকের পছন্দ
               </h2>
             </div>
-            <div className="flex items-center gap-x-2.5">
+            <div className="grid grid-cols-4 mt-5 gap-x-5">
               {fvtCard.map((card, i) => (
                 <EveryDayCard key={i} {...card} />
               ))}
