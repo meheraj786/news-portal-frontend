@@ -1,6 +1,6 @@
 import Container from "../components/container/Container";
+import EveryDayCard from "../components/everyday/EveryDayCard";
 import type { CardProps } from "../types/CardProps";
-import FavoriteNewsCard from "./FavoriteNewsCard";
 
 const FavoriteNews = () => {
   const fvtCard: CardProps[] = [
@@ -42,7 +42,7 @@ const FavoriteNews = () => {
             </div>
             <div className="flex items-center gap-x-2.5">
               {fvtCard.map((card, i) => (
-                <FavoriteNewsCard key={i} {...card} />
+                <EveryDayCard key={i} {...card} />
               ))}
             </div>
           </div>

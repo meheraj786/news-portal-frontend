@@ -1,7 +1,7 @@
 import { MdWatchLater } from "react-icons/md";
 import type { CardProps } from "../../types/CardProps";
 
-function EveryDayCard({ image, tag, time, title }: CardProps) {
+function EveryDayCard({ image, tag, time, title, description }: CardProps) {
   return (
     <div className="w-full">
       <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
@@ -16,10 +16,12 @@ function EveryDayCard({ image, tag, time, title }: CardProps) {
             {tag}
           </p>
 
-          <div className="flex items-center gap-x-1 text-sm">
-            <MdWatchLater className="text-gray-600" />
-            <p>{time}</p>
-          </div>
+          {time && (
+            <div className="flex items-center gap-x-1 text-sm">
+              <MdWatchLater className="text-gray-600" />
+              <p>{time}</p>
+            </div>
+          )}
         </div>
 
         {/* Title */}
