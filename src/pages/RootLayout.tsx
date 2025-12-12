@@ -10,7 +10,7 @@ const RootLayout = () => {
       <Header></Header>
       {/* <MarqueeTag></MarqueeTag> */}
       <Outlet></Outlet>
-              <Footer></Footer>
+      <Footer></Footer>
     </div>
   );
 };

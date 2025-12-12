@@ -1,4 +1,3 @@
-import React from 'react';
 import {  Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react';
 import Container from '../components/container/Container';
 

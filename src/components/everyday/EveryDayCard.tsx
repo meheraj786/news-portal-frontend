@@ -1,7 +1,7 @@
 import { MdWatchLater } from "react-icons/md";
 import type { CardProps } from "../../types/CardProps";
 
-function EveryDayCard({ image, tag, time, title, description }: CardProps) {
+function EveryDayCard({ image, tag, time, title }: CardProps) {
   return (
     <div className="w-full">
       <div className="bg-white p-4 border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
