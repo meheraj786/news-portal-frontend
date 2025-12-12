@@ -49,7 +49,7 @@ const EveryDay = () => {
       <div className="py-8 ">
         <div className="flex justify-between  ">
           <div className=" w-[70%] ">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ">
               {everyday.map((card, i) => (
                 <EveryDayCard key={i} {...card} />
               ))}

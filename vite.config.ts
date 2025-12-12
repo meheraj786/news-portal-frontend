@@ -5,9 +5,13 @@ import flowbiteReact from "flowbite-react/plugin/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react({
-    babel: {
-      plugins: [["babel-plugin-react-compiler"]],
-    },
-  }), tailwindcss(), flowbiteReact()],
+  plugins: [
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler"]],
+      },
+    }),
+    tailwindcss(),
+    flowbiteReact(),
+  ],
 });

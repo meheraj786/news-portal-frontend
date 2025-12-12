@@ -8,7 +8,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import { IoLogoTwitter } from "react-icons/io5";
-import MiniCard from "../trending/MiniCart";
+import MiniCard from "../banner/MiniCart";
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
 
@@ -90,85 +90,83 @@ const Footer = () => {
   return (
     <div className=" bg-gray-200 ">
       <Container>
-        <div className="grid  grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
-
-
-        <div className="text-left ">
-          <Logo></Logo>
-          <h2 className="font-semibold  font-secondary text-[14px] pt-3 leading-7  ">
-            বাংলাদেশের সর্বাধিক জনপ্রিয় এবং বিশ্বাসযোগ্য সংবাদপত্র। সত্য,
-            নিরপেক্ষ এবং দায়বদ্ধ সাংবাদিকতার প্রতি আমাদের অঙ্গীকার।
-          </h2>
-        </div>
-        <div className=" ">
-          <h2 className="font-bold font-secondary text-center  text-[17px] pb-2.5 ">
-            বিভাগ
-          </h2>
-          <div className="group  flex flex-col  gap-5 text-gray-700 font-medium transition duration-200 ">
-            {navItems.map((nav, i) =>
-              nav.path ? (
-                <Link
-                  to={nav.path}
-                  key={i}
-                  className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200  text-center rounded py-1 px-2"
-                >
-                  {nav.name}
-                </Link>
-              ) : (
-                <span
-                  key={i}
-                  className="cursor-pointer  text-center hover:text-red-600 border  border-gray-300 hover:border-red-500 transition duration-200  rounded py-1 px-2"
-                >
-                  {nav.name}
-                </span>
-              )
-            )}
+        <div className="grid  grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+          <div className="text-left ">
+            <Logo></Logo>
+            <h2 className="font-semibold  font-secondary text-[14px] pt-3 leading-7  ">
+              বাংলাদেশের সর্বাধিক জনপ্রিয় এবং বিশ্বাসযোগ্য সংবাদপত্র। সত্য,
+              নিরপেক্ষ এবং দায়বদ্ধ সাংবাদিকতার প্রতি আমাদের অঙ্গীকার।
+            </h2>
           </div>
-        </div>
-        <div className="">
-          <h2 className="font-bold font-secondary text-center text-[17px] pb-2.5   ">
-            আমাদের সম্পর্কে
-          </h2>
-          <div className="  flex flex-col items-center  gap-5 text-gray-700 font-medium transition duration-200 ">
-            {contract.map((info, i) =>
-              info.path ? (
-                <div className="hover:text-red-600 hover:border-red-500  flex gap-x-2.5 items-center transition duration-200 cursor-pointer ">
+          <div className=" ">
+            <h2 className="font-bold font-secondary text-center  text-[17px] pb-2.5 ">
+              বিভাগ
+            </h2>
+            <div className="group  flex flex-col  gap-5 text-gray-700 font-medium transition duration-200 ">
+              {navItems.map((nav, i) =>
+                nav.path ? (
                   <Link
-                    to={info.path}
+                    to={nav.path}
                     key={i}
-                    className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200 text-[18px] items-center  rounded py-1.5 px-2"
+                    className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200  text-center rounded py-1 px-2"
                   >
-                    {info.icon} {info.name}
+                    {nav.name}
                   </Link>
-                </div>
-              ) : (
-                <div
-                  key={i}
-                  className="flex items-center gap-x-2.5 cursor-pointer transition duration-200 hover:text-red-600  group "
-                >
-                  <span className="border border-gray-300 rounded py-1.5 px-2 text-[18px] transition duration-200 group-hover:border-red-500">
-                    {info.icon}
+                ) : (
+                  <span
+                    key={i}
+                    className="cursor-pointer  text-center hover:text-red-600 border  border-gray-300 hover:border-red-500 transition duration-200  rounded py-1 px-2"
+                  >
+                    {nav.name}
                   </span>
+                )
+              )}
+            </div>
+          </div>
+          <div className="">
+            <h2 className="font-bold font-secondary text-center text-[17px] pb-2.5   ">
+              আমাদের সম্পর্কে
+            </h2>
+            <div className="  flex flex-col items-center  gap-5 text-gray-700 font-medium transition duration-200 ">
+              {contract.map((info, i) =>
+                info.path ? (
+                  <div className="hover:text-red-600 hover:border-red-500  flex gap-x-2.5 items-center transition duration-200 cursor-pointer ">
+                    <Link
+                      to={info.path}
+                      key={i}
+                      className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200 text-[18px] items-center  rounded py-1.5 px-2"
+                    >
+                      {info.icon} {info.name}
+                    </Link>
+                  </div>
+                ) : (
+                  <div
+                    key={i}
+                    className="flex items-center gap-x-2.5 cursor-pointer transition duration-200 hover:text-red-600  group "
+                  >
+                    <span className="border border-gray-300 rounded py-1.5 px-2 text-[18px] transition duration-200 group-hover:border-red-500">
+                      {info.icon}
+                    </span>
 
-                  <span className="transition duration-200 hover:text-red-500">
-                    {info.name}
-                  </span>
-                </div>
-              )
-            )}
+                    <span className="transition duration-200 hover:text-red-500">
+                      {info.name}
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+          <div className="">
+            <h2 className=" text-center  font-bold font-secondary text-[17px] pb-2.5   ">
+              Latest News
+            </h2>
+            <div className="  flex flex-col gap-y-2.5  ">
+              {latestNews.map((card, i) => (
+                <MiniCard key={i} {...card} />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="">
-          <h2 className=" text-center  font-bold font-secondary text-[17px] pb-2.5   ">
-            Latest News
-          </h2>
-          <div className="  flex flex-col gap-y-2.5  ">
-            {latestNews.map((card, i) => (
-              <MiniCard key={i} {...card} />
-            ))}
-          </div>
-        </div>
-                </div>
       </Container>
     </div>
   );

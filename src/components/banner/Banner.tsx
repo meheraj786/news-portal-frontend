@@ -5,7 +5,7 @@ import MiniCard from "./MiniCart";
 import Container from "../container/Container";
 import type { CardProps } from "../../types/CardProps";
 
-const Trending: React.FC = () => {
+const Banner: React.FC = () => {
   const cardData: CardProps[] = [
     {
       image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
@@ -94,4 +94,4 @@ const Trending: React.FC = () => {
   );
 };
 
-export default Trending;
+export default Banner;

@@ -38,12 +38,20 @@ export default function Header() {
       path: "",
     },
     {
-      name: "আন্তর্জাতিক",
+      name: "শিক্ষা",
+      path: "",
+    },
+    {
+      name: "ধর্ম ও জীবন",
+      path: "",
+    },
+    {
+      name: "মতামত",
       path: "",
     },
   ];
   return (
-    <header className="w-full bg-white shadow-lg fixed top-9 left-0 z-50 shadow-gray-200">
+    <header className="w-full bg-white shadow-md  fixed top-9 left-0 z-50 shadow-gray-200">
       <Container>
         {/* Main Header */}
 
@@ -51,15 +59,6 @@ export default function Header() {
           <div className=" mx-auto  py-5 flex justify-between items-center">
             {/* Logo */}
             <Logo />
-
-            {/* Search - hidden on mobile */}
-            <div className="flex-1 mx-4 hidden md:flex">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div>
 
             {/* Navigation */}
             <div className="hidden md:flex gap-6 items-center text-gray-700 font-medium">
@@ -81,6 +80,14 @@ export default function Header() {
                   </span>
                 )
               )}
+            </div>
+            {/* Search - hidden on mobile */}
+            <div className="flex-1 mx-4 hidden lg:flex max-w-[250px] md:hidden">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
             </div>
 
             {/* Hamburger menu - mobile */}
@@ -112,7 +119,7 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden bg-white border-t border-gray-200  py-2 flex flex-col gap-2">
+            <div className="md:hidden bg-white border-t border-gray-200  py-2 grid grid-cols-2 gap-2">
               {navItems.map((nav, i) =>
                 nav.path ? (
                   <Link
@@ -130,7 +137,7 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search..."
-                className="mt-2 border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="mt-2 border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500 "
               />
             </div>
           )}
