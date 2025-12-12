@@ -10,6 +10,7 @@ import {
 import { IoLogoTwitter } from "react-icons/io5";
 import MiniCard from "../trending/MiniCart";
 import type { CardProps } from "../../types/CardProps";
+import Container from "../container/Container";
 
 type NavItems = {
   name: string;
@@ -87,9 +88,12 @@ const latestNews: CardProps[] = [
 ];
 const Footer = () => {
   return (
-    <div>
-      <div className="grid  grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4 bg-gray-200  justify-items-center    ">
-        <div className="text-center ">
+    <div className=" bg-gray-200 ">
+      <Container>
+        <div className="grid  grid-cols-1  sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
+
+
+        <div className="text-left ">
           <Logo></Logo>
           <h2 className="font-semibold  font-secondary text-[14px] pt-3 leading-7  ">
             বাংলাদেশের সর্বাধিক জনপ্রিয় এবং বিশ্বাসযোগ্য সংবাদপত্র। সত্য,
@@ -122,7 +126,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="">
-          <h2 className="font-bold font-secondary text-[17px] pb-2.5   ">
+          <h2 className="font-bold font-secondary text-center text-[17px] pb-2.5   ">
             আমাদের সম্পর্কে
           </h2>
           <div className="  flex flex-col items-center  gap-5 text-gray-700 font-medium transition duration-200 ">
@@ -164,7 +168,8 @@ const Footer = () => {
             ))}
           </div>
         </div>
-      </div>
+                </div>
+      </Container>
     </div>
   );
 };
