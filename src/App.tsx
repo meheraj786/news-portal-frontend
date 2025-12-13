@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import CategoryPage from "./pages/CategoryPage";
 import DashRootLayout from "./dashboard/layout/DashRootLayout";
 import DashHome from "./dashboard/pages/DashHome";
+import BlogSinglePost from "./pages/BlogSinglePost";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -28,10 +29,10 @@ const router = createBrowserRouter([
         path: "category",
         element: <CategoryPage />,
       },
-      // {
-      //   path: "/post",
-      //   element: <Post />,
-      // },
+      {
+        path: "/single-post",
+        element: <BlogSinglePost />,
+      },
     ],
   },
   {
