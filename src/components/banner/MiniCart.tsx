@@ -2,7 +2,7 @@ import type { CardProps } from "../../types/CardProps";
 
 function MiniCard({ image, tag, title, time }: CardProps) {
   return (
-    <div className="flex flex-col sm:flex-row gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition cursor-pointer group hover:bg-gray-200 duration-250">
+    <div className="flex flex-row flex-col gap-3 p-2 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition cursor-pointer group hover:bg-gray-200 duration-250">
       {/* Image */}
       <div className="w-full sm:w-[45%] rounded-md overflow-hidden">
         <img

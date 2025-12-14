@@ -1,9 +1,8 @@
-import React from "react";
-
 import { MdWatchLater } from "react-icons/md";
 import MiniCard from "./MiniCart";
 import Container from "../container/Container";
 import type { CardProps } from "../../types/CardProps";
+import Slider from "react-slick";
 
 const Banner: React.FC = () => {
   const cardData: CardProps[] = [
@@ -11,7 +10,6 @@ const Banner: React.FC = () => {
       image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
       tag: "অর্থনীতি",
       title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক",
-
       time: "1 Hour ago",
     },
     {
@@ -29,36 +27,107 @@ const Banner: React.FC = () => {
       time: "৪ ঘণ্টা আগে",
     },
   ];
+
+  const latestNews: CardProps[] = [
+    {
+      image:
+        "https://upload.wikimedia.org/wikipedia/commons/b/bd/Taj_Mahal%2C_Agra%2C_India_edit3.jpg",
+      tag: " আন্তর্জাতিক",
+      title: `সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক মাহমুদ
+                হাসান মাহমুদ হাসান ১৫ নভেম্বর, ২০২৫ ৫ মি`,
+
+      time: "1 Hour ago",
+    },
+    {
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bV1J79Xqdkm0C2pIFZ8uoSPA05myxkdMVg&s",
+      tag: "অর্থনীতি",
+      title: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
+      time: "৩ ঘণ্টা আগে",
+    },
+    {
+      image: "https://cdn.britannica.com/68/6268-050-04FB8622/Bangladesh.jpg",
+      tag: "অর্থনীতি",
+      title: "বাজারে আসছে নতুন রেকর্ড",
+      time: "৪ ঘণ্টা আগে",
+    },
+  ];
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 2000,
+
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          dots: false,
+        },
+      },
+    ],
+  };
+
   return (
     <Container>
       <div className=" py-5">
-        <div className="flex flex-col md:flex-row  justify-between items-start  gap-5">
+        <div className="flex flex-col sm:flex-row  justify-between items-start  gap-5">
           {/* Main trending card */}
-          <div className="relative md:w-[70%] overflow-hidden rounded-lg">
-            <div className="relative group  ">
-              <img
-                className="object-cover w-full  group-hover:scale-105  transition-all duration-250 "
-                src={
-                  "https://upload.wikimedia.org/wikipedia/commons/b/bd/Taj_Mahal%2C_Agra%2C_India_edit3.jpg"
-                }
-                alt="Trending"
-              />
-              <div className="group-hover:scale-105 transition-all duration-250   absolute inset-0 bg-black/50 "></div>
-            </div>
+          <div className="relative w-full md:w-[70%] overflow-hidden rounded-xl shadow-sm">
+            <Slider {...settings} className="overflow-hidden">
+              {latestNews.map((item, i) => (
+                <div key={i}>
+                  <div className="relative overflow-hidden rounded-xl group">
+                    {/* IMAGE */}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="
+            w-full
+            h-[320px] sm:h-[360px] md:h-[400px] lg:h-[440px]
+            object-cover
+            transition-transform duration-300
+            md:group-hover:scale-105
+          "
+                    />
 
-            <div className="absolute bottom-[140px] left-[50px] text-white py-2 px-3 bg-red-500 text-white inline-block rounded-[10px]">
-              আন্তর্জাতিক
-            </div>
-            <p className="w-[85%] absolute bottom-[65px] left-[50px] text-white font-primary font-medium text-[17px]">
-              সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক মাহমুদ
-              হাসান মাহমুদ হাসান ১৫ নভেম্বর, ২০২৫ ৫ মি
-            </p>
-            <div className="absolute bottom-5 left-20 flex items-center gap-x-1.5">
-              <MdWatchLater className="text-white" />
-              <p className="text-gray-300 font-primary font-medium">
-                1 Hour ago
-              </p>
-            </div>
+                    {/* OVERLAY */}
+                    <div className="absolute inset-0 bg-black/50" />
+
+                    {/* CONTENT WRAPPER */}
+                    <div
+                      className="
+            absolute inset-0
+            flex flex-col justify-end
+            px-4 sm:px-6 md:px-8
+            pb-4 sm:pb-6
+            gap-2
+          "
+                    >
+                      {/* TAG */}
+                      <span className="bg-red-500 text-white text-xs sm:text-sm px-3 py-1 rounded-full w-fit">
+                        {item.tag}
+                      </span>
+
+                      {/* TITLE */}
+                      <p className="text-white font-medium text-sm sm:text-base md:text-lg leading-snug line-clamp-2">
+                        {item.title}
+                      </p>
+
+                      {/* TIME */}
+                      <div className="flex items-center gap-x-1.5 text-gray-300 text-xs sm:text-sm">
+                        <MdWatchLater />
+                        <span>{item.time}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
           </div>
 
           {/* Trending sidebar */}
@@ -73,20 +142,6 @@ const Banner: React.FC = () => {
                 <MiniCard key={i} {...card} />
               ))}
             </div>
-            {/* <div className="flex items-center gap-x-2 border border-gray-200 shadow-md py-3 rounded">
-            <div className="w-[40%] h-full">
-            <img
-                className="object-cover rounded"
-                src={cricket}
-                alt="Cricket"
-                />
-                </div>
-                <div className="flex gap-y-2.5">
-                <p className="font-primary font-medium border-gray-300 border py-1 px-1.5 rounded-[18px] text-[17px]">
-                Topic
-                </p>
-                </div>
-          </div> */}
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import CategoryPage from "./pages/CategoryPage";
 import DashRootLayout from "./dashboard/layout/DashRootLayout";
 import DashHome from "./dashboard/pages/DashHome";
 import BlogSinglePost from "./pages/BlogSinglePost";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const router = createBrowserRouter([
   {
     path: "/login",

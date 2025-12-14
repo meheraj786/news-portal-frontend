@@ -130,3 +130,10 @@
     @apply bg-background text-foreground;
   }
 }
+.slick-slide > div {
+  margin: 0;
+}
+
+.slick-list {
+  margin: 0;
+}

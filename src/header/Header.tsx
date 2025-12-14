@@ -2,7 +2,7 @@ import { useState } from "react";
 import Container from "../components/container/Container";
 import Logo from "../components/logo/Logo";
 import { Link } from "react-router";
-
+import { CiSearch } from "react-icons/ci";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -82,12 +82,17 @@ export default function Header() {
               )}
             </div>
             {/* Search - hidden on mobile */}
-            <div className="flex-1 mx-4 hidden lg:flex max-w-[250px] md:hidden">
+            <div className="flex-1 mx-4 hidden lg:flex max-w-[250px] md:hidden ">
               <input
                 type="text"
                 placeholder="Search..."
                 className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
+            </div>
+            <div className="hidden sm:block">
+              <a href="">
+                <CiSearch />
+              </a>
             </div>
 
             {/* Hamburger menu - mobile */}
