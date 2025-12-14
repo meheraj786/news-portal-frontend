@@ -47,7 +47,7 @@ const EveryDay = () => {
   return (
     <div className="py-8 ">
       <Container>
-        <div className="flex flex-col gap-x-2">
+        <div className="  flex flex-col gap-x-2">
           <div className="flex items-center gap-x-2">
             <div className="w-[5px]  bg-red-500 h-7 "></div>
             <h2 className=" font-extrabold text-[27px] font-primary text-black  ">
@@ -55,28 +55,39 @@ const EveryDay = () => {
             </h2>
           </div>
         </div>
-        <div className=" flex flex-col lg:flex-row  justify-between py-8  ">
-          <div className=" md:w-[70%] ">
+        <div className="  flex flex-col lg:flex-row justify-between py-8  ">
+          <div className=" py-8 md:w-[65%] ">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 ">
               {everyday.map((card, i) => (
                 <EveryDayCard key={i} {...card} />
               ))}
             </div>
           </div>
-          <div className="w-[35%] ">
-            {/* <div className="bg-red border ">
-              <h2 className="font-bold font-secondary text-[17px] text-white ">
-                নিউজলেটার সাবস্ক্রাইব করুন
-              </h2>
-              <p className="font-semibold  font-secondary text-[14px] text-white ">
-                সর্বশেষ খবর সরাসরি আপনার ইমেইলে পান
-              </p>
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div> */}
+          <div className=" md:w-[32%] ">
+            <div className="flex-col gap-y-5 ">
+              <div className="bg-linear-to-r  from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2  rounded-lg">
+                <h2 className="font-bold font-secondary text-[17px] text-white ">
+                  নিউজলেটার সাবস্ক্রাইব করুন
+                </h2>
+                <p className="font-semibold  font-secondary text-[14px] text-white ">
+                  সর্বশেষ খবর সরাসরি আপনার ইমেইলে পান
+                </p>
+                <input
+                  type="text"
+                  placeholder="Your Email..."
+                  className="w-full border border-gray-300 rounded-lg  py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white "
+                />
+                <button className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg">
+                  Subscrip
+                </button>
+              </div>
+              <div className="bg-muted rounded-lg p-8 text-center border border-border">
+                <p>Adds</p>
+                <div className="bg-background/50 w-[300px] h-[250px] flex items-center justify-center rounded ">
+                  <p> w-300px h-250px </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Container>
