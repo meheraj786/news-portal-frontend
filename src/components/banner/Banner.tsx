@@ -77,20 +77,20 @@ const Banner: React.FC = () => {
       <div className=" py-5">
         <div className="flex flex-col sm:flex-row  justify-between items-start  gap-5">
           {/* Main trending card */}
-          <div className="relative w-full md:w-[70%] overflow-hidden rounded-xl shadow-sm">
+          <div className="relative w-full md:w-[70%] overflow-hidden rounded ">
             <Slider {...settings} className="overflow-hidden">
               {latestNews.map((item, i) => (
                 <div key={i}>
-                  <div className="relative overflow-hidden rounded-xl group">
+                  <div className="relative overflow-hidden rounded-lg group">
                     {/* IMAGE */}
                     <img
                       src={item.image}
                       alt={item.title}
                       className="
             w-full
-            h-[320px] sm:h-[360px] md:h-[400px] lg:h-[440px]
+            h-80 sm:h-[360px] md:h-[400px] xl:h-[530px]
             object-cover
-            transition-transform duration-300
+            transition-transform duration-300 rounded-lg
             md:group-hover:scale-105
           "
                     />
@@ -105,7 +105,7 @@ const Banner: React.FC = () => {
             flex flex-col justify-end
             px-4 sm:px-6 md:px-8
             pb-4 sm:pb-6
-            gap-2
+            gap-2 rounded-lg
           "
                     >
                       {/* TAG */}
