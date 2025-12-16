@@ -63,8 +63,8 @@ const EveryDay = () => {
               ))}
             </div>
           </div>
-          <div className=" md:w-[32%] ">
-            <div className="flex-col gap-y-5 ">
+          <div className=" w-full lg:w-[30%] ">
+            <div className=" flex flex-col gap-y-5 ">
               <div className="bg-linear-to-r  from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2  rounded-lg">
                 <h2 className="font-bold font-secondary text-[17px] text-white ">
                   নিউজলেটার সাবস্ক্রাইব করুন
