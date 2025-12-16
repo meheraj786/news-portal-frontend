@@ -1,53 +1,52 @@
-import { MdWatchLater } from "react-icons/md";
-import type { CardProps } from "../../types/CardProps";
+import { Clock } from "lucide-react";
+
+interface CardProps {
+  image: string;
+  tag: string;
+  time?: string;
+  title: string;
+  description?: string;
+}
+
 function EveryDayCard({ image, tag, time, title, description }: CardProps) {
   return (
-    <div className="w-full">
-      <div
-        className="
-          bg-white p-4 rounded-xl
-          min-h-[260px] md:h-[290px]
-          flex flex-col
-          shadow-sm border border-gray-200
-          transition cursor-pointer
-          md:hover:shadow-md md:hover:bg-gray-200
-          group
-        "
-      >
-        {/* Image */}
-        <div className="w-full h-40 md:h-[180px] overflow-hidden rounded-lg">
+    <div className="w-full h-full">
+      <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all duration-300 cursor-pointer group h-full flex flex-col">
+        {/* Image Container */}
+        <div className="relative w-full aspect-[16/10] overflow-hidden bg-gray-100">
           <img
-            className="w-full h-full object-cover md:group-hover:scale-110 transition-all duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             src={image}
             alt={title}
           />
+          {/* Tag Overlay */}
+          <div className="absolute top-3 left-3">
+            <span className="inline-block px-3 py-1 text-xs font-semibold bg-red-500 text-white rounded-full shadow-md">
+              {tag}
+            </span>
+          </div>
         </div>
 
-        {/* Tag + Time */}
-        <div className="flex items-center justify-between mt-3">
-          <p className="inline-block font-medium text-[11px] sm:text-xs bg-red-500 text-white px-2 py-1 rounded-full">
-            {tag}
-          </p>
-
+        {/* Content */}
+        <div className="p-4 sm:p-5 flex flex-col flex-1">
+          {/* Time Badge */}
           {time && (
-            <div className="flex items-center gap-x-1 text-xs sm:text-sm text-gray-600">
-              <MdWatchLater />
-              <p>{time}</p>
+            <div className="flex items-center gap-1.5 text-gray-500 mb-3">
+              <Clock className="w-3.5 h-3.5" />
+              <span className="text-xs font-medium">{time}</span>
             </div>
           )}
+
+          {/* Title */}
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
+            {title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-sm text-gray-600 line-clamp-2 flex-1">
+            {description}
+          </p>
         </div>
-
-        {/* Title */}
-        <h5 className="mt-3 text-[14px] sm:text-[15px] font-semibold md:font-medium lg:leading-snug line-clamp-2">
-          {title}
-        </h5>
-
-        {/* Description */}
-        <p className="mt-1 text-[12px] sm:text-[13px] text-gray-400 line-clamp-1">
-          {description}
-        </p>
-
-        <div className="flex-1" />
       </div>
     </div>
   );

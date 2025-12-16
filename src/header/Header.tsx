@@ -30,6 +30,10 @@ export default function Header() {
       path: "/",
     },
     {
+      name: "রাজনীতি",
+      path: "/",
+    },
+    {
       name: "বিনোদন",
       path: "/",
     },
@@ -128,7 +132,7 @@ export default function Header() {
               {navItems.map((nav, i) =>
                 nav.path ? (
                   <Link
-                    to={nav.path}
+                    to={`/category/${nav.path}`}
                     key={i}
                     className="cursor-pointer hover:text-red-600 transition"
                   >

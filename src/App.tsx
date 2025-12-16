@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: "category/:id",
-        element: <CategoryPage />,
+        Component: CategoryPage,
       },
       {
         path: "/single-post",
@@ -53,8 +53,8 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
       </QueryClientProvider>
     </>

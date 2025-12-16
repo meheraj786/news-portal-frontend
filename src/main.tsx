@@ -13,8 +13,8 @@ const authConfig = {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider config={authConfig}>
-    <App />
-    <Toaster />
+      <App />
+      <Toaster />
     </AuthProvider>
   </StrictMode>
 );

@@ -1,6 +1,11 @@
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
+import CategoriesCard from "../../components/categoriescard/CategoriesCard";
+import { CategoriesList } from "../../components/categoriescard/CategoriesList";
+import TagCard from "../tag/tagcard/TagCard";
+import { TagList } from "../tag/tagdata/TagList";
+import NewsCard from "../newsitems/NewsCard";
 
 const EveryDay = () => {
   const everyday: CardProps[] = [
@@ -44,8 +49,9 @@ const EveryDay = () => {
       description: "ঢাকায় নতুন মেডিকেল স্টোরে দোকান উদ্বোধন",
     },
   ];
+
   return (
-    <div className="py-8 ">
+    <div className="py-8 bg-gray-50  ">
       <Container>
         <div className="  flex flex-col gap-x-2">
           <div className="flex items-center gap-x-2">
@@ -63,6 +69,7 @@ const EveryDay = () => {
               ))}
             </div>
           </div>
+
           <div className=" w-full lg:w-[30%] ">
             <div className=" flex flex-col gap-y-5 ">
               <div className="bg-linear-to-r  from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2  rounded-lg">

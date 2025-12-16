@@ -1,17 +1,11 @@
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
-import Container from "../components/container/Container";
-import { useParams } from "react-router";
-import CategoriesCard from "../components/categoriescard/CategoriesCard";
-import { CategoriesList } from "../components/categoriescard/CategoriesList";
-import TagCard from "@/components/tag/tagcard/TagCard";
-import { TagList } from "../components/tag/tagdata/TagList";
+import Container from "../container/Container";
 
-const CategoryPage = () => {
-  const { id } = useParams();
+const National = () => {
   const articles = [
     {
       id: 1,
-      category: "ভ্রমণ",
+      category: "জাতীয়",
       image:
         "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop",
       title:
@@ -64,6 +58,19 @@ const CategoryPage = () => {
     "বান্দরবান পাহাড়ের যুদ্ধে একটি চুক্তির স্বর্গ",
   ];
 
+  const categories = [
+    "Fundamental",
+    "অর্থনীতি",
+    "গল্প",
+    "তথ্য প্রযুক্তি",
+    "ধর্ম",
+    "প্রবন্ধ",
+    "বই ও চলচিত্র",
+    "ভ্রমণ",
+    "সংবাদ",
+    "স্বাস্থ্য",
+  ];
+
   const tags = [
     "অর্থনীতি",
     "আধুনিক শিক্ষা",
@@ -97,7 +104,7 @@ const CategoryPage = () => {
         {/* Category Header */}
         <div className="text-center mb-8 bg-white py-6">
           <h1 className="text-2xl font-bold text-gray-800">
-            Category : <span className="text-pink-600">{id}</span>
+            Category : <span className="text-pink-600">জাতীয়</span>
           </h1>
         </div>
 
@@ -222,8 +229,23 @@ const CategoryPage = () => {
             </div>
 
             {/* Categories */}
-            <div className="">
-              <CategoriesCard categories={CategoriesList} />
+            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                Categories
+              </h3>
+              <ul className="space-y-2">
+                {categories.map((category, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between text-sm"
+                  >
+                    <span className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors">
+                      {category}
+                    </span>
+                    {/* <span className="text-gray-500 text-xs">({Math.floor(Math.random() * 15) + 1})</span> */}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* About Me */}
@@ -298,8 +320,20 @@ const CategoryPage = () => {
             </div>
 
             {/* Tags Cloud */}
-            <div className="">
-              <TagCard tags={TagList} />
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                Tags Cloud
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    className="bg-gray-100 hover:bg-pink-600 hover:text-white px-3 py-1 rounded text-sm text-gray-700 cursor-pointer transition-colors"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -308,4 +342,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage;
+export default National;
