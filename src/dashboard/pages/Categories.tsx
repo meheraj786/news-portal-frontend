@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { Category } from "@/validators/category";
 import { useQueryClient } from "@tanstack/react-query";
-import {  Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
 const Categories = () => {
@@ -38,7 +38,7 @@ const Categories = () => {
       header: "Actions",
       cell: ({ row }: { row: { original: Category } }) => (
         <div className="flex justify-center text-center items-center gap-2">
-<EditCategory  data={row.original}/>
+          <EditCategory data={row.original} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>

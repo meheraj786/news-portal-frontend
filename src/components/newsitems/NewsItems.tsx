@@ -1,7 +1,10 @@
+import { Link } from "react-router";
 import CategoriesCard from "../categoriescard/CategoriesCard";
 import { CategoriesList } from "../categoriescard/CategoriesList";
+import Container from "../container/Container";
 import TagCard from "../tag/tagcard/TagCard";
 import { TagList } from "../tag/tagdata/TagList";
+import { Button } from "../ui/button";
 import NewsCard from "./NewsCard";
 
 const newsItems = [
@@ -46,11 +49,11 @@ const newsItems = [
 const NewsItems = () => {
   return (
     <div>
-      <div className="min-h-screen bg-gray-50 py-3 sm:py-4 lg:py-6">
-        <div className="max-w-6xl mx-auto">
+      <div className=" bg-gray-50  pb-15">
+        <Container>
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 flex items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
               <span className="w-1.5 h-10 bg-red-500 rounded-full" />
               সর্বশেষ সংবাদ
             </h1>
@@ -64,6 +67,11 @@ const NewsItems = () => {
                   <NewsCard key={index} {...item} />
                 ))}
               </div>
+                        <div className="text-center mt-10 mb-10 md:mb-0">
+            <Link to="/news">
+              <Button>সব সংবাদ দেখুন</Button>
+            </Link>
+          </div>
             </div>
             <div className=" w-full lg:w-[30%] ">
               <div className=" flex flex-col gap-y-5 ">
@@ -76,7 +84,8 @@ const NewsItems = () => {
               </div>
             </div>
           </div>
-        </div>
+
+        </Container>
       </div>
     </div>
   );

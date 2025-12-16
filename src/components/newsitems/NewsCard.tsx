@@ -19,7 +19,7 @@ function NewsCard({
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group border border-gray-100">
       <div className="flex flex-col sm:flex-row gap-0 sm:gap-4">
         {/* Image Section */}
-        <div className="w-full sm:w-2/5 lg:w-1/2 aspect-video sm:aspect-square overflow-hidden bg-gray-100">
+        <div className="w-full  lg:w-50 lg:h-full aspect-video sm:aspect-square overflow-hidden bg-gray-100">
           <img
             src={image}
             alt={title}
