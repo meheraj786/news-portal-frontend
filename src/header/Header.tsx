@@ -1,105 +1,171 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Container from "../components/container/Container";
 import Logo from "../components/logo/Logo";
 import { Link } from "react-router";
 import { CiSearch } from "react-icons/ci";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import NewsCard from "@/components/newsitems/NewsCard";
+
+type NavItems = {
+  name: string;
+  path?: string;
+};
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Date
-  // const today = new Date();
-  // const options: Intl.DateTimeFormatOptions = {
-  //   weekday: "long",
-  //   day: "numeric",
-  //   month: "long",
-  //   year: "numeric",
-  // };
-  // const dateString = today.toLocaleDateString("en-US", options);
-  type NavItems = {
-    name: string;
-    path?: string;
-  };
-
   const navItems: NavItems[] = [
+    { name: "জাতীয়", path: "/" },
+    { name: "রাজনীতি", path: "/" },
+    { name: "বিনোদন", path: "/" },
+    { name: "খেলাধুলা", path: "/" },
+    { name: "শিক্ষা", path: "/" },
+    { name: "ধর্ম ও জীবন", path: "/" },
+    { name: "মতামত", path: "/" },
+  ];
+
+  // Search items
+  const newsItems = [
     {
-      name: "জাতীয়",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1494252713559-f26b4bf0b174?w=800&h=600&fit=crop",
+      title:
+        "ভোলা-বরিশাল সেতুর দাবিতে উত্তাল ভোলা- ইস্টিকোর গ্যাসবাহী গাড়ি আটক",
+      date: "November 25, 2025",
+      comments: 0,
+      description:
+        "রাজধানীর বিন আলামগীরের শোরাল কোথাপাড়ায় তোলার পাঁচ দশা দাবি বাস্তবায়ন সরকারের নীরবতার বিরুদ্ধে আজ ভোলাসুত্রে অবস্থানের মর্যাদাহীনান",
     },
     {
-      name: "রাজনীতি",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&h=600&fit=crop",
+      title: "শিক্ষা প্রতিষ্ঠানে নতুন নিয়ম জারি",
+      date: "November 25, 2025",
+      comments: 12,
+      description:
+        "দেশের সকল শিক্ষা প্রতিষ্ঠানে নতুন নিয়মকানুন জারি করেছে শিক্ষা মন্ত্রণালয়। এতে শিক্ষার্থীদের উপস্থিতি এবং পরীক্ষা পদ্ধতিতে বড় পরিবর্তন আনা হয়েছে।",
     },
     {
-      name: "রাজনীতি",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=600&fit=crop",
+      title: "কৃষকদের জন্য নতুন ভর্তুকি ঘোষণা",
+      date: "November 24, 2025",
+      comments: 8,
+      description:
+        "সরকার কৃষকদের জন্য সার ও বীজে নতুন ভর্তুকি ঘোষণা করেছে। এতে কৃষকরা আগামী মৌসুমে কম খরচে চাষাবাদ করতে পারবেন বলে আশা করা হচ্ছে।",
     },
     {
-      name: "বিনোদন",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=600&fit=crop",
+      title: "কৃষকদের জন্য নতুন ভর্তুকি ঘোষণা",
+      date: "November 24, 2025",
+      comments: 8,
+      description:
+        "সরকার কৃষকদের জন্য সার ও বীজে নতুন ভর্তুকি ঘোষণা করেছে। এতে কৃষকরা আগামী মৌসুমে কম খরচে চাষাবাদ করতে পারবেন বলে আশা করা হচ্ছে।",
     },
     {
-      name: "খেলাধুলা",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=600&fit=crop",
+      title: "কৃষকদের জন্য নতুন ভর্তুকি ঘোষণা",
+      date: "November 24, 2025",
+      comments: 8,
+      description:
+        "সরকার কৃষকদের জন্য সার ও বীজে নতুন ভর্তুকি ঘোষণা করেছে। এতে কৃষকরা আগামী মৌসুমে কম খরচে চাষাবাদ করতে পারবেন বলে আশা করা হচ্ছে।",
     },
     {
-      name: "শিক্ষা",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&h=600&fit=crop",
+      title: "কৃষকদের জন্য নতুন ভর্তুকি ঘোষণা",
+      date: "November 24, 2025",
+      comments: 8,
+      description:
+        "সরকার কৃষকদের জন্য সার ও বীজে নতুন ভর্তুকি ঘোষণা করেছে। এতে কৃষকরা আগামী মৌসুমে কম খরচে চাষাবাদ করতে পারবেন বলে আশা করা হচ্ছে।",
     },
     {
-      name: "ধর্ম ও জীবন",
-      path: "/",
-    },
-    {
-      name: "মতামত",
-      path: "/",
+      image:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
+      title: "রাজধানীতে নতুন ফ্লাইওভার উদ্বোধন",
+      date: "November 24, 2025",
+      comments: 15,
+      description:
+        "ঢাকার যানজট নিরসনে মহাখালীতে নতুন ফ্লাইওভার উদ্বোধন করা হয়েছে। এতে যাত্রীদের সময় সাশ্রয় হবে এবং যানজট কমবে বলে মনে করছেন বিশেষজ্ঞরা।",
     },
   ];
-  return (
-    <header className="w-full bg-white shadow-md  fixed top-9 left-0 z-50 shadow-gray-200">
-      <Container>
-        {/* Main Header */}
 
-        <div className="w-full ">
-          <div className=" mx-auto  py-5 flex justify-between items-center">
+  return (
+    <header className="w-full bg-white shadow-md fixed top-9 left-0 z-50 shadow-gray-200">
+      <Container>
+        <div className="w-full">
+          <div className="mx-auto py-5 flex justify-between items-center">
             {/* Logo */}
             <Logo />
 
             {/* Navigation */}
             <div className="hidden md:flex gap-6 items-center text-gray-700 font-medium">
-              {navItems.map((nav, i) =>
-                nav.path ? (
-                  <Link
-                    to={`category/${nav.name}`}
-                    key={i}
-                    className="cursor-pointer hover:text-red-600 transition"
-                  >
-                    {nav.name}
-                  </Link>
-                ) : (
-                  <span
-                    key={i}
-                    className="cursor-pointer hover:text-red-600 transition"
-                  >
-                    {nav.name}
-                  </span>
-                )
-              )}
-            </div>
-            {/* Search - hidden on mobile */}
-            <div className="flex-1 mx-4 hidden lg:flex max-w-[250px] md:hidden ">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div>
-            <div className="hidden sm:block">
-              <a href="">
-                <CiSearch />
-              </a>
+              {navItems.map((nav, i) => (
+                <Link
+                  key={i}
+                  to={`/category/${nav.name}`}
+                  className="cursor-pointer hover:text-red-600 transition"
+                >
+                  {nav.name}
+                </Link>
+              ))}
             </div>
 
-            {/* Hamburger menu - mobile */}
+            {/* Search */}
+            <div className=" mx-4 hidden lg:flex max-w-[250px]  ">
+              <Dialog>
+                <DialogTrigger className="ms-auto " asChild>
+                  <Button variant="outline" className="size-10 ">
+                    <CiSearch />
+                  </Button>
+                </DialogTrigger>
+
+                <DialogContent className="sm:max-w-[750px] max-h-[90%]  p-7 overflow-y-auto">
+                  <DialogHeader>
+                    <Label>Search News</Label>
+                  </DialogHeader>
+
+                  <Input type="text" placeholder="Search..." />
+
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline">Close</Button>
+                    </DialogClose>
+                  </DialogFooter>
+
+                  <div className="space-y-4 mt-4">
+                    {newsItems.length === 0 && (
+                      <p className="text-gray-500">No result found</p>
+                    )}
+
+                    {newsItems.map((item, index) => (
+                      <NewsCard
+                        key={index}
+                        comments={item.comments}
+                        date={item.date}
+                        description={item.description}
+                        image={item.image}
+                        title={item.title}
+                      />
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Hamburger */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -107,20 +173,20 @@ export default function Header() {
               >
                 <div className="space-y-1">
                   <span
-                    className={`block h-0.5 w-6 bg-gray-700 transition-transform ${
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
                       isOpen ? "rotate-45 translate-y-1.5" : ""
                     }`}
-                  ></span>
+                  />
                   <span
-                    className={`block h-0.5 w-6 bg-gray-700 transition-opacity ${
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
                       isOpen ? "opacity-0" : ""
                     }`}
-                  ></span>
+                  />
                   <span
-                    className={`block h-0.5 w-6 bg-gray-700 transition-transform ${
+                    className={`block h-0.5 w-6 bg-gray-700 transition ${
                       isOpen ? "-rotate-45 -translate-y-1.5" : ""
                     }`}
-                  ></span>
+                  />
                 </div>
               </button>
             </div>
@@ -128,25 +194,21 @@ export default function Header() {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="md:hidden bg-white border-t border-gray-200  py-2 grid grid-cols-2 gap-2">
-              {navItems.map((nav, i) =>
-                nav.path ? (
-                  <Link
-                    to={`/category/${nav.path}`}
-                    key={i}
-                    className="cursor-pointer hover:text-red-600 transition"
-                  >
-                    {nav.name}
-                  </Link>
-                ) : (
-                  <span>{nav.name}</span>
-                )
-              )}
-              {/* Mobile search */}
+            <div className="md:hidden bg-white border-t border-gray-200 py-3 grid grid-cols-2 gap-2">
+              {navItems.map((nav, i) => (
+                <Link
+                  key={i}
+                  to={`/category/${nav.name}`}
+                  className="hover:text-red-600"
+                >
+                  {nav.name}
+                </Link>
+              ))}
+
               <input
                 type="text"
                 placeholder="Search..."
-                className="mt-2 border border-gray-300 rounded-md  py-1 focus:outline-none focus:ring-2 focus:ring-red-500 "
+                className="col-span-2 mt-2 border rounded-md p-2"
               />
             </div>
           )}
