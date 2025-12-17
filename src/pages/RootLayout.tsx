@@ -8,7 +8,7 @@ const RootLayout = () => {
     <div>
       <Topheader />
       <Header></Header>
-      {/* <MarqueeTag></MarqueeTag> */}
+
       <Outlet></Outlet>
       <Footer></Footer>
     </div>

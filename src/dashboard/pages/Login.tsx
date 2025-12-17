@@ -1,7 +1,6 @@
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { userSchema, type UserInput } from "../validators/user";
 // import { useForm } from "react-hook-form";
-
 import { LoginForm } from "../../components/login-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema, type UserInput } from "../../validators/user";
@@ -17,16 +16,16 @@ const Login = () => {
     },
   });
 
-
-  return     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+  return (
+    <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <div className="mx-auto text-center">
-
-        <Logo/>
+          <Logo />
         </div>
         <LoginForm form={form} />
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default Login;

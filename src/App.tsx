@@ -14,6 +14,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Categories from "./dashboard/pages/Categories";
 import Posts from "./dashboard/pages/Posts";
 import NavMenu from "./dashboard/pages/NavMenu";
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -46,7 +47,12 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashRootLayout />,
-    children: [{ index: true, element: <DashHome /> }, {path: "/dashboard/categories", element: <Categories /> }, {path: "/dashboard/posts", element: <Posts /> }, {path: "/dashboard/nav", element: <NavMenu /> },],
+    children: [
+      { index: true, element: <DashHome /> },
+      { path: "/dashboard/categories", element: <Categories /> },
+      { path: "/dashboard/posts", element: <Posts /> },
+      { path: "/dashboard/nav", element: <NavMenu /> },
+    ],
   },
 ]);
 
@@ -55,7 +61,7 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
-      <RouterProvider router={router} />
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </>
   );
