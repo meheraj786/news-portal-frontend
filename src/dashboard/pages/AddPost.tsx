@@ -19,7 +19,7 @@ import type { AxiosError } from "axios";
 import { useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import JoditEditor from 'jodit-react';
+import JoditEditor from "jodit-react";
 
 export function AddPost() {
   const { data: category } = useFetchAllCategories();
@@ -38,14 +38,16 @@ export function AddPost() {
   const postMutation = useCreatePost();
   const queryClient = useQueryClient();
 
-  	const editor = useRef(null);
+  const editor = useRef(null);
 
-	const config = useMemo(() => ({
-			readonly: false, 
-			placeholder: 'Start typings...'
-		}),
-		[]
-	);
+  const config = useMemo(
+    () => ({
+      readonly: false,
+      height: 400,
+      placeholder: "Start typings...",
+    }),
+    []
+  );
 
   const handleSubmit = (values: Post) => {
     console.log(values);
@@ -75,22 +77,17 @@ export function AddPost() {
         <h2 className="text-2xl font-bold">Add Post</h2>
         <p className="text-gray-600">Create a new post.</p>
       </div>
-      
+
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <div className="grid gap-3">
           <Label htmlFor="title">Title</Label>
-          <Input
-            id="title"
-            placeholder="Title"
-            {...form.register("title")}
-          />
+          <Input id="title" placeholder="Title" {...form.register("title")} />
           {form.formState.errors.title && (
             <span className="text-red-500 text-xs">
               {form.formState.errors.title.message}
             </span>
           )}
         </div>
-
 
         <div className="grid gap-3">
           <Label htmlFor="image">Image</Label>
@@ -148,29 +145,30 @@ export function AddPost() {
             </span>
           )}
         </div>
-<div className="grid gap-3">
-  <Label>Content</Label>
+        <div className="grid gap-3">
+          <Label>Content</Label>
+          <div className="w-full sm:w-4xl h-1/2 md:w-7xl">
+            <JoditEditor
+              ref={editor}
+              className="h-1/2"
+              value={form.watch("content")}
+              config={config}
+              tabIndex={1}
+              onBlur={(newContent) => {
+                form.setValue("content", newContent, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                });
+              }}
+            />
+          </div>
 
-  <JoditEditor
-    ref={editor}
-    value={form.watch("content")}
-    config={config}
-    tabIndex={1}
-    onBlur={(newContent) => {
-      form.setValue("content", newContent, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
-    }}
-  />
-
-  {form.formState.errors.content && (
-    <span className="text-red-500 text-xs">
-      {form.formState.errors.content.message}
-    </span>
-  )}
-</div>
-
+          {form.formState.errors.content && (
+            <span className="text-red-500 text-xs">
+              {form.formState.errors.content.message}
+            </span>
+          )}
+        </div>
 
         <div className="flex gap-3 pt-4">
           <Button type="submit" className="bg-green-500">

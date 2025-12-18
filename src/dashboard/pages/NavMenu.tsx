@@ -1,72 +1,128 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-type NavCategory = {
-  id: string;
-  name: string;
-  disable?: boolean;
-};
-
-const navcategories: NavCategory[] = [
-  { id: "1", name: "politics" },
-  { id: "2", name: "kheladula" },
-  { id: "3", name: "sikha" },
-  { id: "4", name: "sanvir akta ailsha", disable: true },
-];
+import { useFetchAllCategories } from "@/api/hooks/category";
+import { useFetchNavMenu, useUpdateNavMenu } from "@/api/hooks/navMenu";
+import { toast } from "sonner";
 
 export default function NavMenu() {
-  // ✅ STATE INSIDE COMPONENT
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [submittedItems, setSubmittedItems] = useState<string[]>([]);
+  const { data: categories = [], isLoading: categoriesLoading } = useFetchAllCategories();
+  const { data: navMenu, isLoading: navMenuLoading } = useFetchNavMenu();
+  const { mutate: updateNavMenu, isPending } = useUpdateNavMenu();
 
-  // ✅ HANDLERS INSIDE COMPONENT
+  const initialItems = useMemo(() => {
+    return navMenu?.categoryIds?.map((c) => c._id) ?? [];
+  }, [navMenu?.categoryIds]);
+
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const actualSelectedItems = selectedItems.length === 0 && initialItems.length > 0 
+    ? initialItems 
+    : selectedItems;
+
   const handleCheckboxChange = (id: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    const current = actualSelectedItems;
+    setSelectedItems(
+      current.includes(id)
+        ? current.filter((item) => item !== id)
+        : current.length < 10
+        ? [...current, id]
+        : current
     );
   };
 
   const handleSubmit = () => {
-    setSubmittedItems(selectedItems);
-    console.log("Submitted:", selectedItems);
+    if (actualSelectedItems.length > 10) {
+      alert("Maximum 10 categories allowed!");
+      return;
+    }
+
+    updateNavMenu(
+      { categoryIds: actualSelectedItems },
+      {
+        onSuccess: () => {
+          toast.success("Navigation menu updated successfully!");
+        },
+      }
+    );
   };
 
   const handleCancel = () => {
-    setSelectedItems([]);
+    setSelectedItems(initialItems);
   };
 
+  const hasChanges = 
+    actualSelectedItems.length !== initialItems.length ||
+    actualSelectedItems.some((id) => !initialItems.includes(id));
+
+  const isLoading = categoriesLoading || navMenuLoading;
+
+  if (isLoading) {
+    return <p className="p-5">Loading...</p>;
+  }
+
   return (
-    <div className="border-2 px-5">
-      <div className="flex mx-auto py-5 gap-6">
-        {navcategories.map((item) => (
-          <div
-            key={item.id}
-            className="flex items-center gap-3 border-2 py-3 px-7 rounded"
-          >
-            <Checkbox
-              id={item.id}
-              checked={selectedItems.includes(item.id)}
-              onCheckedChange={() => handleCheckboxChange(item.id)}
-              disabled={item.disable}
-            />
-            <Label htmlFor={item.id}>{item.name}</Label>
-          </div>
-        ))}
+    <div className="border-2 px-5 rounded-md">
+      <div className="py-5">
+        <h2 className="text-lg font-semibold mb-4">
+          Navigation Menu Categories (Max 10)
+        </h2>
+        <p className="text-sm text-muted-foreground mb-4">
+          Selected: {actualSelectedItems.length} / 10
+        </p>
+        
+        <div className="flex flex-wrap gap-6">
+          {categories.map((item) => {
+            const isSelected = actualSelectedItems.includes(item._id);
+            const canSelect = actualSelectedItems.length < 10 || isSelected;
+            
+            return (
+              <div
+                key={item._id}
+                className={`flex items-center gap-3 border py-3 px-7 rounded transition-colors ${
+                  isSelected ? "border-primary bg-primary/5" : ""
+                } ${!item.isActive ? "opacity-50" : ""}`}
+              >
+                <Checkbox
+                  id={item._id}
+                  checked={isSelected}
+                  onCheckedChange={() => handleCheckboxChange(item._id)}
+                  disabled={!item.isActive || (!canSelect && !isSelected)}
+                />
+                <Label 
+                  htmlFor={item._id}
+                  className="cursor-pointer"
+                >
+                  {item.name}
+                  {!item.isActive && (
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      (Inactive)
+                    </span>
+                  )}
+                </Label>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="flex gap-3 p-5 justify-end">
-        <Button onClick={handleCancel} className="bg-blue-500">
+      <div className="flex gap-3 p-5 justify-end border-t">
+        <Button
+          variant="outline"
+          onClick={handleCancel}
+          disabled={isPending || !hasChanges}
+        >
           Cancel
         </Button>
-        <Button onClick={handleSubmit}>Submit</Button>
-      </div>
 
-      <div className="text-sm text-gray-600">
-        Submitted Array: {JSON.stringify(submittedItems)}
+        <Button 
+          onClick={handleSubmit} 
+          disabled={isPending || !hasChanges || actualSelectedItems.length > 10}
+        >
+          {isPending ? "Saving..." : "Submit"}
+        </Button>
       </div>
     </div>
   );
