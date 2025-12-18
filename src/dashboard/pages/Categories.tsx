@@ -37,7 +37,7 @@ const Categories = () => {
     {
       header: "Actions",
       cell: ({ row }: { row: { original: Category } }) => (
-        <div className="flex justify-center text-center items-center gap-2">
+        <div className="flex justify-center text-center items-center gap-2 ">
           <EditCategory data={row.original} />
 
           <AlertDialog>
@@ -80,12 +80,13 @@ const Categories = () => {
   ];
 
   return (
-    <div>
-      <div className="flex justify-between mb-5 items-center">
+    <div className=" p-5 rounded-2xl border-1 ">
+      <div className="flex justify-between mb-5 items-center   ">
         <h2 className="font-bold text-2xl">Categories</h2>
         <AddCategory />
       </div>
       <DataTable
+        className=" bg-gradient-to-br from-red-50 to-rose-100 "
         search="name"
         data={(categories || []).map((c) => ({
           ...c,

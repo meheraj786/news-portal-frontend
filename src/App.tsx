@@ -15,6 +15,9 @@ import Categories from "./dashboard/pages/Categories";
 import Posts from "./dashboard/pages/Posts";
 import NavMenu from "./dashboard/pages/NavMenu";
 import { AddPost } from "./dashboard/pages/AddPost";
+import Subscription from "./dashboard/pages/Subscription";
+import Ads from "./dashboard/pages/ads";
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   {
@@ -53,6 +56,8 @@ const router = createBrowserRouter([
       { path: "/dashboard/posts", element: <Posts /> },
       { path: "/dashboard/nav", element: <NavMenu /> },
       { path: "/dashboard/add-post", element: <AddPost /> },
+      { path: "/dashboard/subscription", element: <Subscription /> },
+      { path: "/dashboard/ads", element: <Ads /> },
     ],
   },
 ]);

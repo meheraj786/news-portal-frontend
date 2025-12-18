@@ -45,6 +45,16 @@ const data = {
       url: "/dashboard/nav",
       icon: IconChartBar,
     },
+    {
+      title: "Subscription",
+      url: "/dashboard/subscription",
+      icon: IconDashboard,
+    },
+    {
+      title: "Ads",
+      url: "/dashboard/ads",
+      icon: IconDashboard,
+    },
   ],
   // navClouds: [
   //   {
