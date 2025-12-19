@@ -2,8 +2,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 import type { Post } from "@/validators/post";
 
-
-
 export const useFetchAllPosts = () => {
   return useQuery({
     queryKey: ["posts", "all"],
@@ -24,8 +22,6 @@ export const useFetchPostById = (id: string) => {
     enabled: !!id,
   });
 };
-
-
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -48,22 +44,44 @@ export const useCreatePost = () => {
   });
 };
 
+// export const useUpdatePost = () => {
+//   const queryClient = useQueryClient();
 
+//   return useMutation({
+//     mutationFn: async ({ _id, ...data }: Post) => {
+//       console.log(data, "printing data");
+//       const res = await api.put(`post/${_id}`, data);
+//       return res.data.data;
+//     },
 
+//     onSuccess: (_data, variables) => {
+//       queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+
+//       queryClient.invalidateQueries({
+//         queryKey: ["posts", variables._id],
+//       });
+//     },
+//   });
+// };
 export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ _id, ...data }: Post) => {
-      const res = await api.put(`post/${_id}`, data);
+    // 1. Destructure 'formData' explicitly
+    mutationFn: async ({ _id, formData }: { _id: string; formData: FormData }) => {
+      // 2. Send ONLY formData as the body
+      // We also force the header just to be safe, though Axios usually detects it.
+      const res = await api.put(`post/${_id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       return res.data.data;
     },
 
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
-
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] }); // specific key
       queryClient.invalidateQueries({
-        queryKey: ["posts", variables._id],
+        queryKey: ["post", variables._id],
       });
     },
   });

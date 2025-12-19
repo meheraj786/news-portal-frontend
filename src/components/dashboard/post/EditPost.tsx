@@ -45,11 +45,7 @@ export function EditPost({ data }: { data: Post }) {
   const getCategoryId = (category: unknown): string => {
     if (!category) return "";
 
-    if (
-      typeof category === "object" &&
-      category !== null &&
-      "_id" in category
-    ) {
+    if (typeof category === "object" && category !== null && "_id" in category) {
       return (category as { _id: string })._id;
     }
     if (typeof category === "string") {
@@ -114,19 +110,17 @@ export function EditPost({ data }: { data: Post }) {
     formData.append("category", values.category);
     formData.append("isDraft", String(values.isDraft));
     formData.append("views", String(values.views));
-    const tagsToSend = values.tags.map((tag: any) => 
-  typeof tag === "object" && tag.name ? tag.name : tag
-);
-console.log("Tags being sent:", tagsToSend);
-console.log("Tags JSON:", JSON.stringify(tagsToSend));
-formData.append("tags", JSON.stringify(tagsToSend));
+    const tagsToSend = values.tags?.map((tag: any) => (typeof tag === "object" && tag.name ? tag.name : tag));
+    console.log("Tags being sent:", tagsToSend);
+    console.log("Tags JSON:", JSON.stringify(tagsToSend));
+    formData.append("tags", JSON.stringify(tagsToSend));
 
     if (imageFile) {
       formData.append("image", imageFile);
     }
 
     postMutation.mutate(
-      { _id: values._id as string, formData: formData  },
+      { _id: values._id as string, formData: formData },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["post", "all"] });
@@ -137,9 +131,7 @@ formData.append("tags", JSON.stringify(tagsToSend));
         onError: (error: unknown) => {
           if (error && (error as AxiosError).response) {
             const axiosError = error as AxiosError<{ message: string }>;
-            toast.error(
-              axiosError.response?.data?.message || "Something went wrong!"
-            );
+            toast.error(axiosError.response?.data?.message || "Something went wrong!");
           } else {
             toast.error("Something went wrong!");
           }
@@ -148,7 +140,6 @@ formData.append("tags", JSON.stringify(tagsToSend));
     );
   };
   console.log(form.formState.errors);
-  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -170,26 +161,16 @@ formData.append("tags", JSON.stringify(tagsToSend));
               <Label>Title</Label>
               <Input {...form.register("title")} />
               {form.formState.errors.title && (
-                <span className="text-red-500 text-xs">
-                  {form.formState.errors.title.message}
-                </span>
+                <span className="text-red-500 text-xs">{form.formState.errors.title.message}</span>
               )}
             </div>
 
             <div className="grid gap-2">
               <Label>Image</Label>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+              <Input type="file" accept="image/*" onChange={handleImageChange} />
               {imagePreview && (
                 <div className="mt-2">
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="w-48 h-48 object-cover rounded-md"
-                  />
+                  <img src={imagePreview} alt="Preview" className="w-48 h-48 object-cover rounded-md" />
                 </div>
               )}
             </div>
@@ -218,9 +199,7 @@ formData.append("tags", JSON.stringify(tagsToSend));
                 </SelectContent>
               </Select>
               {form.formState.errors.category && (
-                <span className="text-red-500 text-xs">
-                  {form.formState.errors.category.message}
-                </span>
+                <span className="text-red-500 text-xs">{form.formState.errors.category.message}</span>
               )}
             </div>
 
@@ -229,9 +208,7 @@ formData.append("tags", JSON.stringify(tagsToSend));
               <Input
                 defaultValue={data?.tags
                   ?.map((tag) =>
-                    typeof tag === "object" && tag !== null && "name" in tag
-                      ? (tag as { name: string }).name
-                      : tag
+                    typeof tag === "object" && tag !== null && "name" in tag ? (tag as { name: string }).name : tag
                   )
                   .join(", ")}
                 placeholder="news, tech, politics"
@@ -241,15 +218,13 @@ formData.append("tags", JSON.stringify(tagsToSend));
                     .map((t) => t.trim())
                     .filter(Boolean)
                     .map((name) => ({ name }));
-                  form.setValue("tags", tagsArray , {
+                  form.setValue("tags", tagsArray, {
                     shouldValidate: true,
                   });
                 }}
               />
               {form.formState.errors.tags && (
-                <span className="text-red-500 text-xs">
-                  {form.formState.errors.tags.message as string}
-                </span>
+                <span className="text-red-500 text-xs">{form.formState.errors.tags.message as string}</span>
               )}
             </div>
 
@@ -268,9 +243,7 @@ formData.append("tags", JSON.stringify(tagsToSend));
                 }
               />
               {form.formState.errors.content && (
-                <span className="text-red-500 text-xs">
-                  {form.formState.errors.content.message}
-                </span>
+                <span className="text-red-500 text-xs">{form.formState.errors.content.message}</span>
               )}
             </div>
           </div>
