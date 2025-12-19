@@ -128,11 +128,7 @@ export default function Ads() {
             value={horizontalAds.length}
             icon={<Maximize2 />}
           />
-          <Stat
-            label="Square Ads"
-            value={squareAds.length}
-            icon={<Square />}
-          />
+          <Stat label="Square Ads" value={squareAds.length} icon={<Square />} />
         </div>
 
         {/* Horizontal */}
@@ -173,7 +169,6 @@ export default function Ads() {
   );
 }
 
-
 const Stat = ({ label, value, icon }: any) => (
   <div className="bg-white p-6 rounded-xl shadow border">
     <div className="flex items-center gap-3">
@@ -186,14 +181,7 @@ const Stat = ({ label, value, icon }: any) => (
   </div>
 );
 
-const AdSection = ({
-  title,
-  ads,
-  grid,
-  onEdit,
-  onDelete,
-  onToggle,
-}: any) => (
+const AdSection = ({ title, ads, grid, onEdit, onDelete, onToggle }: any) => (
   <div className="mb-10">
     <h2 className="text-xl font-semibold mb-4">{title}</h2>
 
@@ -265,9 +253,7 @@ const AdModal = ({
         <select
           className="w-full border px-3 py-2 rounded"
           value={form.type}
-          onChange={(e) =>
-            setForm({ ...form, type: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, type: e.target.value })}
         >
           <option value="horizontal">Horizontal</option>
           <option value="square">Square</option>
@@ -292,10 +278,7 @@ const AdModal = ({
         />
 
         {preview && (
-          <img
-            src={preview}
-            className="w-full h-40 object-cover rounded"
-          />
+          <img src={preview} className="w-full h-40 object-cover rounded" />
         )}
       </div>
 

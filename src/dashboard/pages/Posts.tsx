@@ -26,7 +26,7 @@ const Posts = () => {
   const deletePost = useDeletePost();
   console.log(post, "post");
 
-   type Tag = {
+  type Tag = {
     id: string;
     name: string;
 
@@ -45,17 +45,17 @@ const Posts = () => {
         return <p>{row.original.category?.name || "N/A"}</p>;
       },
     },
-{
-  accessorKey: "tags",
-  header: "Tags",
-  cell: ({ row }: { row: { original: Post } }) => (
-    <div className="flex gap-1 flex-wrap w-40">
-      {row.original.tags?.map((tag: Tag) => (
-        <Badge key={tag._id}>{tag.name}</Badge>
-      ))}
-    </div>
-  ),
-},
+    {
+      accessorKey: "tags",
+      header: "Tags",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <div className="flex gap-1 flex-wrap w-40">
+          {row.original.tags?.map((tag: Tag) => (
+            <Badge key={tag._id}>{tag.name}</Badge>
+          ))}
+        </div>
+      ),
+    },
     {
       accessorKey: "content",
       header: "Content",
@@ -79,7 +79,7 @@ const Posts = () => {
     {
       header: "Actions",
       cell: ({ row }: { row: { original: Post } }) => (
-        <div className="flex justify-center text-center items-center gap-2">
+        <div className="flex justify-center text-center items-center gap-2 ">
           <Dialog>
             <DialogTrigger asChild>
               <Button className="bg-secondary" size={"sm"}>
@@ -145,13 +145,14 @@ const Posts = () => {
 
   return (
     <div>
-      <div className="flex justify-between mb-5 items-center">
+      <div className="flex justify-between mb-5 items-center ">
         <h2 className="font-bold text-2xl">Post</h2>
         <Link to={"/dashboard/add-post"}>
           <Button>Add Post</Button>
         </Link>
       </div>
       <DataTable
+        className="bg-gradient-to-br from-red-50 to-rose-100 "
         loading={isLoading}
         search="title"
         data={post || []}

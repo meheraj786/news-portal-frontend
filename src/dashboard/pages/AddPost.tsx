@@ -25,7 +25,7 @@ export function AddPost() {
   const { data: category } = useFetchAllCategories();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
-  
+
   const form = useForm<Omit<Post, "image">>({
     resolver: zodResolver(postSchema.omit({ image: true })),
     defaultValues: {
@@ -37,16 +37,17 @@ export function AddPost() {
       tags: [],
     },
   });
+
   const postMutation = useCreatePost();
   const queryClient = useQueryClient();
-
   const editor = useRef(null);
 
   const config = useMemo(
     () => ({
       readonly: false,
+      minHeight: 280,
       height: 400,
-      placeholder: "Start typings...",
+      placeholder: "Start typing...",
     }),
     []
   );
@@ -70,13 +71,11 @@ export function AddPost() {
     formData.append("category", values.category);
     formData.append("isDraft", String(values.isDraft));
     formData.append("views", String(values.views));
-    
     formData.append("tags", JSON.stringify(values.tags));
-    
+
     if (imageFile) {
       formData.append("image", imageFile);
     }
-    console.log(formData, "formData")
 
     postMutation.mutate(formData as any, {
       onSuccess: () => {
@@ -99,16 +98,18 @@ export function AddPost() {
     });
   };
 
-  console.log(form.formState.errors)
-
   return (
-    <div className="w-full sm:w-4xl md:w-7xl mx-auto p-6">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold">Add Post</h2>
         <p className="text-gray-600">Create a new post.</p>
       </div>
 
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-5 sm:space-y-6"
+      >
+        {/* Title */}
         <div className="grid gap-3">
           <Label htmlFor="title">Title</Label>
           <Input id="title" placeholder="Title" {...form.register("title")} />
@@ -119,6 +120,7 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Image */}
         <div className="grid gap-3">
           <Label htmlFor="image">Image</Label>
           <Input
@@ -128,22 +130,21 @@ export function AddPost() {
             onChange={handleImageChange}
           />
           {imagePreview && (
-            <div className="mt-2">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-48 h-48 object-cover rounded-md"
-              />
-            </div>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-full max-w-[220px] aspect-square object-cover rounded-md"
+            />
           )}
         </div>
 
+        {/* Category */}
         <div className="grid gap-3">
           <Label>Category</Label>
           <Select
-            onValueChange={(value) => {
-              form.setValue("category", value, { shouldValidate: true });
-            }}
+            onValueChange={(value) =>
+              form.setValue("category", value, { shouldValidate: true })
+            }
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select category" />
@@ -166,6 +167,7 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Tags */}
         <div className="grid gap-3">
           <Label htmlFor="tags">Tags</Label>
           <Input
@@ -186,24 +188,23 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Content */}
         <div className="grid gap-3">
           <Label>Content</Label>
-          <div className="w-full sm:w-4xl h-1/2 md:w-7xl">
+          <div className="w-full max-w-full overflow-hidden">
             <JoditEditor
               ref={editor}
-              className="h-1/2"
               value={form.watch("content")}
               config={config}
               tabIndex={1}
-              onBlur={(newContent) => {
+              onBlur={(newContent) =>
                 form.setValue("content", newContent, {
                   shouldValidate: true,
                   shouldDirty: true,
-                });
-              }}
+                })
+              }
             />
           </div>
-
           {form.formState.errors.content && (
             <span className="text-red-500 text-xs">
               {form.formState.errors.content.message}
@@ -211,13 +212,14 @@ export function AddPost() {
           )}
         </div>
 
-        <div className="flex gap-3 pt-4">
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <Button type="submit" className="bg-green-500">
             Post
           </Button>
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={() => {
               form.reset();
               setImageFile(null);

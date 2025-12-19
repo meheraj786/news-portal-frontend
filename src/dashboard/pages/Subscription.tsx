@@ -11,7 +11,6 @@ interface Subscription {
 export default function Subscription() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { data: subscriptions } = useFetchAllSubscriptions();
-
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {

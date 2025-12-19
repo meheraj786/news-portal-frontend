@@ -6,8 +6,21 @@ import { CategoriesList } from "../../components/categoriescard/CategoriesList";
 import TagCard from "../tag/tagcard/TagCard";
 import { TagList } from "../tag/tagdata/TagList";
 import NewsCard from "../newsitems/NewsCard";
+import { useSubscribe } from "@/api/hooks/subscribtion";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const EveryDay = () => {
+  const subscripMutation = useSubscribe();
+  const [subEmail, setSubEmail] = useState("");
+  const handleSubmit = () => {
+    subscripMutation.mutate(subEmail, {
+      onSuccess: () => {
+        toast.success("subscrip");
+        setSubEmail("");
+      },
+    });
+  };
   const everyday: CardProps[] = [
     {
       image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
@@ -81,10 +94,15 @@ const EveryDay = () => {
                 </p>
                 <input
                   type="text"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
                   placeholder="Your Email..."
                   className="w-full border border-gray-300 rounded-lg  py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white "
                 />
-                <button className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg">
+                <button
+                  onClick={handleSubmit}
+                  className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg"
+                >
                   Subscrip
                 </button>
               </div>
