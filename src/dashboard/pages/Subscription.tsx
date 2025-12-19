@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Mail, Clock, Search, Users } from "lucide-react";
+import { useFetchAllSubscriptions } from "@/api/hooks/subscribtion";
 
 interface Subscription {
   id: number;
@@ -9,24 +10,7 @@ interface Subscription {
 
 export default function Subscription() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  // Sample subscription data
-  const [subscriptions] = useState<Subscription[]>([
-    {
-      id: 1,
-      email: "hamjanabil@gmail.com",
-      subscribedAt: "2024-12-15T10:30:00",
-    },
-    {
-      id: 2,
-      email: "sanvirislam@gmail.com",
-      subscribedAt: "2024-12-14T15:45:00",
-    },
-    { id: 3, email: "mehrajxample.com", subscribedAt: "2024-12-13T09:20:00" },
-    { id: 4, email: "user4@example.com", subscribedAt: "2024-12-12T14:10:00" },
-    { id: 5, email: "user5@example.com", subscribedAt: "2024-12-10T11:25:00" },
-    { id: 6, email: "user6@example.com", subscribedAt: "2024-12-08T16:50:00" },
-  ]);
+  const { data: subscriptions } = useFetchAllSubscriptions();
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -40,7 +24,7 @@ export default function Subscription() {
     return date.toLocaleDateString("en-US", options);
   };
 
-  const filteredSubscriptions: Subscription[] = subscriptions.filter((sub) =>
+  const filteredSubscriptions = subscriptions?.filter((sub) =>
     sub.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -64,7 +48,7 @@ export default function Subscription() {
             <div>
               <p className="text-sm text-red-600">Total Subscribers</p>
               <p className="text-2xl font-bold text-red-900">
-                {subscriptions.length}
+                {subscriptions?.length}
               </p>
             </div>
           </div>
@@ -105,10 +89,11 @@ export default function Subscription() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
-                {filteredSubscriptions.length > 0 ? (
-                  filteredSubscriptions.map((sub) => (
+                {filteredSubscriptions?.length &&
+                filteredSubscriptions?.length > 0 ? (
+                  filteredSubscriptions?.map((sub) => (
                     <tr
-                      key={sub.id}
+                      key={sub._id}
                       className="hover:bg-slate-50 transition-colors"
                     >
                       <td className="px-6 py-4">
@@ -122,7 +107,7 @@ export default function Subscription() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-slate-600">
-                        {formatDate(sub.subscribedAt)}
+                        {formatDate(sub.createdAt)}
                       </td>
                     </tr>
                   ))
