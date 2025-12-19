@@ -15,7 +15,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { categorySchema, type Category } from "@/validators/category";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,13 +30,11 @@ export function AddCategory() {
   });
   const [open, isOpen] = useState<boolean>(false);
   const catMutation = useCreateCategory();
-  const queryClient = useQueryClient();
 
   const handleSubmit = (values: Category) => {
     console.log(values);
     catMutation.mutate(values, {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["categories", "all"] });
         toast.success("Category added successfully!");
         form.reset();
         isOpen(false);
