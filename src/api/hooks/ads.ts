@@ -7,6 +7,7 @@ export type Ad = {
   image?: {
     url: string;
   };
+  type: string;
   link?: string;
   isActive: boolean;
   createdAt: string;
