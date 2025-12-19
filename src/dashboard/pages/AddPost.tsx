@@ -16,20 +16,22 @@ import { postSchema, type Post } from "@/validators/post";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import JoditEditor from "jodit-react";
 
 export function AddPost() {
   const { data: category } = useFetchAllCategories();
-  const form = useForm<Post>({
-    resolver: zodResolver(postSchema),
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  
+  const form = useForm<Omit<Post, "image">>({
+    resolver: zodResolver(postSchema.omit({ image: true })),
     defaultValues: {
       title: "",
       content: "",
       category: "",
-      image: "",
       isDraft: false,
       views: 0,
       tags: [],
@@ -49,13 +51,40 @@ export function AddPost() {
     []
   );
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (values: Post) => {
-    console.log(values);
-    postMutation.mutate(values, {
+    const formData = new FormData();
+    formData.append("title", values.title);
+    formData.append("content", values.content);
+    formData.append("category", values.category);
+    formData.append("isDraft", String(values.isDraft));
+    formData.append("views", String(values.views));
+    
+    formData.append("tags", JSON.stringify(values.tags));
+    
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+    console.log(formData, "formData")
+
+    postMutation.mutate(formData as any, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["post", "all"] });
         toast.success("News added successfully!");
         form.reset();
+        setImageFile(null);
+        setImagePreview("");
       },
       onError: (error: unknown) => {
         if (error && (error as AxiosError).response) {
@@ -69,10 +98,11 @@ export function AddPost() {
       },
     });
   };
-  console.log(form.formState.errors);
+
+  console.log(form.formState.errors)
 
   return (
-    <div className=" w-full sm:w-4xl md:w-7xl mx-auto p-6">
+    <div className="w-full sm:w-4xl md:w-7xl mx-auto p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold">Add Post</h2>
         <p className="text-gray-600">Create a new post.</p>
@@ -93,9 +123,19 @@ export function AddPost() {
           <Label htmlFor="image">Image</Label>
           <Input
             id="image"
-            {...form.register("image")}
-            placeholder="Image Url"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
           />
+          {imagePreview && (
+            <div className="mt-2">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-48 h-48 object-cover rounded-md"
+              />
+            </div>
+          )}
         </div>
 
         <div className="grid gap-3">
@@ -145,6 +185,7 @@ export function AddPost() {
             </span>
           )}
         </div>
+
         <div className="grid gap-3">
           <Label>Content</Label>
           <div className="w-full sm:w-4xl h-1/2 md:w-7xl">
@@ -174,7 +215,15 @@ export function AddPost() {
           <Button type="submit" className="bg-green-500">
             Post
           </Button>
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => {
+              form.reset();
+              setImageFile(null);
+              setImagePreview("");
+            }}
+          >
             Reset
           </Button>
         </div>

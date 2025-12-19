@@ -31,8 +31,12 @@ export const useCreatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: Post) => {
-      const res = await api.post("post", data);
+    mutationFn: async (data: FormData) => {
+      const res = await api.post("post", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return res.data.data;
     },
 
