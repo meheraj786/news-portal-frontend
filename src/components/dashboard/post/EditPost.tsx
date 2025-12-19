@@ -59,8 +59,8 @@ export function EditPost({ data }: { data: Post }) {
     return "";
   };
 
-  const form = useForm<Omit<Post, "image">>({
-    resolver: zodResolver(postSchema.omit({ image: true })),
+  const form = useForm({
+    // resolver: zodResolver(postSchema.omit({ image: true })),
     defaultValues: {
       _id: data?._id,
       title: data?.title,
@@ -82,8 +82,7 @@ export function EditPost({ data }: { data: Post }) {
       isDraft: data?.isDraft,
       views: data?.views,
     });
-    // Set existing image as preview
-    setImagePreview(data?.image || "");
+    setImagePreview(data?.image?.url || "");
     setImageFile(null);
   }, [data, form]);
 
@@ -115,15 +114,19 @@ export function EditPost({ data }: { data: Post }) {
     formData.append("category", values.category);
     formData.append("isDraft", String(values.isDraft));
     formData.append("views", String(values.views));
-    formData.append("tags", JSON.stringify(values.tags));
+    const tagsToSend = values.tags.map((tag: any) => 
+  typeof tag === "object" && tag.name ? tag.name : tag
+);
+console.log("Tags being sent:", tagsToSend);
+console.log("Tags JSON:", JSON.stringify(tagsToSend));
+formData.append("tags", JSON.stringify(tagsToSend));
 
-    // Only append new image if user selected one
     if (imageFile) {
       formData.append("image", imageFile);
     }
 
     postMutation.mutate(
-      { _id: values._id as string, formData: formData as any },
+      { _id: values._id as string, formData: formData  },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["post", "all"] });
@@ -238,7 +241,7 @@ export function EditPost({ data }: { data: Post }) {
                     .map((t) => t.trim())
                     .filter(Boolean)
                     .map((name) => ({ name }));
-                  form.setValue("tags", tagsArray as any, {
+                  form.setValue("tags", tagsArray , {
                     shouldValidate: true,
                   });
                 }}
