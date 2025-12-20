@@ -1,11 +1,15 @@
 export interface CardProps {
-  image: {
-    url?: string;};
-  tag?: string;
-  category:{
-    name?: string
-  }
+  _id: string;
+
   title: string;
-  createdAt?: string; // optional
-  content?: string; // optional
+  content?: string;
+  createdAt?: string;
+
+  image?: {
+    url?: string;
+  };
+
+  category?: {
+    name?: string;
+  };
 }
