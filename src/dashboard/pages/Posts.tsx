@@ -15,23 +15,41 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import type { Post } from "@/validators/post";
 import { Eye, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router";
 import { PostContent } from "@/components/post/PostContent";
 
+interface Tag {
+  _id: string;
+  name: string;
+}
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
+interface PostImage {
+  publicId: string;
+  url: string;
+}
+
+interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  category: Category;
+  tags: Tag[];
+  image: PostImage;
+  views: number;
+  isDraft: boolean;
+}
+
 const Posts = () => {
-  const { data: post, isLoading } = useFetchAllPosts();
+  const { data, isLoading } = useFetchAllPosts();
+  const posts = data as unknown as Post[];
   const deletePost = useDeletePost();
-  console.log(post, "post");
-
-   type Tag = {
-    id: string;
-    name: string;
-
-    _id: string;
-  };
 
   const column = [
     {
@@ -41,40 +59,38 @@ const Posts = () => {
     {
       accessorKey: "category",
       header: "Category",
-      cell: ({ row }: { row: { original: Post } }) => {
-        return <p>{row.original.category?.name || "N/A"}</p>;
-      },
+      cell: ({ row }: { row: { original: Post } }) => (
+        <p>{row.original.category?.name || "N/A"}</p>
+      ),
     },
-{
-  accessorKey: "tags",
-  header: "Tags",
-  cell: ({ row }: { row: { original: Post } }) => (
-    <div className="flex gap-1 flex-wrap w-40">
-      {row.original.tags?.map((tag: Tag) => (
-        <Badge key={tag._id}>{tag.name}</Badge>
-      ))}
-    </div>
-  ),
-},
+    {
+      accessorKey: "tags",
+      header: "Tags",
+      cell: ({ row }: { row: { original: Post } }) => (
+        <div className="flex gap-1 flex-wrap w-40">
+          {row.original.tags?.map((tag) => (
+            <Badge key={tag._id}>{tag.name}</Badge>
+          ))}
+        </div>
+      ),
+    },
     {
       accessorKey: "content",
       header: "Content",
-      cell: ({ row }: { row: { original: Post } }) => {
-        return <p className="truncate w-40">{row.original.content}</p>;
-      },
+      cell: ({ row }: { row: { original: Post } }) => (
+        <p className="truncate w-40">{row.original.content}</p>
+      ),
     },
     {
       accessorKey: "image",
       header: "Image",
-      cell: ({ row }: { row: { original: Post } }) => {
-        return (
-          <img
-            src={row.original.image?.url}
-            className="w-10 h-10 object-cover rounded"
-            alt={row.original.title || "Post image"}
-          />
-        );
-      },
+      cell: ({ row }: { row: { original: Post } }) => (
+        <img
+          src={row.original.image?.url}
+          className="w-10 h-10 object-cover rounded"
+          alt={row.original.title}
+        />
+      ),
     },
     {
       header: "Actions",
@@ -83,13 +99,13 @@ const Posts = () => {
           <Dialog>
             <DialogTrigger asChild>
               <Button className="bg-secondary" size={"sm"}>
-                <Eye />
+                <Eye size={16} />
               </Button>
             </DialogTrigger>
             <DialogContent className="max-h-screen overflow-y-scroll">
               <img
                 src={row.original.image?.url}
-                alt={row.original.title || "Post"}
+                alt={row.original.title}
                 className="w-full rounded-lg"
               />
               <h3 className="text-sm sm:text-base font-semibold leading-snug text-gray-900 line-clamp-2 mb-2 group-hover:text-red-500 transition-colors">
@@ -97,21 +113,25 @@ const Posts = () => {
               </h3>
               <PostContent content={row.original.content} />
               <Badge>{row.original.category?.name || "Uncategorized"}</Badge>
-              <p className="text-sm text-gray-600">
-                {/* Tags: {row.original?.tags?.join(", ") || "No tags"} */}
-              </p>
-              <span className="text-sm text-gray-500">
+              <div className="flex gap-1 flex-wrap mt-2">
+                {row.original.tags?.map((tag) => (
+                  <Badge variant="outline" key={tag._id}>
+                    {tag.name}
+                  </Badge>
+                ))}
+              </div>
+              <span className="text-sm text-gray-500 block mt-2">
                 Views: {row.original.views || 0}
               </span>
             </DialogContent>
           </Dialog>
 
-          <EditPost data={row.original} />
+          <EditPost data={row.original as Post} />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant={"destructive"} size={"sm"}>
-                <Trash />
+                <Trash size={16} />
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -126,7 +146,7 @@ const Posts = () => {
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() => {
-                    deletePost.mutate(row.original._id as string, {
+                    deletePost.mutate(row.original._id, {
                       onSuccess: () => {
                         toast.success("Post deleted successfully!");
                       },
@@ -154,7 +174,7 @@ const Posts = () => {
       <DataTable
         loading={isLoading}
         search="title"
-        data={post || []}
+        data={posts || []}
         columns={column}
       />
     </div>

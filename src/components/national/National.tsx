@@ -1,7 +1,13 @@
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import Container from "../container/Container";
+import { useFetchAllCategories } from "@/api/hooks/category";
+import { useFetchAllTags } from "@/api/hooks/tag";
+import { useFetchAllPosts } from "@/api/hooks/post";
 
 const National = () => {
+  const {data:CategoriesList}=useFetchAllCategories()
+  const {data:TagList}=useFetchAllTags()
+  const {data:recentPosts}=useFetchAllPosts()
   const articles = [
     {
       id: 1,
@@ -52,50 +58,9 @@ const National = () => {
     },
   ];
 
-  const recentPosts = [
-    "বাংলা ভাষিকদের বাংলাদেশ ও পশ্চিমবঙ্গের রাজসিংহ পর্ব",
-    "কলকাতা শহরের পরিচয় বাঙালি সংস্কৃতির আয়নায় দেখা",
-    "বান্দরবান পাহাড়ের যুদ্ধে একটি চুক্তির স্বর্গ",
-  ];
 
-  const categories = [
-    "Fundamental",
-    "অর্থনীতি",
-    "গল্প",
-    "তথ্য প্রযুক্তি",
-    "ধর্ম",
-    "প্রবন্ধ",
-    "বই ও চলচিত্র",
-    "ভ্রমণ",
-    "সংবাদ",
-    "স্বাস্থ্য",
-  ];
 
-  const tags = [
-    "অর্থনীতি",
-    "আধুনিক শিক্ষা",
-    "কবিতা",
-    "কলম",
-    "কলেজ জীবনে শেষ",
-    "খেলা",
-    "ঐতিহ্য",
-    "গল্প",
-    "চাকরি",
-    "জীবনধারা",
-    "তথ্য",
-    "তথ্য প্রযুক্তি",
-    "তথ্য সমাজ",
-    "প্রকৃতির চোখে",
-    "প্রবন্ধ",
-    "প্রাচীন ইতিহাস",
-    "বই ও চলচিত্র",
-    "বিজ্ঞান",
-    "ভ্রমণ",
-    "রাজনীতি",
-    "রোমান্টিক প্রেমের গল্প",
-    "শিক্ষা",
-    "স্বাস্থ্য",
-  ];
+
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -181,12 +146,12 @@ const National = () => {
                 Recent Posts
               </h3>
               <ul className="space-y-3">
-                {recentPosts.map((post, index) => (
+                {recentPosts?.slice(0, 3)?.map((post, index) => (
                   <li
                     key={index}
                     className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"
                   >
-                    {post}
+                    {post.title}
                   </li>
                 ))}
               </ul>
@@ -234,13 +199,13 @@ const National = () => {
                 Categories
               </h3>
               <ul className="space-y-2">
-                {categories.map((category, index) => (
+                {CategoriesList?.map((category, index) => (
                   <li
                     key={index}
                     className="flex items-center justify-between text-sm"
                   >
                     <span className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors">
-                      {category}
+                      {category?.name}
                     </span>
                     {/* <span className="text-gray-500 text-xs">({Math.floor(Math.random() * 15) + 1})</span> */}
                   </li>
@@ -325,12 +290,12 @@ const National = () => {
                 Tags Cloud
               </h3>
               <div className="flex flex-wrap gap-2">
-                {tags.map((tag, index) => (
+                {TagList?.map((tag, index) => (
                   <span
                     key={index}
                     className="bg-gray-100 hover:bg-pink-600 hover:text-white px-3 py-1 rounded text-sm text-gray-700 cursor-pointer transition-colors"
                   >
-                    {tag}
+                    {tag?.name}
                   </span>
                 ))}
               </div>

@@ -1,5 +1,7 @@
 import React from 'react';
 import { User, Calendar, MessageCircle, Clock, Eye, Facebook, Twitter, Linkedin, Instagram, ArrowLeft, ArrowRight, Search } from 'lucide-react';
+import { useParams } from 'react-router';
+import { useFetchPostById } from '@/api/hooks/post';
 
 // --- Types ---
 
@@ -86,111 +88,80 @@ const RECENT_ARTICLES_THUMBS: BlogPost[] = [
 
 // --- Sub-components ---
 
-const ArticleLayout: React.FC = () => {
+const ArticleLayout: React.FC = ({ post }) => {
   return (
     <article className="w-full">
       {/* Meta Header */}
       <div className="flex flex-wrap items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
         <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm font-bold uppercase text-[10px] md:text-xs">
-          {ARTICLE_CONTENT.category}
+          {post?.category?.name}
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={14} /> {ARTICLE_CONTENT.readTime}
+          <Clock size={14} /> {post?.createdAt}
         </span>
         <span className="flex items-center gap-1">
-          <Eye size={14} /> {ARTICLE_CONTENT.views}
+          <Eye size={14} /> {post?.views}
         </span>
       </div>
 
       {/* Title */}
       <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-        {ARTICLE_CONTENT.title}
+        {post?.title}
       </h1>
 
       {/* Author and Date Line */}
       <div className="flex flex-wrap items-center gap-4 mb-6 text-xs md:text-sm text-gray-500 border-b border-gray-100 pb-6">
         <div className="flex items-center gap-2">
           <User size={14} />
-          <span className="text-gray-700 font-semibold">{ARTICLE_CONTENT.author}</span>
+          <span className="text-gray-700 font-semibold">Author</span>
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={14} />
-          <span>{ARTICLE_CONTENT.date}</span>
+          <span>{post?.createdAt}</span>
         </div>
         <div className="flex items-center gap-2">
           <MessageCircle size={14} />
-          <span>{ARTICLE_CONTENT.comments}</span>
+          <span>{post?.views}</span>
         </div>
       </div>
 
       {/* Hero Image */}
       <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
         <img 
-          src="https://picsum.photos/id/1029/1200/600" 
+          src={post?.image?.url}
           alt="Bengali Culture" 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {/* Overlay Text attempting to match the 'Bangali' red text style roughly */}
         <div className="absolute inset-0 flex items-center justify-center bg-white/20">
              <h1 className="text-red-600/90 font-bold text-6xl md:text-9xl drop-shadow-md select-none tracking-tighter">
-                বাঙালি
+                {post?.title}
              </h1>
         </div>
       </div>
 
       {/* Article Body */}
       <div className="prose prose-lg max-w-none text-gray-700 font-normal leading-relaxed">
-        <p className="mb-4">{ARTICLE_CONTENT.intro}</p>
-        <p className="mb-8">{ARTICLE_CONTENT.p2}</p>
+        {/* <p className="mb-4">{ARTICLE_CONTENT.intro}</p>
+        <p className="mb-8">{ARTICLE_CONTENT.p2}</p> */}
 
-        {ARTICLE_CONTENT.sections.map((section, idx) => (
-          <div key={idx} className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.title}</h2>
-            {section.content && <p className="mb-4">{section.content}</p>}
-            
-            {section.bullets && (
-              <ul className="list-disc pl-5 space-y-2 mb-4 marker:text-gray-400">
-                {section.bullets.map((bullet, bIdx) => (
-                  <li key={bIdx}>{bullet}</li>
-                ))}
-              </ul>
-            )}
-
-             {section.list && (
-              <ol className="list-decimal pl-5 space-y-3 mb-4 marker:font-bold marker:text-gray-900">
-                {section.list.map((item, lIdx) => (
-                  <li key={lIdx}>
-                    <span className="font-semibold">{item.split(':')[0]}:</span>
-                    {item.split(':')[1]}
-                  </li>
-                ))}
-              </ol>
-            )}
-
-            {section.extra && <p className="mb-4">{section.extra}</p>}
-          </div>
-        ))}
-
-        <div className="bg-gray-50 border-l-4 border-gray-800 p-6 my-8 italic">
-            <h3 className="text-xl font-bold mb-2">উপসংহার</h3>
-            <p>{ARTICLE_CONTENT.conclusion}</p>
-        </div>
+        <div dangerouslySetInnerHTML={{ __html: post?.content }} />
       </div>
 
       {/* Tags */}
       <div className="flex items-center gap-2 mt-8 mb-8 border-t border-b border-gray-100 py-4">
         <span className="font-bold text-gray-900">Tags:</span>
         <div className="flex flex-wrap gap-2">
-          {ARTICLE_CONTENT.tags.map((tag) => (
+          {post?.tags?.map((tag) => (
             <span key={tag} className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded hover:bg-gray-100 cursor-pointer transition-colors">
-              {tag}
+              {tag?.name}
             </span>
           ))}
         </div>
       </div>
 
       {/* Author Box */}
-      <div className="bg-[#F2F4F8] p-6 md:p-8 rounded-md flex flex-col md:flex-row gap-6 mb-10 items-start">
+      {/* <div className="bg-[#F2F4F8] p-6 md:p-8 rounded-md flex flex-col md:flex-row gap-6 mb-10 items-start">
         <div className="w-20 h-20 bg-gray-300 rounded-full flex-shrink-0 overflow-hidden">
              <img src="https://picsum.photos/id/64/200/200" alt="Author" className="w-full h-full object-cover" />
         </div>
@@ -211,7 +182,6 @@ const ArticleLayout: React.FC = () => {
         </div>
       </div>
 
-       {/* Check latest article from this author */}
        <div className="mb-10 bg-gray-50 p-6 rounded border border-gray-100">
           <h4 className="text-sm text-gray-500 mb-4 border-b pb-2">Check latest article from this author</h4>
           <div className="grid grid-cols-1 gap-4">
@@ -227,11 +197,11 @@ const ArticleLayout: React.FC = () => {
                   </div>
               ))}
           </div>
-       </div>
+       </div> */}
 
 
       {/* Previous/Next Post Navigation */}
-      <div className="flex flex-col md:flex-row justify-between gap-4 mb-10">
+      {/* <div className="flex flex-col md:flex-row justify-between gap-4 mb-10">
         <div className="flex-1 bg-white border border-gray-100 p-4 hover:shadow-md transition-shadow cursor-pointer flex gap-4 items-center group">
              <div className="w-20 h-16 bg-gray-200 overflow-hidden flex-shrink-0">
                  <img src="https://picsum.photos/id/10/200/200" className="w-full h-full object-cover" alt="prev" />
@@ -251,7 +221,7 @@ const ArticleLayout: React.FC = () => {
                  <img src="https://picsum.photos/id/20/200/200" className="w-full h-full object-cover" alt="next" />
              </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Leave a Reply */}
       <div className="bg-gray-50 p-6 md:p-8 rounded border border-gray-100">
@@ -392,13 +362,13 @@ const Sidebar: React.FC = () => {
 
 
       {/* Recent Articles with Images */}
-      <div className="widget">
+      {/* <div className="widget">
         <h3 className="text-lg font-bold mb-4">Recent Article</h3>
          <div className="space-y-4">
               {RECENT_ARTICLES_THUMBS.map((post, idx) => (
                   <div key={idx} className="flex gap-4 items-center group cursor-pointer border-b border-gray-100 pb-3 last:border-0">
                       <div className="w-16 h-16 overflow-hidden flex-shrink-0">
-                          <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                          <img src={post?.image?.url} alt={post.title} className="w-full h-full object-cover" />
                       </div>
                       <div>
                           <h4 className="font-bold text-gray-800 text-xs md:text-sm leading-tight group-hover:text-blue-600 transition-colors mb-1">{post.title}</h4>
@@ -411,7 +381,7 @@ const Sidebar: React.FC = () => {
                   </div>
               ))}
           </div>
-      </div>
+      </div> */}
 
        {/* Newsletter */}
        <div className="widget bg-[#5e6d7a] p-6 text-white text-center rounded-sm">
@@ -456,6 +426,8 @@ const Sidebar: React.FC = () => {
 // --- Main App Component ---
 
 export default function BlogSinglePost() {
+  const {id}=useParams()
+  const {data:post}=useFetchPostById(id)
   return (
     <div className="min-h-screen pt-30 bg-white">
         
@@ -465,7 +437,7 @@ export default function BlogSinglePost() {
                 
                 {/* Left Column: Article */}
                 <main className="w-full lg:w-[70%]">
-                    <ArticleLayout />
+                    <ArticleLayout post={post} />
                 </main>
 
                 {/* Right Column: Sidebar */}

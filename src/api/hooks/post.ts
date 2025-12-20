@@ -106,3 +106,49 @@ export const useDeletePost = () => {
     },
   });
 };
+
+export const useFetchTrendingPosts = () => {
+  return useQuery({
+    queryKey: ["posts", "trending"],
+    queryFn: async (): Promise<Post[]> => {
+      const res = await api.get("post/trending");
+      return res.data.data;
+    },
+  });
+};
+
+interface SearchParams {
+  query?: string;
+  categoryName?: string;
+  page?: number;
+  limit?: number;
+}
+
+interface SearchResponse {
+  success: boolean;
+  data: Post[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+
+export const useSearchPosts = (params: SearchParams) => {
+  return useQuery({
+    queryKey: ["posts", "search", params],
+    queryFn: async (): Promise<SearchResponse> => {
+      const res = await api.get("post/search", {
+        params: {
+          query: params.query,
+          categoryName: params.categoryName,
+          page: params.page || 1,
+          limit: params.limit || 10,
+        },
+      });
+      return res.data;
+    },
+    enabled: true, 
+  });
+};

@@ -1,8 +1,10 @@
 import React from "react";
 import Container from "../container/Container";
 import Marquee from "react-fast-marquee";
+import { useFetchAllPosts } from "@/api/hooks/post";
 
 const MarqueeTag: React.FC = () => {
+  const {data}=useFetchAllPosts()
   return (
     <div className="h-[55px] flex items-center bg-red-500 shadow-md w-full overflow-hidden">
       <Container className="w-full">
@@ -24,9 +26,9 @@ const MarqueeTag: React.FC = () => {
               pauseOnHover={true}
               gradient={false}
               className="text-white text-xs md:text-sm"
-            >
-              I can be a React component… • Smooth responsive ticker… • Add
-              unlimited breaking news!
+            >{
+              data?.map((post,i:number)=><span key={i} className="px-2">{post.title}</span>)
+            }
             </Marquee>
           </div>
         </div>

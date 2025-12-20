@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, type ReactNode } from "react";
 import {
   Plus,
   Edit,
@@ -20,6 +20,14 @@ import {
   type Ad,
 } from "@/api/hooks/ads";
 
+type AdForm = {
+  title: string;
+  type: "horizontal" | "square" | string;
+  link: string;
+  isActive: boolean;
+};
+
+
 export default function Ads() {
   const { data: ads = [], isLoading } = useFetchAllAds();
   const { mutate: createAd, isPending: creating } = useCreateAd();
@@ -30,12 +38,15 @@ export default function Ads() {
   const [showModal, setShowModal] = useState(false);
   const [editingAd, setEditingAd] = useState<Ad | null>(null);
 
-  const [form, setForm] = useState({
-    title: "",
-    type: "horizontal" as "horizontal" | "square",
-    link: "",
-    isActive: true,
-  });
+  console.log(ads)
+
+const [form, setForm] = useState<AdForm>({
+  title: "",
+  type: "horizontal",
+  link: "",
+  isActive: true,
+});
+
 
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState("");
@@ -174,7 +185,7 @@ export default function Ads() {
 }
 
 
-const Stat = ({ label, value, icon }: any) => (
+const Stat = ({ label, value, icon }: { label: string; value: number; icon: ReactNode }) => (
   <div className="bg-white p-6 rounded-xl shadow border">
     <div className="flex items-center gap-3">
       <div className="bg-red-100 p-3 rounded-lg">{icon}</div>
@@ -193,7 +204,7 @@ const AdSection = ({
   onEdit,
   onDelete,
   onToggle,
-}: any) => (
+}: {title: string; ads: Ad[]; grid?: boolean; onEdit: (ad: Ad) => void; onDelete: (id: string) => void; onToggle: (id: string) => void}) => (
   <div className="mb-10">
     <h2 className="text-xl font-semibold mb-4">{title}</h2>
 
@@ -247,7 +258,18 @@ const AdModal = ({
   onSubmit,
   loading,
   isEdit,
-}: any) => (
+}: {
+  form: AdForm;
+  setForm: React.Dispatch<React.SetStateAction<AdForm>>;
+  preview: string;
+  setFile: (file: File) => void;
+  setPreview: (url: string) => void;
+  onClose: () => void;
+  onSubmit: () => void;
+  loading: boolean;
+  isEdit: boolean;
+}) => 
+ (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
     <div className="bg-white w-full max-w-lg rounded-xl p-6">
       <h3 className="text-xl font-bold mb-4">

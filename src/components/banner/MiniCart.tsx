@@ -1,9 +1,8 @@
-import React from "react";
 import { Clock } from "lucide-react";
 
 interface CardProps {
-  image: string;
-  tag: string;
+  image?: { url: string } | string | null;
+  tag?: string;
   title: string;
   time?: string;
 }
@@ -14,7 +13,7 @@ function MiniCard({ image, tag, title, time }: CardProps) {
       {/* Image */}
       <div className="w-full sm:w-28 md:w-32 h-24 sm:h-auto flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
         <img
-          src={image}
+          src={image?.url || ""}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           alt={title}
         />

@@ -11,16 +11,16 @@ export default function NavMenu() {
   const { data: categories = [], isLoading: categoriesLoading } = useFetchAllCategories();
   const { data: navMenu, isLoading: navMenuLoading } = useFetchNavMenu();
   const { mutate: updateNavMenu, isPending } = useUpdateNavMenu();
-
-  const initialItems = useMemo(() => {
-    return navMenu?.categoryIds?.map((c) => c._id) ?? [];
-  }, [navMenu?.categoryIds]);
+  
+  // Get initial IDs from navMenu
+  const initialIds = useMemo(() => {
+    return navMenu && Array.isArray(navMenu) ? navMenu.map((c) => c._id) : [];
+  }, [navMenu]);
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-  const actualSelectedItems = selectedItems.length === 0 && initialItems.length > 0 
-    ? initialItems 
-    : selectedItems;
+  
+  // Determine actual selected items (use initialIds if selectedItems is empty)
+  const actualSelectedItems = selectedItems.length > 0 ? selectedItems : initialIds;
 
   const handleCheckboxChange = (id: string) => {
     const current = actualSelectedItems;
@@ -35,32 +35,46 @@ export default function NavMenu() {
 
   const handleSubmit = () => {
     if (actualSelectedItems.length > 10) {
-      alert("Maximum 10 categories allowed!");
+      toast.error("Maximum 10 categories allowed!");
       return;
     }
+
+    console.log("Submitting categoryIds:", actualSelectedItems);
 
     updateNavMenu(
       { categoryIds: actualSelectedItems },
       {
         onSuccess: () => {
           toast.success("Navigation menu updated successfully!");
+          // Reset selectedItems so it uses initialIds again on next render
+          setSelectedItems([]);
+        },
+        onError: (error) => {
+          console.error("Update error:", error);
+          toast.error("Failed to update navigation menu");
         },
       }
     );
   };
 
   const handleCancel = () => {
-    setSelectedItems(initialItems);
+    setSelectedItems([]);
   };
 
+  // Calculate if there are changes
   const hasChanges = 
-    actualSelectedItems.length !== initialItems.length ||
-    actualSelectedItems.some((id) => !initialItems.includes(id));
+    actualSelectedItems.length !== initialIds.length ||
+    actualSelectedItems.some((id) => !initialIds.includes(id)) ||
+    initialIds.some((id) => !actualSelectedItems.includes(id));
 
   const isLoading = categoriesLoading || navMenuLoading;
 
   if (isLoading) {
-    return <p className="p-5">Loading...</p>;
+    return (
+      <div className="flex items-center justify-center p-10">
+        <p className="text-muted-foreground">Loading navigation menu...</p>
+      </div>
+    );
   }
 
   return (
@@ -70,7 +84,7 @@ export default function NavMenu() {
           Navigation Menu Categories (Max 10)
         </h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Selected: {actualSelectedItems.length} / 10
+          Selected: <span className="font-medium">{actualSelectedItems.length}</span> / 10
         </p>
         
         <div className="flex flex-wrap gap-6">
@@ -81,8 +95,8 @@ export default function NavMenu() {
             return (
               <div
                 key={item._id}
-                className={`flex items-center gap-3 border py-3 px-7 rounded transition-colors ${
-                  isSelected ? "border-primary bg-primary/5" : ""
+                className={`flex items-center gap-3 border py-3 px-7 rounded transition-all ${
+                  isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-gray-200"
                 } ${!item.isActive ? "opacity-50" : ""}`}
               >
                 <Checkbox
@@ -93,7 +107,7 @@ export default function NavMenu() {
                 />
                 <Label 
                   htmlFor={item._id}
-                  className="cursor-pointer"
+                  className={`cursor-pointer ${!item.isActive || (!canSelect && !isSelected) ? "cursor-not-allowed" : ""}`}
                 >
                   {item.name}
                   {!item.isActive && (
@@ -121,7 +135,7 @@ export default function NavMenu() {
           onClick={handleSubmit} 
           disabled={isPending || !hasChanges || actualSelectedItems.length > 10}
         >
-          {isPending ? "Saving..." : "Submit"}
+          {isPending ? "Saving..." : "Save Changes"}
         </Button>
       </div>
     </div>

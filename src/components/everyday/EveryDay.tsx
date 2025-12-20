@@ -1,54 +1,11 @@
-import type { CardProps } from "../../types/CardProps";
+
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
-import CategoriesCard from "../../components/categoriescard/CategoriesCard";
-import { CategoriesList } from "../../components/categoriescard/CategoriesList";
-import TagCard from "../tag/tagcard/TagCard";
-import { TagList } from "../tag/tagdata/TagList";
-import NewsCard from "../newsitems/NewsCard";
+import SquareAds from "../ads/SquareAds";
+import { useFetchAllPosts } from "@/api/hooks/post";
 
 const EveryDay = () => {
-  const everyday: CardProps[] = [
-    {
-      image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
-      tag: "অর্থনীতি",
-      time: "1 Hour ago",
-      title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ",
-      description: "ঢাকায় নতুন স্কাইটাওয়ার উদ্বোধন",
-    },
-    {
-      image:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPuH1kQAHVumAHPRWTTiKwatTPA81-bT_M_Q&s",
-      tag: "অর্থনীতি",
-      time: "৩ ঘণ্টা আগে",
-      title: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
-      description: "শিক্ষায় নতুন বাজারের সৃষ্টি",
-    },
-    {
-      image:
-        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
-      tag: "অর্থনীতি",
-      title: "বাজারে আসছে নতুন রেকর্ড",
-      time: "৪ ঘণ্টা আগে",
-      description: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
-    },
-    {
-      image:
-        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
-      tag: "অর্থনীতি",
-      title: "বাজারে আসছে নতুন রেকর্ড",
-      time: "৪ ঘণ্টা আগে",
-      description: "অর্থনীতিতে গুরুত্বপূর্ণ প্রবৃদ্ধি",
-    },
-    {
-      image:
-        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
-      tag: "অর্থনীতি",
-      title: "বাজারে আসছে নতুন রেকর্ড",
-      time: "৪ ঘণ্টা আগে",
-      description: "ঢাকায় নতুন মেডিকেল স্টোরে দোকান উদ্বোধন",
-    },
-  ];
+const {data:posts}=useFetchAllPosts()
 
   return (
     <div className="py-8 bg-gray-50  ">
@@ -64,7 +21,7 @@ const EveryDay = () => {
         <div className="  flex flex-col lg:flex-row justify-between py-8  ">
           <div className=" py-8 w-full lg:w-[67%] ">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">
-              {everyday.map((card, i) => (
+              {posts?.slice(0, 6).map((card, i) => (
                 <EveryDayCard key={i} {...card} />
               ))}
             </div>
@@ -88,12 +45,7 @@ const EveryDay = () => {
                   Subscrip
                 </button>
               </div>
-              <div className="bg-muted rounded-lg p-8 text-center border border-border">
-                <p>Adds</p>
-                <div className="bg-background/50 w-[300px] h-[250px] flex items-center justify-center rounded ">
-                  <p> w-300px h-250px </p>
-                </div>
-              </div>
+<SquareAds/>
             </div>
           </div>
         </div>

@@ -22,8 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { postSchema, type Post } from "@/validators/post";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import { Pencil } from "lucide-react";
@@ -32,64 +30,93 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import JoditEditor from "jodit-react";
 
+interface Category {
+  _id: string;
+  name: string;
+  slug?: string;
+}
+
+interface Tag {
+  _id?: string;
+  name: string;
+}
+
+interface PostImage {
+  publicId: string;
+  url: string;
+}
+
+export interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  category: string | Category; 
+  image?: PostImage;
+  tags: (string | Tag)[];
+  isDraft: boolean;
+  views: number;
+}
+
+interface PostFormValues {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: Tag[];
+  isDraft: boolean;
+  views: number;
+}
+
 export function EditPost({ data }: { data: Post }) {
   const { data: categories } = useFetchAllCategories();
   const [open, setOpen] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  
+  const [imagePreview, setImagePreview] = useState<string | undefined>(data?.image?.url);
+  
   const postMutation = useUpdatePost();
   const queryClient = useQueryClient();
-
   const editor = useRef(null);
 
-  const getCategoryId = (category: unknown): string => {
+  const getCategoryId = (category: string | Category | undefined): string => {
     if (!category) return "";
-
-    if (typeof category === "object" && category !== null && "_id" in category) {
-      return (category as { _id: string })._id;
-    }
-    if (typeof category === "string") {
-      return category;
-    }
-
-    return "";
+    if (typeof category === "object") return category._id;
+    return category;
   };
 
-  const form = useForm({
-    // resolver: zodResolver(postSchema.omit({ image: true })),
+  const form = useForm<PostFormValues>({
     defaultValues: {
       _id: data?._id,
       title: data?.title,
       content: data?.content,
       category: getCategoryId(data?.category),
-      tags: data?.tags || [],
+      tags: (data?.tags || []).map(t => typeof t === 'string' ? { name: t } : t),
       isDraft: data?.isDraft,
       views: data?.views,
     },
   });
 
   useEffect(() => {
-    form.reset({
-      _id: data?._id,
-      title: data?.title,
-      content: data?.content,
-      category: getCategoryId(data?.category),
-      tags: data?.tags || [],
-      isDraft: data?.isDraft,
-      views: data?.views,
-    });
-    setImagePreview(data?.image?.url || "");
-    setImageFile(null);
+    if (data) {
+      form.reset({
+        _id: data._id,
+        title: data.title,
+        content: data.content,
+        category: getCategoryId(data.category),
+        tags: (data.tags || []).map(t => typeof t === 'string' ? { name: t } : t),
+        isDraft: data.isDraft,
+        views: data.views,
+      });
+      setImagePreview(data.image?.url);
+      setImageFile(null);
+    }
   }, [data, form]);
 
-  const config = useMemo(
-    () => ({
-      readonly: false,
-      height: 400,
-      placeholder: "Update content...",
-    }),
-    []
-  );
+  const config = useMemo(() => ({
+    readonly: false,
+    height: 400,
+    placeholder: "Update content...",
+  }), []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -103,16 +130,15 @@ export function EditPost({ data }: { data: Post }) {
     }
   };
 
-  const handleSubmit = (values: Post) => {
+  const handleSubmit = (values: PostFormValues) => {
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("content", values.content);
     formData.append("category", values.category);
     formData.append("isDraft", String(values.isDraft));
     formData.append("views", String(values.views));
-    const tagsToSend = values.tags?.map((tag: any) => (typeof tag === "object" && tag.name ? tag.name : tag));
-    console.log("Tags being sent:", tagsToSend);
-    console.log("Tags JSON:", JSON.stringify(tagsToSend));
+    
+    const tagsToSend = values.tags.map(tag => tag.name);
     formData.append("tags", JSON.stringify(tagsToSend));
 
     if (imageFile) {
@@ -120,7 +146,7 @@ export function EditPost({ data }: { data: Post }) {
     }
 
     postMutation.mutate(
-      { _id: values._id as string, formData: formData },
+      { _id: values._id, formData: formData },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["post", "all"] });
@@ -129,23 +155,18 @@ export function EditPost({ data }: { data: Post }) {
           setImageFile(null);
         },
         onError: (error: unknown) => {
-          if (error && (error as AxiosError).response) {
-            const axiosError = error as AxiosError<{ message: string }>;
-            toast.error(axiosError.response?.data?.message || "Something went wrong!");
-          } else {
-            toast.error("Something went wrong!");
-          }
+          const axiosError = error as AxiosError<{ message: string }>;
+          toast.error(axiosError.response?.data?.message || "Something went wrong!");
         },
       }
     );
   };
-  console.log(form.formState.errors);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="bg-blue-500 text-white">
-          <Pencil />
+          <Pencil size={16} />
         </Button>
       </DialogTrigger>
 
@@ -186,11 +207,10 @@ export function EditPost({ data }: { data: Post }) {
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Category</SelectLabel>
-                    {categories?.map((item) => (
+                    {categories?.map((item: Category) => (
                       <SelectItem key={item._id} value={item._id}>
                         {item.name}
                       </SelectItem>
@@ -198,34 +218,24 @@ export function EditPost({ data }: { data: Post }) {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-              {form.formState.errors.category && (
-                <span className="text-red-500 text-xs">{form.formState.errors.category.message}</span>
-              )}
             </div>
 
             <div className="grid gap-2">
               <Label>Tags</Label>
               <Input
                 defaultValue={data?.tags
-                  ?.map((tag) =>
-                    typeof tag === "object" && tag !== null && "name" in tag ? (tag as { name: string }).name : tag
-                  )
+                  ?.map((tag) => (typeof tag === "object" ? tag.name : tag))
                   .join(", ")}
                 placeholder="news, tech, politics"
                 onChange={(e) => {
-                  const tagsArray = e.target.value
+                  const tagsArray: Tag[] = e.target.value
                     .split(",")
                     .map((t) => t.trim())
                     .filter(Boolean)
                     .map((name) => ({ name }));
-                  form.setValue("tags", tagsArray, {
-                    shouldValidate: true,
-                  });
+                  form.setValue("tags", tagsArray, { shouldValidate: true });
                 }}
               />
-              {form.formState.errors.tags && (
-                <span className="text-red-500 text-xs">{form.formState.errors.tags.message as string}</span>
-              )}
             </div>
 
             <div className="grid gap-2">
@@ -234,7 +244,6 @@ export function EditPost({ data }: { data: Post }) {
                 ref={editor}
                 value={form.watch("content")}
                 config={config}
-                tabIndex={1}
                 onBlur={(newContent) =>
                   form.setValue("content", newContent, {
                     shouldValidate: true,
@@ -242,9 +251,6 @@ export function EditPost({ data }: { data: Post }) {
                   })
                 }
               />
-              {form.formState.errors.content && (
-                <span className="text-red-500 text-xs">{form.formState.errors.content.message}</span>
-              )}
             </div>
           </div>
 
@@ -252,8 +258,8 @@ export function EditPost({ data }: { data: Post }) {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit" className="bg-green-500">
-              Save changes
+            <Button type="submit" className="bg-green-500" disabled={postMutation.isPending}>
+              {postMutation.isPending ? "Saving..." : "Save changes"}
             </Button>
           </DialogFooter>
         </form>

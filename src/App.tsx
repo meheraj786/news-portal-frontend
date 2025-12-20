@@ -16,7 +16,7 @@ import Posts from "./dashboard/pages/Posts";
 import NavMenu from "./dashboard/pages/NavMenu";
 import { AddPost } from "./dashboard/pages/AddPost";
 import Subscription from "./dashboard/pages/Subscription";
-import Ads from "./dashboard/pages/ads";
+import Ads from "./dashboard/pages/Ads";
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         Component: CategoryPage,
       },
       {
-        path: "/single-post",
+        path: "/single-post/:id",
         element: <BlogSinglePost />,
       },
     ],

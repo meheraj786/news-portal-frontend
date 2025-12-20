@@ -1,6 +1,8 @@
 import Container from "../container/Container";
+import { useRandomAd } from "./RandomAds";
 
 const Ads = () => {
+  const ad = useRandomAd("SIDEBAR");
   return (
     <div className="py-8">
       <Container>
@@ -9,19 +11,12 @@ const Ads = () => {
 
           {/* AD BANNER */}
           <div className="flex justify-center">
-            <div
-              className="
-                w-full
-                max-w-[970px]
-                h-[90px]
-                bg-white
-                flex items-center justify-center
-                rounded
-                border
-              "
-            >
-              <p className="text-xs text-gray-500">970px × 90px Ad Banner</p>
-            </div>
+            <img
+            src={ad?.image?.url}
+            alt={ad?.title}
+            className="w-full max-w-full h-[100px] object-cover object-center cursor-pointer"
+            />
+
           </div>
         </div>
       </Container>
