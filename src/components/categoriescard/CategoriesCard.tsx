@@ -1,8 +1,8 @@
-type Props = {
-  categories: string[];
+export type cat = {
+  name:string;
 };
 
-const CategoriesCard: React.FC<Props> = ({ categories }) => {
+const CategoriesCard=({ categories }: { categories: cat[] }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
@@ -10,10 +10,10 @@ const CategoriesCard: React.FC<Props> = ({ categories }) => {
       </h3>
 
       <ul className="space-y-2">
-        {categories.map((cat, i) => (
+        {categories?.map((cat, i) => (
           <li key={i}>
             <span className="text-gray-700 hover:text-pink-600 cursor-pointer">
-              {cat}
+              {cat.name}
             </span>
           </li>
         ))}

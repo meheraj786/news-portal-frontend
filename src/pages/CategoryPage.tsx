@@ -2,93 +2,19 @@ import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import Container from "../components/container/Container";
 import { useParams } from "react-router";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
-import { CategoriesList } from "../components/categoriescard/CategoriesList";
+import { useFetchAllCategories } from "@/api/hooks/category";
+import { useFetchAllTags } from "@/api/hooks/tag";
+import { useFetchAllPosts } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
-import { TagList } from "../components/tag/tagdata/TagList";
 
 const CategoryPage = () => {
   const { id } = useParams();
-  const articles = [
-    {
-      id: 1,
-      category: "ভ্রমণ",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=400&fit=crop",
-      title:
-        "বাঙলা ভাষিকদের বাংলাদেশ ও পশ্চিমবঙ্গের রাজসিংহ পর্ব: সংস্থান সংকট",
-      author: "Indianexpress.Com",
-      date: "January 5, 2025",
-      excerpt:
-        "বর্তমান বিশ্বে বাংলা ভাষী জনগোষ্ঠীর একটি বিশাল অংশ বাংলাদেশ ও পশ্চিমবঙ্গে বসবাস করেন। তবে এই দুই অঞ্চলে বাংলা ভাষা ও সংস্কৃতির প্রসার এবং সংরক্ষণ নিয়ে রয়েছে নানা সংস্থান সংকট।",
-    },
-    {
-      id: 2,
-      category: "ভ্রমণ",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
-      title: "বান্দরবান পাহাড়ের যুদ্ধে একটি চুক্তির স্বর্গ",
-      author: "Indianexpress.Com",
-      date: "January 2, 2025",
-      excerpt:
-        "বান্দরবান জেলা দেশের পার্বত্য এলাকাগুলির মধ্যে একটি বিখ্যাত স্থান। এখানে পাহাড়, নদী, উপত্যকা সবকিছুই মিলেমিশে একটি অপরূপ প্রাকৃতিক দৃশ্য তৈরি করেছে। বান্দরবান ভ্রমণ মানে শুধু প্রকৃতি দেখা নয়, এটি একটি অবিস্মরণীয় অভিজ্ঞতা।",
-    },
-    {
-      id: 3,
-      category: "ভ্রমণ",
-      categoryEn: "Travel",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=400&fit=crop",
-      title: "Sikkim Travel Guide: A Complete Experience in the Himalayas",
-      author: "Indianexpress.Com",
-      date: "January 2, 2025",
-      excerpt:
-        "Sikkim অত্যাশ্চর্য হিমালয়ের কোলে অবস্থিত একটি ছোট্ট রাজ্য যা তার প্রাকৃতিক সৌন্দর্য, বৌদ্ধ মঠ এবং বৈচিত্র্যময় সংস্কৃতির জন্য বিখ্যাত। পাহাড়, হিমবাহ এবং সবুজ উপত্যকা নিয়ে গঠিত এই অঞ্চলটি প্রকৃতিপ্রেমীদের জন্য স্বর্গ।",
-    },
-    {
-      id: 4,
-      category: "ভ্রমণ",
-      categoryEn: "Travel",
-      image:
-        "https://images.unsplash.com/photo-1568454537842-d933259bb258?w=800&h=400&fit=crop",
-      title: "কলকাতা এক শহরের ডেডের যাত্রার গল্প",
-      author: "Indianexpress.Com",
-      date: "January 2, 2025",
-      excerpt:
-        "কলকাতা, পশ্চিমবঙ্গের রাজধানী শহরটি, একটি সমৃদ্ধ ইতিহাস এবং সংস্কৃতির কেন্দ্র। এই শহরটি তার ঐতিহ্যবাহী রাস্তা, পুরানো দালানকোঠা এবং ঐতিহাসিক স্মৃতিস্তম্ভের জন্য বিখ্যাত। কলকাতার রাস্তায় হাঁটলে মনে হয় যেন সময় থমকে আছে।",
-    },
-  ];
+  const {data:TagsList}=useFetchAllTags()
+  const {data:CategoriesList}=useFetchAllCategories()
+  const {data:posts}=useFetchAllPosts()
 
-  const recentPosts = [
-    "বাংলা ভাষিকদের বাংলাদেশ ও পশ্চিমবঙ্গের রাজসিংহ পর্ব",
-    "কলকাতা শহরের পরিচয় বাঙালি সংস্কৃতির আয়নায় দেখা",
-    "বান্দরবান পাহাড়ের যুদ্ধে একটি চুক্তির স্বর্গ",
-  ];
 
-  const tags = [
-    "অর্থনীতি",
-    "আধুনিক শিক্ষা",
-    "কবিতা",
-    "কলম",
-    "কলেজ জীবনে শেষ",
-    "খেলা",
-    "ঐতিহ্য",
-    "গল্প",
-    "চাকরি",
-    "জীবনধারা",
-    "তথ্য",
-    "তথ্য প্রযুক্তি",
-    "তথ্য সমাজ",
-    "প্রকৃতির চোখে",
-    "প্রবন্ধ",
-    "প্রাচীন ইতিহাস",
-    "বই ও চলচিত্র",
-    "বিজ্ঞান",
-    "ভ্রমণ",
-    "রাজনীতি",
-    "রোমান্টিক প্রেমের গল্প",
-    "শিক্ষা",
-    "স্বাস্থ্য",
-  ];
+
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -105,9 +31,9 @@ const CategoryPage = () => {
           {/* Main Content Area */}
           <div className="lg:col-span-2">
             {/* Articles */}
-            {articles.map((article) => (
+            {posts?.slice(0, 3).map((article) => (
               <div
-                key={article.id}
+                key={article._id}
                 className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
               >
                 <img
@@ -120,9 +46,9 @@ const CategoryPage = () => {
                     <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
                       {article.category}
                     </span>
-                    {article.categoryEn && (
+                    {article.category && (
                       <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                        {article.categoryEn}
+                        {article.category.name}
                       </span>
                     )}
                   </div>
@@ -133,15 +59,15 @@ const CategoryPage = () => {
 
                   <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
-                      <span className="text-pink-600">👤</span> {article.author}
+                      <span className="text-pink-600">👤</span> Author
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="text-pink-600">📅</span> {article.date}
+                      <span className="text-pink-600">📅</span> {article.createdAt}
                     </span>
                   </div>
 
                   <p className="text-gray-700 mb-4 leading-relaxed">
-                    {article.excerpt}
+                    {article.tags?.map((tag) => tag?.name).join(", ")}
                   </p>
 
                   <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
@@ -174,12 +100,12 @@ const CategoryPage = () => {
                 Recent Posts
               </h3>
               <ul className="space-y-3">
-                {recentPosts.map((post, index) => (
+                {posts?.map((post, index) => (
                   <li
                     key={index}
                     className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"
                   >
-                    {post}
+                    {post.title}
                   </li>
                 ))}
               </ul>
@@ -223,7 +149,7 @@ const CategoryPage = () => {
 
             {/* Categories */}
             <div className="">
-              <CategoriesCard categories={CategoriesList} />
+              <CategoriesCard categories={CategoriesList || []} />
             </div>
 
             {/* About Me */}
@@ -299,7 +225,7 @@ const CategoryPage = () => {
 
             {/* Tags Cloud */}
             <div className="">
-              <TagCard tags={TagList} />
+              <TagCard tags={TagsList || []} />
             </div>
           </div>
         </div>

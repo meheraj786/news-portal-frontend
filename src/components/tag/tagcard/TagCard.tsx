@@ -1,8 +1,15 @@
-type TagsCloudProps = {
-  tags: string[];
-};
 
-const TagCard: React.FC<TagsCloudProps> = ({ tags }) => {
+
+type Tag = {
+  _id: string;
+  name: string;
+  slug: string;
+  postCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const TagCard = ({ tags } : { tags: Tag[] }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
@@ -24,7 +31,7 @@ const TagCard: React.FC<TagsCloudProps> = ({ tags }) => {
               transition-colors
             "
           >
-            {tag}
+            {tag.name}
           </span>
         ))}
       </div>

@@ -1,19 +1,21 @@
-import { Clock, MessageCircle } from "lucide-react";
+import { Clock, User } from "lucide-react";
+import { PostContent } from "../post/PostContent";
 
 interface NewsCardProps {
-  image: string;
+  image: { url: string };
   title: string;
   date: string;
-  comments: number;
-  description: string;
+  views: number;
+  content: string;
+  createdAt: string;
 }
 
 function NewsCard({
   image,
   title,
-  date,
-  comments,
-  description,
+  content,
+  createdAt,
+  views
 }: NewsCardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group border border-gray-100">
@@ -21,7 +23,7 @@ function NewsCard({
         {/* Image Section */}
         <div className="w-full  lg:w-50 lg:h-full aspect-video sm:aspect-square overflow-hidden bg-gray-100">
           <img
-            src={image}
+            src={image.url || ""}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           />
@@ -38,17 +40,17 @@ function NewsCard({
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              <span>{date}</span>
+              <span>{createdAt}</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <MessageCircle className="w-4 h-4" />
-              <span>{comments}</span>
+              <User className="w-4 h-4" />
+              <span>{views}</span>
             </div>
           </div>
 
           {/* Description */}
           <p className="text-sm sm:text-base text-gray-700 leading-relaxed line-clamp-3">
-            {description}
+            <PostContent  content={content} />
           </p>
         </div>
       </div>
