@@ -20,12 +20,14 @@ import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import JoditEditor from "jodit-react";
+import { useNavigate } from "react-router";
 
 export function AddPost() {
+  const navigate = useNavigate(); // ২. নেভিগেট ফাংশন ডিক্লেয়ার
   const { data: category } = useFetchAllCategories();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
-  
+
   const form = useForm<Omit<Post, "image">>({
     resolver: zodResolver(postSchema.omit({ image: true })),
     defaultValues: {
@@ -37,16 +39,16 @@ export function AddPost() {
       tags: [],
     },
   });
+
   const postMutation = useCreatePost();
   const queryClient = useQueryClient();
-
   const editor = useRef(null);
 
   const config = useMemo(
     () => ({
       readonly: false,
       height: 400,
-      placeholder: "Start typings...",
+      placeholder: "Start typing...",
     }),
     []
   );
@@ -63,28 +65,30 @@ export function AddPost() {
     }
   };
 
-  const handleSubmit = (values: Post) => {
+  const handleSubmit = (values: Omit<Post, "image">) => {
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("content", values.content);
     formData.append("category", values.category);
     formData.append("isDraft", String(values.isDraft));
     formData.append("views", String(values.views));
-    
     formData.append("tags", JSON.stringify(values.tags));
-    
+
     if (imageFile) {
       formData.append("image", imageFile);
     }
-    console.log(formData, "formData")
 
     postMutation.mutate(formData as any, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["post", "all"] });
         toast.success("News added successfully!");
-        form.reset();
+
+        // সব স্টেট রিসেট
         setImageFile(null);
         setImagePreview("");
+        form.reset();
+
+        navigate("/dashboard/posts");
       },
       onError: (error: unknown) => {
         if (error && (error as AxiosError).response) {
@@ -99,16 +103,15 @@ export function AddPost() {
     });
   };
 
-  console.log(form.formState.errors)
-
   return (
-    <div className="w-full sm:w-4xl md:w-7xl mx-auto p-6">
+    <div className="w-full max-w-7xl mx-auto p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold">Add Post</h2>
         <p className="text-gray-600">Create a new post.</p>
       </div>
 
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        {/* Title */}
         <div className="grid gap-3">
           <Label htmlFor="title">Title</Label>
           <Input id="title" placeholder="Title" {...form.register("title")} />
@@ -119,8 +122,9 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Image Upload */}
         <div className="grid gap-3">
-          <Label htmlFor="image">Image</Label>
+          <Label htmlFor="image">Feature Image</Label>
           <Input
             id="image"
             type="file"
@@ -132,15 +136,18 @@ export function AddPost() {
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="w-48 h-48 object-cover rounded-md"
+                className="w-48 h-32 object-cover rounded-md border"
               />
             </div>
           )}
         </div>
 
+        {/* Category Select - ফিক্সড করা হয়েছে */}
         <div className="grid gap-3">
           <Label>Category</Label>
           <Select
+            // ৪. value কানেক্ট করা হয়েছে যাতে reset() দিলে এটিও ফাঁকা হয়
+            value={form.watch("category") || ""}
             onValueChange={(value) => {
               form.setValue("category", value, { shouldValidate: true });
             }}
@@ -150,8 +157,8 @@ export function AddPost() {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Category</SelectLabel>
-                {category?.map((item) => (
+                <SelectLabel>Categories</SelectLabel>
+                {category?.map((item: any) => (
                   <SelectItem key={item._id} value={item._id}>
                     {item.name}
                   </SelectItem>
@@ -166,11 +173,14 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Tags */}
         <div className="grid gap-3">
-          <Label htmlFor="tags">Tags</Label>
+          <Label htmlFor="tags">Tags (Comma separated)</Label>
           <Input
             id="tags"
             placeholder="news, politics, tech"
+            // Reset এর সুবিধার্থে value কানেক্ট করা হয়েছে
+            value={form.watch("tags")?.join(", ") || ""}
             onChange={(e) => {
               const tagsArray = e.target.value
                 .split(",")
@@ -186,15 +196,14 @@ export function AddPost() {
           )}
         </div>
 
+        {/* Content - Jodit Editor */}
         <div className="grid gap-3">
           <Label>Content</Label>
-          <div className="w-full sm:w-4xl h-1/2 md:w-7xl">
+          <div className="prose max-w-none">
             <JoditEditor
               ref={editor}
-              className="h-1/2"
               value={form.watch("content")}
               config={config}
-              tabIndex={1}
               onBlur={(newContent) => {
                 form.setValue("content", newContent, {
                   shouldValidate: true,
@@ -203,7 +212,6 @@ export function AddPost() {
               }}
             />
           </div>
-
           {form.formState.errors.content && (
             <span className="text-red-500 text-xs">
               {form.formState.errors.content.message}
@@ -211,20 +219,25 @@ export function AddPost() {
           )}
         </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button type="submit" className="bg-green-500">
-            Post
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-4 border-t">
+          <Button
+            type="submit"
+            className="bg-green-600 hover:bg-green-700 px-8"
+            disabled={postMutation.isPending}
+          >
+            {postMutation.isPending ? "Posting..." : "Publish News"}
           </Button>
-          <Button 
-            type="button" 
-            variant="outline" 
+          <Button
+            type="button"
+            variant="outline"
             onClick={() => {
               form.reset();
               setImageFile(null);
               setImagePreview("");
             }}
           >
-            Reset
+            Clear Form
           </Button>
         </div>
       </form>
