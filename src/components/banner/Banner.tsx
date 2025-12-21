@@ -26,9 +26,7 @@ interface Post {
 }
 
 const Banner: React.FC = () => {
-  const { data: posts } = useFetchTrendingPosts() as {
-    data: Post[] | undefined;
-  };
+  const { data: posts, isLoading } = useFetchTrendingPosts();
 
   const settings = {
     dots: true,
