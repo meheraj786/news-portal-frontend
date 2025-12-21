@@ -4,6 +4,25 @@
   --font-primary: "Inter", sans-serif;
   --font-secondary: "Poppins", sans-serif;
 }
+/* Hide Google Translate top banner */
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+/* Prevent body shifting */
+body {
+  top: 0 !important;
+}
+
+/* Optional: hide Google translate tooltip */
+.goog-tooltip {
+  display: none !important;
+}
+
+.goog-tooltip:hover {
+  display: none !important;
+}
+
 
 @import "tailwindcss";
 @import "flowbite-react/plugin/tailwindcss";

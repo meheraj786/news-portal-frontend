@@ -1,4 +1,5 @@
 import Container from "../container/Container";
+import TranslateWidget from "../TranslateWidget";
 
 export default function Topheader() {
   // Get current date
@@ -13,7 +14,7 @@ export default function Topheader() {
 
   return (
     <header className="w-full fixed top-0 left-0 z-50 bg-gray-200 border-b border-gray-300">
-      <Container className="mx-auto py-2 flex justify-between items-center text-sm font-medium">
+      <Container className="mx-auto py-2 flex justify-between items-start text-sm font-medium">
         {/* Left */}
         {/* <div className="  text-red-600 font-semibold cursor-pointer">
           Breaking News
@@ -24,12 +25,7 @@ export default function Topheader() {
 
         {/* Right */}
         <div className="flex gap-4 text-gray-600">
-          <span className="cursor-pointer hover:text-red-600 transition">
-            English
-          </span>
-          <span className="cursor-pointer hover:text-red-600 transition">
-            E-Paper
-          </span>
+            <TranslateWidget/>
         </div>
       </Container>
     </header>

@@ -13,7 +13,6 @@ export type Ad = {
   createdAt: string;
 };
 
-
 export const useFetchAllAds = () => {
   return useQuery({
     queryKey: ["ads", "all"],
@@ -23,7 +22,6 @@ export const useFetchAllAds = () => {
     },
   });
 };
-
 
 export const useCreateAd = () => {
   const queryClient = useQueryClient();
@@ -64,7 +62,6 @@ export const useUpdateAd = () => {
   });
 };
 
-
 export const useToggleAdStatus = () => {
   const queryClient = useQueryClient();
 
@@ -79,7 +76,6 @@ export const useToggleAdStatus = () => {
     },
   });
 };
-
 
 export const useDeleteAd = () => {
   const queryClient = useQueryClient();

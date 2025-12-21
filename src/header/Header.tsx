@@ -18,6 +18,7 @@ import NewsCard from "@/components/newsitems/NewsCard";
 import { useFetchNavMenu } from "@/api/hooks/navMenu";
 import { useSearchPosts } from "@/api/hooks/post";
 import { Loader2 } from "lucide-react";
+import Loader from "@/components/Loader/Loader";
 
 interface PostImage {
   publicId: string;
@@ -41,7 +42,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: navData } = useFetchNavMenu();
+  const { data: navData, isLoading: loading } = useFetchNavMenu();
   const navItems = navData as unknown as NavItem[];
 
   const { data: searchResults, isLoading } = useSearchPosts({
@@ -49,8 +50,15 @@ export default function Header() {
     limit: 5,
   });
 
+
+
+
   return (
     <header className="w-full bg-white shadow-md fixed top-9 left-0 z-50 shadow-gray-200">
+      {
+        loading &&
+        <Loader/>
+      }
       <Container>
         <div className="w-full">
           <div className="mx-auto py-5 flex justify-between items-center">
@@ -60,7 +68,7 @@ export default function Header() {
               {Array.isArray(navItems) && navItems.map((nav, i) => (
                 <Link
                   key={i}
-                  to={`/category/${nav.name}`}
+                  to={`/category/${nav._id}`}
                   className="cursor-pointer hover:text-red-600 transition"
                 >
                   {nav.name}

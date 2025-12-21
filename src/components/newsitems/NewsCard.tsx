@@ -1,5 +1,6 @@
 import { Clock, User } from "lucide-react";
 import { PostContent } from "../post/PostContent";
+import DateFormatter from "../DateFormatter";
 
 interface NewsCardProps {
   image: { url: string };
@@ -40,7 +41,7 @@ function NewsCard({
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
             <div className="flex items-center gap-1.5">
               <Clock className="w-4 h-4" />
-              <span>{createdAt}</span>
+              <span><DateFormatter date={createdAt} /></span>
             </div>
             <div className="flex items-center gap-1.5">
               <User className="w-4 h-4" />

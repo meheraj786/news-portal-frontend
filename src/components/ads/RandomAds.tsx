@@ -9,10 +9,11 @@ export const useRandomAd = (adType: "BANNER" | "SIDEBAR"): Ad | null => {
   const filteredAds = useMemo(() => {
     if (!allAds || !Array.isArray(allAds)) return [];
 
-    return allAds.filter((ad) => {
+    const filteredByType = allAds.filter((ad) => {
       const isHorizontal = ad.type === "horizontal";
       return adType === "BANNER" ? isHorizontal : !isHorizontal;
     });
+    return filteredByType.filter((ad) => ad.isActive);
   }, [allAds, adType]);
 
   const selectedAd = useMemo(() => {

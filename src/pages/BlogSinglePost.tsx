@@ -1,53 +1,41 @@
-import React from 'react';
-import { User, Calendar, MessageCircle, Clock, Eye, Facebook, Twitter, Linkedin, Instagram, ArrowLeft, ArrowRight, Search } from 'lucide-react';
-import { useParams } from 'react-router';
-import { useFetchPostById } from '@/api/hooks/post';
+import React from "react";
+import {
+  User,
+  Calendar,
+  Clock,
+  Eye,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Search,
+} from "lucide-react";
+import { Link, useParams } from "react-router";
+import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
+import { useRandomAd } from "@/components/ads/RandomAds";
+import DateFormatter from "@/components/DateFormatter";
+import Loader from "@/components/Loader/Loader";
 
 // --- Types ---
 
 interface BlogPost {
   title: string;
   date: string;
-  image: string;
+  image: {
+    url: string;
+  };
+  content: string;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+  tags: {
+    name: string;
+  };
+  category: {
+    name: string;
+    slug: string;
+  };
 }
-
-// --- Constants ---
-
-const ARTICLE_CONTENT = {
-  category: "ইতিহাস",
-  readTime: "1 min read",
-  views: "86",
-  title: "বাংলা জাতিসত্তা: বাংলাদেশ ও পশ্চিমবঙ্গের বাঙালির গর্ব, সংগ্রাম ও পরিচয়",
-  author: "Dainikbangali@Gmail.Com",
-  date: "September 15, 2025",
-  comments: "0",
-  intro: "বাংলা মানে শুধু একটি ভাষা নয়, এটি একটি সম্পূর্ণ সভ্যতা। একদিকে বাংলাদেশের বাঙালি, অন্যদিকে ভারতের পশ্চিমবঙ্গের বাঙালি—দু'জনেই এক ভাষায় কথা বলে, এক সংস্কৃতি বহন করে, এক ঐতিহ্যে বেড়ে উঠেছে। ভৌগোলিক সীমারেখা আলাদা হলেও, বাংলা ভাষা আমাদের এক করে রাখে।",
-  p2: "১৯৫২ সালের ভাষা আন্দোলন থেকে শুরু করে রবীন্দ্রনাথের নোবেল জয়, নজরুলের বিদ্রোহী কবিতা, কিংবা সুকুমার রায়ের রসিকতা—সবই এই বাঙালি জাতিসত্তার অংশ। তাই বলা যায়, বাংলা ভাষা মানে আমাদের আত্মপরিচয়ের শিকড়, আর বাংলাদেশ ও পশ্চিমবঙ্গ মিলেই হলো বাঙালি জাতির পূর্ণ রূপ।",
-  sections: [
-    {
-      title: "বাঙালি কারা?",
-      content: "বাঙালি হলো সেই জাতি যারা বাংলাকে মাতৃভাষা হিসেবে ব্যবহার করে, এবং যাদের সংস্কৃতি, সাহিত্য, সংগীত, খাবার, পোশাক, উৎসব—সবই বাংলা ঐতিহ্যের সঙ্গে মিশে আছে।",
-      bullets: [
-        "বাংলাদেশ: প্রায় ১৭ কোটি মানুষ বাংলা ভাষায় কথা বলে। স্বাধীনতা যুদ্ধ, ভাষা আন্দোলন, এবং সাংস্কৃতিক চেতনা—সবকিছুই এখানে বাংলার মর্যাদা রক্ষায় ভূমিকা রেখেছে।",
-        "পশ্চিমবঙ্গ (ভারত): প্রায় ১০ কোটি মানুষ বাংলা ভাষায় কথা বলে। কলকাতা, শান্তিনিকেতন, দার্জিলিং থেকে সুন্দরবন—সবখানেই বাংলা সংস্কৃতির ছাপ পাওয়া যায়।"
-      ]
-    },
-    {
-      title: "কেন হিন্দিভাষীরা বাংলার বিরোধিতা করে?",
-      content: "ভারতের রাষ্ট্রভাষা হিসেবে হিন্দির আধিপত্য চাপিয়ে দেওয়ার প্রচেষ্টা দীর্ঘদিন ধরে চলছে। ফলে পশ্চিমবঙ্গের বাঙালিরা বহুবার প্রতিবাদ করেছে। অনেক হিন্দিভাষী মানুষ মনে করেন, হিন্দিই ভারতের একমাত্র পরিচয় হওয়া উচিত।",
-      extra: "কিন্তু বাস্তব হলো, ভারত বহুভাষী দেশ, এবং বাংলা ভারতের অন্যতম প্রাচীন ও সমৃদ্ধ ভাষা। তাই যখন বাংলাকে অবহেলা করা হয়, তখন বাঙালি হিন্দি আধিপত্যকে মেনে নেয় না।"
-    },
-    {
-      title: "বাংলা ভাষার গৌরব",
-      list: [
-        "ভাষা আন্দোলন (১৯৫২, বাংলাদেশ): পৃথিবীর একমাত্র জাতি যারা ভাষার জন্য জীবন দিয়েছে। সালাম, রফিক, বরকত, জব্বাররা প্রমাণ করেছিলেন—ভাষা পরিচয়ের চেয়ে বড় কিছু নেই।",
-        "সাহিত্য: রবীন্দ্রনাথ ঠাকুর (নোবেলজয়ী কবি), কাজী নজরুল ইসলাম (জাতীয় কবি), জীবনানন্দ দাশ—সবাই বাংলাকে সমৃদ্ধ করেছেন।"
-      ]
-    }
-  ],
-  conclusion: "বাংলা জাতিসত্তা শুধু একটি স্লোগান নয়, এটি বাংলাদেশ ও পশ্চিমবঙ্গ মিলিয়ে এক অদম্য শক্তি। অন্য ভাষাভাষীরা যখন বাংলাকে ছোট করতে চায়, তখন আমাদের মনে রাখতে হবে—আমরা সেই জাতি যারা ভাষার জন্য জীবন দিয়েছে।",
-  tags: ["বাঙালি", "বাংলা", "বাংলা জাতিসত্তা"]
-};
 
 const SIDEBAR_DATA = {
   recentPosts: [
@@ -55,49 +43,64 @@ const SIDEBAR_DATA = {
     "ব্যাপক বিক্ষোভের মধ্যে পদত্যাগ করলেন বুলগেরিয়ার প্রধানমন্ত্রী রসেন ওলিয়াচকোভ",
     "মিসাইল ও ড্রোন প্রযুক্তির বিনিময়ে ইউক্রেনকে মিগ-২৯ দিবে পোল্যান্ড",
     "বাংলাদেশ-কেরিয়া উন্নয়ন সহযোগিতা আরও জোরদার করতে চায়: প্রধান উপদেষ্টা ড. ইউনূস",
-    "ভোলা-বরিশাল সেতুর দাবিতে ২২৫ মেগাওয়াট বিদ্যুৎকেন্দ্র ঘেরাও"
+    "ভোলা-বরিশাল সেতুর দাবিতে ২২৫ মেগাওয়াট বিদ্যুৎকেন্দ্র ঘেরাও",
   ],
   archives: [
-    "December 2025", "November 2025", "October 2025", "September 2025", "August 2025", "July 2025"
+    "December 2025",
+    "November 2025",
+    "October 2025",
+    "September 2025",
+    "August 2025",
+    "July 2025",
   ],
   categories: [
-    "Uncategorized", "অর্থ-বাণিজ্য", "অর্থনীতি", "আইন-আদালত", "খেলাধুলা", "জাতীয়", "দেশজুড়ে", "ধর্ম ও জীবন", "প্রবাস"
+    "Uncategorized",
+    "অর্থ-বাণিজ্য",
+    "অর্থনীতি",
+    "আইন-আদালত",
+    "খেলাধুলা",
+    "জাতীয়",
+    "দেশজুড়ে",
+    "ধর্ম ও জীবন",
+    "প্রবাস",
   ],
   tags: [
-    "bangladesh vs srilanka", "building", "design", "fashion", "gadget", "gaza", "lifestyle", "Realestate", "story", "style", "আওয়ামী লীগ", "আরিফুল ইসলাম খান", "কলকাতা", "কালীপূজা"
-  ]
+    "bangladesh vs srilanka",
+    "building",
+    "design",
+    "fashion",
+    "gadget",
+    "gaza",
+    "lifestyle",
+    "Realestate",
+    "story",
+    "style",
+    "আওয়ামী লীগ",
+    "আরিফুল ইসলাম খান",
+    "কলকাতা",
+    "কালীপূজা",
+  ],
 };
-
-const RECENT_ARTICLES_THUMBS: BlogPost[] = [
-  {
-    title: "ঢাকা-৮ আসনের স্বতন্ত্র প্রার্থী উসমান গনি জলিবিদ্ধ",
-    date: "December 12, 2025",
-    image: "https://picsum.photos/id/1015/80/80"
-  },
-  {
-    title: "ব্যাপক বিক্ষোভের মধ্যে পদত্যাগ করলেন বুলগেরিয়ার প্রধানমন্ত্রী",
-    date: "December 11, 2025",
-    image: "https://picsum.photos/id/1025/80/80"
-  },
-  {
-    title: "মিসাইল ও ড্রোন প্রযুক্তির বিনিময়ে ইউক্রেনকে মিগ-২৯",
-    date: "December 11, 2025",
-    image: "https://picsum.photos/id/1012/80/80"
-  }
-];
 
 // --- Sub-components ---
 
-const ArticleLayout: React.FC = ({ post }) => {
+const ArticleLayout = ({ post }: { post: BlogPost }) => {
+  const {data:relatedPost, isLoading}=useFetchPostsByCategory(post?.category?._id as string)
+  console.log(relatedPost, "relatedPost");
+  
+  const ads = useRandomAd("BANNER");
   return (
     <article className="w-full">
+      {
+        isLoading && <Loader/>
+      }
       {/* Meta Header */}
       <div className="flex flex-wrap items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
         <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm font-bold uppercase text-[10px] md:text-xs">
           {post?.category?.name}
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={14} /> {post?.createdAt}
+          <Clock size={14} /> <DateFormatter date={post?.createdAt} />
         </span>
         <span className="flex items-center gap-1">
           <Eye size={14} /> {post?.views}
@@ -117,27 +120,29 @@ const ArticleLayout: React.FC = ({ post }) => {
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={14} />
-          <span>{post?.createdAt}</span>
+          <span>
+            <DateFormatter date={post?.createdAt} />
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <MessageCircle size={14} />
+          <Eye size={14} />
           <span>{post?.views}</span>
         </div>
       </div>
 
       {/* Hero Image */}
       <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
-        <img 
+        <img
           src={post?.image?.url}
-          alt="Bengali Culture" 
+          alt="Bengali Culture"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {/* Overlay Text attempting to match the 'Bangali' red text style roughly */}
-        <div className="absolute inset-0 flex items-center justify-center bg-white/20">
-             <h1 className="text-red-600/90 font-bold text-6xl md:text-9xl drop-shadow-md select-none tracking-tighter">
-                {post?.title}
-             </h1>
-        </div>
+        {/* <div className="absolute inset-0 flex items-center justify-center bg-white/20">
+          <h1 className="text-red-600/90 font-bold text-xl drop-shadow-md select-none tracking-tighter">
+            {post?.title}
+          </h1>
+        </div> */}
       </div>
 
       {/* Article Body */}
@@ -153,7 +158,10 @@ const ArticleLayout: React.FC = ({ post }) => {
         <span className="font-bold text-gray-900">Tags:</span>
         <div className="flex flex-wrap gap-2">
           {post?.tags?.map((tag) => (
-            <span key={tag} className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded hover:bg-gray-100 cursor-pointer transition-colors">
+            <span
+              key={tag._id}
+              className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded hover:bg-gray-100 cursor-pointer transition-colors"
+            >
               {tag?.name}
             </span>
           ))}
@@ -199,7 +207,6 @@ const ArticleLayout: React.FC = ({ post }) => {
           </div>
        </div> */}
 
-
       {/* Previous/Next Post Navigation */}
       {/* <div className="flex flex-col md:flex-row justify-between gap-4 mb-10">
         <div className="flex-1 bg-white border border-gray-100 p-4 hover:shadow-md transition-shadow cursor-pointer flex gap-4 items-center group">
@@ -224,7 +231,7 @@ const ArticleLayout: React.FC = ({ post }) => {
       </div> */}
 
       {/* Leave a Reply */}
-      <div className="bg-gray-50 p-6 md:p-8 rounded border border-gray-100">
+      {/* <div className="bg-gray-50 p-6 md:p-8 rounded border border-gray-100">
         <h3 className="text-xl font-bold mb-6">Leave a Reply</h3>
         <form className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -238,41 +245,76 @@ const ArticleLayout: React.FC = ({ post }) => {
             Post Comment
           </button>
         </form>
-      </div>
+      </div> */}
 
-       {/* Related Posts Bottom Section */}
-       <div className="mt-12">
-            <h3 className="text-lg font-bold mb-6 border-l-4 border-black pl-3 uppercase">Related Posts</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                <div className="flex gap-4 group cursor-pointer">
-                    <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-                         <img src="https://picsum.photos/id/55/200/200" className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="rel" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">কলকাতা এক শহরের ভেতরে হাজার গল্প</h4>
-                        <span className="text-xs text-gray-500">September 14, 2025</span>
-                    </div>
+      {/* Related Posts Bottom Section */}
+      {/* Title */}
+      {/* <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+        {post?.title}
+      </h1> */}
+
+      {/* Meta Header, Author and Hero Image ... (Eshob thik thakbe) */}
+
+      {/* <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
+        <img
+          src={post?.image?.url}
+          alt={post?.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      </div> */}
+
+      {/* Article Body */}
+      {/* <div className="prose prose-lg max-w-none text-gray-700 font-normal leading-relaxed">
+        <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+      </div> */}
+
+      {/* Tags Section ... (thik thakbe) */}
+
+      {/* Related Posts Bottom Section - এখানি ম্যাপিং করা হয়েছে */}
+      <div className="mt-12">
+        <h3 className="text-lg font-bold mb-6 border-l-4 border-black pl-3 uppercase">
+          Related Posts
+        </h3>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-gray-100 rounded"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {relatedPost && relatedPost.length > 0 ? (
+              relatedPost.filter((p) => p?._id !== post?._id).slice(0, 4).map((relPost) => (
+                <div
+                  key={relPost._id}
+                  className="flex gap-4 group cursor-pointer"
+                >
+                  <div className="w-24 h-24 overflow-hidden flex-shrink-0 rounded-sm">
+                    <img
+                      src={
+                        relPost?.image?.url || "https://via.placeholder.com/200"
+                      }
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      alt={relPost.title}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2 line-clamp-2">
+                      <Link to={`/single-post/${relPost._id}`}>{relPost.title}</Link>
+                    </h4>
+                    <span className="text-xs text-gray-500">
+                      {new Date(relPost.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex gap-4 group cursor-pointer">
-                    <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-                         <img src="https://picsum.photos/id/66/200/200" className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="rel" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">Sikkim Travel Guide: A Complete Experience in the Himalayas</h4>
-                        <span className="text-xs text-gray-500">September 14, 2025</span>
-                    </div>
-                </div>
-                <div className="flex gap-4 group cursor-pointer">
-                    <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-                         <img src="https://picsum.photos/id/77/200/200" className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="rel" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">বান্দরবান পাহাড়ের বুকে এক টুকরো স্বর্গ</h4>
-                        <span className="text-xs text-gray-500">September 14, 2025</span>
-                    </div>
-                </div>
-            </div>
-       </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-400">No related posts found.</p>
+            )}
+          </div>
+        )}
+      </div>
     </article>
   );
 };
@@ -280,12 +322,11 @@ const ArticleLayout: React.FC = ({ post }) => {
 const Sidebar: React.FC = () => {
   return (
     <aside className="w-full space-y-8">
-      
       {/* Search Widget */}
       <div className="relative">
-        <input 
-          type="text" 
-          placeholder="Search" 
+        <input
+          type="text"
+          placeholder="Search"
           className="w-full bg-gray-50 border border-gray-200 pl-4 pr-10 py-3 text-sm focus:outline-none focus:border-gray-400"
         />
         <button className="absolute right-0 top-0 h-full px-3 bg-[#1e293b] text-white hover:bg-gray-700 transition-colors">
@@ -299,7 +340,10 @@ const Sidebar: React.FC = () => {
         <ul className="space-y-3">
           {SIDEBAR_DATA.recentPosts.map((post, idx) => (
             <li key={idx}>
-              <a href="#" className="text-gray-600 text-[13px] hover:text-blue-600 leading-snug block border-b border-gray-100 pb-2 last:border-0">
+              <a
+                href="#"
+                className="text-gray-600 text-[13px] hover:text-blue-600 leading-snug block border-b border-gray-100 pb-2 last:border-0"
+              >
                 {post}
               </a>
             </li>
@@ -307,19 +351,18 @@ const Sidebar: React.FC = () => {
         </ul>
       </div>
 
-      {/* Recent Comments */}
-      <div className="widget">
-        <h3 className="text-lg font-bold mb-4">Recent Comments</h3>
-        <p className="text-sm text-gray-500 italic">No comments to show.</p>
-      </div>
+
 
       {/* Archives */}
       <div className="widget">
         <h3 className="text-lg font-bold mb-4">Archives</h3>
         <ul className="space-y-2">
           {SIDEBAR_DATA.archives.map((archive, idx) => (
-            <li key={idx} className="text-gray-600 text-sm border border-gray-200 px-3 py-2 rounded-sm hover:bg-gray-50 cursor-pointer flex items-center before:content-['•'] before:mr-2 before:text-gray-400">
-                {archive}
+            <li
+              key={idx}
+              className="text-gray-600 text-sm border border-gray-200 px-3 py-2 rounded-sm hover:bg-gray-50 cursor-pointer flex items-center before:content-['•'] before:mr-2 before:text-gray-400"
+            >
+              {archive}
             </li>
           ))}
         </ul>
@@ -329,37 +372,61 @@ const Sidebar: React.FC = () => {
       <div className="widget">
         <h3 className="text-lg font-bold mb-4">Categories</h3>
         <ul className="space-y-2">
-            {SIDEBAR_DATA.categories.map((cat, idx) => (
-                <li key={idx} className="text-gray-600 text-sm border border-gray-200 px-3 py-2 rounded-sm hover:bg-gray-50 cursor-pointer flex items-center before:content-['•'] before:mr-2 before:text-gray-400">
-                    {cat}
-                </li>
-            ))}
+          {SIDEBAR_DATA.categories.map((cat, idx) => (
+            <li
+              key={idx}
+              className="text-gray-600 text-sm border border-gray-200 px-3 py-2 rounded-sm hover:bg-gray-50 cursor-pointer flex items-center before:content-['•'] before:mr-2 before:text-gray-400"
+            >
+              {cat}
+            </li>
+          ))}
         </ul>
       </div>
 
-       {/* About Me */}
-       <div className="widget">
+      {/* About Me */}
+      <div className="widget">
         <h3 className="text-lg font-bold mb-4">About Me</h3>
         <div className="flex flex-col gap-4">
-             <div className="bg-gray-50 p-4 rounded text-center">
-                 <p className="text-sm text-gray-600 mb-4 leading-relaxed text-left">
-                     Hello ! I am Richard Y. Lim<br/><br/>
-                     Upon migration to Medina, the direction of the Qibla continued to be Jerusalem, although it was then physically impossible for one to also face the Ka'ba, as Medina is north of Makkah.
-                 </p>
-                 <div className="flex justify-between items-center border-t border-gray-200 pt-4 mt-2">
-                     <span className="text-xs font-bold text-gray-500 uppercase">Follow Me</span>
-                     <div className="flex gap-2">
-                        <Facebook size={14} className="text-gray-600 cursor-pointer hover:text-blue-600" />
-                        <Twitter size={14} className="text-gray-600 cursor-pointer hover:text-blue-400" />
-                        <Linkedin size={14} className="text-gray-600 cursor-pointer hover:text-blue-700" />
-                        <Instagram size={14} className="text-gray-600 cursor-pointer hover:text-pink-600" />
-                     </div>
-                 </div>
-             </div>
-             <img src="https://picsum.photos/id/338/300/100" className="w-full h-24 object-cover object-top opacity-80" alt="signature placeholder" />
+          <div className="bg-gray-50 p-4 rounded text-center">
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed text-left">
+              Hello ! I am Richard Y. Lim
+              <br />
+              <br />
+              Upon migration to Medina, the direction of the Qibla continued to
+              be Jerusalem, although it was then physically impossible for one
+              to also face the Ka'ba, as Medina is north of Makkah.
+            </p>
+            <div className="flex justify-between items-center border-t border-gray-200 pt-4 mt-2">
+              <span className="text-xs font-bold text-gray-500 uppercase">
+                Follow Me
+              </span>
+              <div className="flex gap-2">
+                <Facebook
+                  size={14}
+                  className="text-gray-600 cursor-pointer hover:text-blue-600"
+                />
+                <Twitter
+                  size={14}
+                  className="text-gray-600 cursor-pointer hover:text-blue-400"
+                />
+                <Linkedin
+                  size={14}
+                  className="text-gray-600 cursor-pointer hover:text-blue-700"
+                />
+                <Instagram
+                  size={14}
+                  className="text-gray-600 cursor-pointer hover:text-pink-600"
+                />
+              </div>
+            </div>
+          </div>
+          <img
+            src="https://picsum.photos/id/338/300/100"
+            className="w-full h-24 object-cover object-top opacity-80"
+            alt="signature placeholder"
+          />
         </div>
-       </div>
-
+      </div>
 
       {/* Recent Articles with Images */}
       {/* <div className="widget">
@@ -383,40 +450,52 @@ const Sidebar: React.FC = () => {
           </div>
       </div> */}
 
-       {/* Newsletter */}
-       <div className="widget bg-[#5e6d7a] p-6 text-white text-center rounded-sm">
-            <h3 className="text-xl font-bold mb-2">Subscribe To Our Newsletter</h3>
-            <p className="text-xs text-gray-300 mb-6">No spam, notifications only about new stories and updates.</p>
-            <div className="space-y-2">
-                <input type="email" placeholder="Your email address" className="w-full py-2 px-3 text-sm text-gray-800 rounded-sm focus:outline-none" />
-                <button className="w-full bg-[#ff6b6b] hover:bg-[#fa5252] text-white font-bold py-2 text-sm rounded-sm uppercase tracking-wider transition-colors">
-                    Sign Up
-                </button>
-            </div>
-       </div>
+      {/* Newsletter */}
+      <div className="widget bg-linear-to-r from-red-600 via-red-500 to-green-700 p-6 text-white text-center rounded-sm">
+        <h3 className="text-xl font-bold mb-2">Subscribe To Our Newsletter</h3>
+        <p className="text-xs text-white mb-6">
+          No spam, notifications only about new stories and updates.
+        </p>
+        <div className="space-y-2">
+          <input
+            type="email"
+            placeholder="Your email address"
+            className="w-full py-2 px-3 text-sm text-white rounded-sm focus:outline-none"
+          />
+          <button className="w-full bg-[#ff6b6b] hover:bg-[#fa5252] text-white font-bold py-2 text-sm rounded-sm uppercase tracking-wider transition-colors">
+            Sign Up
+          </button>
+        </div>
+      </div>
 
       {/* Categories / Tags Cloud */}
-       <div className="widget">
-            <h3 className="text-lg font-bold mb-4">Categories</h3>
-            <div className="flex flex-col space-y-2">
-                 {SIDEBAR_DATA.categories.slice(0, 5).map((cat, idx) => (
-                     <div key={idx} className="text-sm text-gray-600 border border-gray-200 p-2 rounded hover:bg-gray-50 cursor-pointer flex items-center gap-2">
-                        <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-                        {cat}
-                     </div>
-                 ))}
+      <div className="widget">
+        <h3 className="text-lg font-bold mb-4">Categories</h3>
+        <div className="flex flex-col space-y-2">
+          {SIDEBAR_DATA.categories.slice(0, 5).map((cat, idx) => (
+            <div
+              key={idx}
+              className="text-sm text-gray-600 border border-gray-200 p-2 rounded hover:bg-gray-50 cursor-pointer flex items-center gap-2"
+            >
+              <span className="w-1 h-1 rounded-full bg-gray-400"></span>
+              {cat}
             </div>
-       </div>
+          ))}
+        </div>
+      </div>
 
       {/* Tags Cloud */}
       <div className="widget">
         <h3 className="text-lg font-bold mb-4">Tags Cloud</h3>
         <div className="flex flex-wrap gap-2">
-            {SIDEBAR_DATA.tags.map((tag, idx) => (
-                <span key={idx} className="px-3 py-1 bg-white border border-gray-200 text-gray-500 text-xs hover:bg-[#1e293b] hover:text-white transition-colors cursor-pointer capitalize">
-                    {tag}
-                </span>
-            ))}
+          {SIDEBAR_DATA.tags.map((tag, idx) => (
+            <span
+              key={idx}
+              className="px-3 py-1 bg-white border border-gray-200 text-gray-500 text-xs hover:bg-[#1e293b] hover:text-white transition-colors cursor-pointer capitalize"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
     </aside>
@@ -426,28 +505,24 @@ const Sidebar: React.FC = () => {
 // --- Main App Component ---
 
 export default function BlogSinglePost() {
-  const {id}=useParams()
-  const {data:post}=useFetchPostById(id)
+  const { id } = useParams();
+  const { data: post } = useFetchPostById(id);
   return (
     <div className="min-h-screen pt-30 bg-white">
-        
-        {/* Main Content Area */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-            <div className="flex flex-col lg:flex-row gap-12">
-                
-                {/* Left Column: Article */}
-                <main className="w-full lg:w-[70%]">
-                    <ArticleLayout post={post} />
-                </main>
+      {/* Main Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Left Column: Article */}
+          <main className="w-full lg:w-[70%]">
+            <ArticleLayout post={post} />
+          </main>
 
-                {/* Right Column: Sidebar */}
-                <aside className="w-full lg:w-[30%]">
-                    <Sidebar />
-                </aside>
-
-            </div>
+          {/* Right Column: Sidebar */}
+          <aside className="w-full lg:w-[30%]">
+            <Sidebar />
+          </aside>
         </div>
-        
+      </div>
     </div>
   );
 }

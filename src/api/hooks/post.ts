@@ -29,17 +29,17 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: async (data: FormData) => {
       const res = await api.post("post", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
       return res.data.data;
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", "all"],
-      });
+      // Post list refresh korbe
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+
+      // Dashboard stats refresh korbe (Reload chara update hobe)
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -67,22 +67,24 @@ export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    // 1. Destructure 'formData' explicitly
-    mutationFn: async ({ _id, formData }: { _id: string; formData: FormData }) => {
-      // 2. Send ONLY formData as the body
-      // We also force the header just to be safe, though Axios usually detects it.
+    mutationFn: async ({
+      _id,
+      formData,
+    }: {
+      _id: string;
+      formData: FormData;
+    }) => {
       const res = await api.put(`post/${_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       return res.data.data;
     },
 
     onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["posts", "all"] }); // specific key
-      queryClient.invalidateQueries({
-        queryKey: ["post", variables._id],
-      });
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+      queryClient.invalidateQueries({ queryKey: ["post", variables._id] });
+
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -93,16 +95,13 @@ export const useDeletePost = () => {
   return useMutation({
     mutationFn: async (id: string) => {
       const res = await api.delete(`post/${id}`);
-      queryClient.invalidateQueries({
-        queryKey: ["posts", id],
-      });
       return res.data;
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["posts", "all"],
-      });
+      queryClient.invalidateQueries({ queryKey: ["posts", "all"] });
+
+      queryClient.invalidateQueries({ queryKey: ["dashboard", "stats"] });
     },
   });
 };
@@ -149,6 +148,44 @@ export const useSearchPosts = (params: SearchParams) => {
       });
       return res.data;
     },
-    enabled: true, 
+    enabled: true,
+  });
+};
+// export const useFetchPostsByCategory = (slug: string, limit: number = 6) => {
+//   return useQuery({
+//     queryKey: ["posts", "category", slug, limit],
+//     queryFn: async () => {
+//       const res = await api.get(`post/category/${slug}?limit=${limit}`);
+//       return res.data; // data.data te posts thakbe r data.categoryName e nam
+//     },
+//     enabled: !!slug,
+//   });
+// };
+interface CategoryPostResponse {
+  success: boolean;
+  data: Post[];
+  categoryName: string;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+export const useFetchPostsByCategory = (
+  slugOrId: string,
+  page: number = 1,
+  limit: number = 6
+) => {
+  return useQuery({
+    queryKey: ["posts", "category", slugOrId, { page, limit }],
+    queryFn: async (): Promise<CategoryPostResponse> => {
+      const res = await api.get(`post/category/${slugOrId}`, {
+        params: { page, limit },
+      });
+      return res.data.data;
+    },
+    enabled: !!slugOrId, 
+    staleTime: 1000 * 60 * 5, 
   });
 };

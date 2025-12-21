@@ -1,12 +1,24 @@
-
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
 import SquareAds from "../ads/SquareAds";
 import { useFetchAllPosts } from "@/api/hooks/post";
+import { useState } from "react";
+import { useSubscribe } from "@/api/hooks/subscribtion";
 
 const EveryDay = () => {
-const {data:posts}=useFetchAllPosts()
+  const { data: posts } = useFetchAllPosts();
+  const [email, setEmail] = useState("");
+  const { mutate: postsubscription, isPending, isError } = useSubscribe();
 
+  const handleSubscribe = () => {
+    if (!email) return;
+
+    postsubscription(email, {
+      onSuccess: () => {
+        setEmail("");
+      },
+    });
+  };
   return (
     <div className="py-8 bg-gray-50  ">
       <Container>
@@ -29,23 +41,38 @@ const {data:posts}=useFetchAllPosts()
 
           <div className=" w-full lg:w-[30%] ">
             <div className=" flex flex-col gap-y-5 ">
-              <div className="bg-linear-to-r  from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2  rounded-lg">
-                <h2 className="font-bold font-secondary text-[17px] text-white ">
+              <div className="bg-linear-to-r from-red-600 via-red-500 to-green-700 p-6 flex flex-col gap-y-2 rounded-lg">
+                <h2 className="font-bold font-secondary text-[17px] text-white">
                   নিউজলেটার সাবস্ক্রাইব করুন
                 </h2>
-                <p className="font-semibold  font-secondary text-[14px] text-white ">
+
+                <p className="font-semibold font-secondary text-[14px] text-white">
                   সর্বশেষ খবর সরাসরি আপনার ইমেইলে পান
                 </p>
+
                 <input
-                  type="text"
+                  type="email"
                   placeholder="Your Email..."
-                  className="w-full border border-gray-300 rounded-lg  py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white "
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                 />
-                <button className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg">
-                  Subscrip
+
+                <button
+                  onClick={handleSubscribe}
+                  disabled={isPending}
+                  className="font-semibold font-primary text-[15px] text-black bg-white py-3 rounded-lg disabled:opacity-50"
+                >
+                  {isPending ? "Subscribing..." : "Subscribe"}
                 </button>
+                {isError && (
+                  <p className="text-sm text-white mt-2">
+                    {(isError as any)?.response?.data?.message ||
+                      "Please write your correct email"}
+                  </p>
+                )}
               </div>
-<SquareAds/>
+              <SquareAds />
             </div>
           </div>
         </div>
