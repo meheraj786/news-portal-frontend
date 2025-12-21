@@ -2,7 +2,6 @@ import React from "react";
 import {
   User,
   Calendar,
-  MessageCircle,
   Clock,
   Eye,
   Facebook,
@@ -15,7 +14,7 @@ import { Link, useParams } from "react-router";
 import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
 import DateFormatter from "@/components/DateFormatter";
-import { useFetchCategoryById } from "@/api/hooks/category";
+import Loader from "@/components/Loader/Loader";
 
 // --- Types ---
 
@@ -92,6 +91,9 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
   const ads = useRandomAd("BANNER");
   return (
     <article className="w-full">
+      {
+        isLoading && <Loader/>
+      }
       {/* Meta Header */}
       <div className="flex flex-wrap items-center gap-2 mb-4 text-xs md:text-sm text-gray-500 font-medium">
         <span className="bg-yellow-400 text-black px-2 py-0.5 rounded-sm font-bold uppercase text-[10px] md:text-xs">
