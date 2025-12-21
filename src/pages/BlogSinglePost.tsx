@@ -11,10 +11,11 @@ import {
   Instagram,
   Search,
 } from "lucide-react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
 import DateFormatter from "@/components/DateFormatter";
+import { useFetchCategoryById } from "@/api/hooks/category";
 
 // --- Types ---
 
@@ -85,6 +86,9 @@ const SIDEBAR_DATA = {
 // --- Sub-components ---
 
 const ArticleLayout = ({ post }: { post: BlogPost }) => {
+  const {data:relatedPost, isLoading}=useFetchPostsByCategory(post?.category?._id as string)
+  console.log(relatedPost, "relatedPost");
+  
   const ads = useRandomAd("BANNER");
   return (
     <article className="w-full">
@@ -119,7 +123,7 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <MessageCircle size={14} />
+          <Eye size={14} />
           <span>{post?.views}</span>
         </div>
       </div>
@@ -132,11 +136,11 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {/* Overlay Text attempting to match the 'Bangali' red text style roughly */}
-        <div className="absolute inset-0 flex items-center justify-center bg-white/20">
-          <h1 className="text-red-600/90 font-bold text-6xl md:text-9xl drop-shadow-md select-none tracking-tighter">
+        {/* <div className="absolute inset-0 flex items-center justify-center bg-white/20">
+          <h1 className="text-red-600/90 font-bold text-xl drop-shadow-md select-none tracking-tighter">
             {post?.title}
           </h1>
-        </div>
+        </div> */}
       </div>
 
       {/* Article Body */}
@@ -243,24 +247,24 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
 
       {/* Related Posts Bottom Section */}
       {/* Title */}
-      <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+      {/* <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
         {post?.title}
-      </h1>
+      </h1> */}
 
       {/* Meta Header, Author and Hero Image ... (Eshob thik thakbe) */}
 
-      <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
+      {/* <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
         <img
           src={post?.image?.url}
           alt={post?.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-      </div>
+      </div> */}
 
       {/* Article Body */}
-      <div className="prose prose-lg max-w-none text-gray-700 font-normal leading-relaxed">
+      {/* <div className="prose prose-lg max-w-none text-gray-700 font-normal leading-relaxed">
         <div dangerouslySetInnerHTML={{ __html: post?.content }} />
-      </div>
+      </div> */}
 
       {/* Tags Section ... (thik thakbe) */}
 
@@ -278,8 +282,8 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-            {relatedPosts && relatedPosts.length > 0 ? (
-              relatedPosts.map((relPost: any) => (
+            {relatedPost && relatedPost.length > 0 ? (
+              relatedPost.filter((p) => p?._id !== post?._id).slice(0, 4).map((relPost) => (
                 <div
                   key={relPost._id}
                   className="flex gap-4 group cursor-pointer"
@@ -295,7 +299,7 @@ const ArticleLayout = ({ post }: { post: BlogPost }) => {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2 line-clamp-2">
-                      <a href={`/post/${relPost._id}`}>{relPost.title}</a>
+                      <Link to={`/single-post/${relPost._id}`}>{relPost.title}</Link>
                     </h4>
                     <span className="text-xs text-gray-500">
                       {new Date(relPost.createdAt).toLocaleDateString()}
@@ -345,11 +349,7 @@ const Sidebar: React.FC = () => {
         </ul>
       </div>
 
-      {/* Recent Comments */}
-      <div className="widget">
-        <h3 className="text-lg font-bold mb-4">Recent Comments</h3>
-        <p className="text-sm text-gray-500 italic">No comments to show.</p>
-      </div>
+
 
       {/* Archives */}
       <div className="widget">

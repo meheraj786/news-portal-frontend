@@ -178,13 +178,12 @@ export const useFetchPostsByCategory = (
   limit: number = 6
 ) => {
   return useQuery({
-    // Query Key-te slug/id r page thaktei hobe jate data unique hoy
     queryKey: ["posts", "category", slugOrId, { page, limit }],
     queryFn: async (): Promise<CategoryPostResponse> => {
       const res = await api.get(`post/category/${slugOrId}`, {
         params: { page, limit },
       });
-      return res.data;
+      return res.data.data;
     },
     enabled: !!slugOrId, 
     staleTime: 1000 * 60 * 5, 

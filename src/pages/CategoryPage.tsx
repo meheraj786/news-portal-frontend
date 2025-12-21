@@ -1,7 +1,7 @@
 import Container from "../components/container/Container";
 import { Link, useParams } from "react-router";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
-import { useFetchAllCategories } from "@/api/hooks/category";
+import { useFetchAllCategories, useFetchCategoryById } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts, useFetchPostsByCategory } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
@@ -14,10 +14,10 @@ const CategoryPage = () => {
   const { data: CategoriesList } = useFetchAllCategories();
   const { data: posts } = useFetchAllPosts();
   const {data: categoryPosts} = useFetchPostsByCategory(id as string)
-  console.log(id);
+  const {data:category}=useFetchCategoryById(id as string)
+  console.log(category);
   
 
-  console.log(categoryPosts);
   
 
   return (
@@ -27,7 +27,7 @@ const CategoryPage = () => {
         {/* Category Header */}
         <div className="text-center mb-8 bg-white py-6">
           <h1 className="text-2xl font-bold text-gray-800">
-            Category : <span className="text-pink-600">{id}</span>
+            Category : <span className="text-pink-600">{category?.name}</span>
           </h1>
         </div>
 
