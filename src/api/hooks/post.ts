@@ -67,13 +67,7 @@ export const useUpdatePost = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      _id,
-      formData,
-    }: {
-      _id: string;
-      formData: FormData;
-    }) => {
+    mutationFn: async ({ _id, formData }: { _id: string; formData: FormData }) => {
       const res = await api.put(`post/${_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -172,20 +166,17 @@ interface CategoryPostResponse {
     pages: number;
   };
 }
-export const useFetchPostsByCategory = (
-  slugOrId: string,
-  page: number = 1,
-  limit: number = 6
-) => {
+export const useFetchPostsByCategory = (id: string, page: number = 1, limit: number = 6) => {
   return useQuery({
-    queryKey: ["posts", "category", slugOrId, { page, limit }],
+    queryKey: ["posts", "category", id, { page, limit }],
     queryFn: async (): Promise<CategoryPostResponse> => {
-      const res = await api.get(`post/category/${slugOrId}`, {
+      const res = await api.get(`post/filter/${id}`, {
         params: { page, limit },
       });
+
       return res.data.data;
     },
-    enabled: !!slugOrId, 
-    staleTime: 1000 * 60 * 5, 
+    enabled: !!id,
+    staleTime: 1000 * 60 * 5,
   });
 };

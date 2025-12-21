@@ -13,12 +13,9 @@ const CategoryPage = () => {
   const { data: TagsList } = useFetchAllTags();
   const { data: CategoriesList } = useFetchAllCategories();
   const { data: posts } = useFetchAllPosts();
-  const {data: categoryPosts} = useFetchPostsByCategory(id as string)
-  const {data:category}=useFetchCategoryById(id as string)
-  console.log(category);
-  
-
-  
+  const { data: categoryPosts } = useFetchPostsByCategory(id as string);
+  const { data: category } = useFetchCategoryById(id as string);
+  console.log(categoryPosts);
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -40,11 +37,7 @@ const CategoryPage = () => {
                 key={article._id}
                 className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
               >
-                <img
-                  src={article?.image?.url}
-                  alt={article.title}
-                  className="w-full h-64 object-cover"
-                />
+                <img src={article?.image?.url} alt={article.title} className="w-full h-64 object-cover" />
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">
                     {article.category && (
@@ -64,8 +57,7 @@ const CategoryPage = () => {
                       <span className="text-pink-600">👤</span> Author
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="text-pink-600">📅</span>{" "}
-                      <DateFormatter date={article.createdAt} />
+                      <span className="text-pink-600">📅</span> <DateFormatter date={article.createdAt} />
                     </span>
                   </div>
 
@@ -100,9 +92,7 @@ const CategoryPage = () => {
 
             {/* Recent Posts */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Posts
-              </h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Recent Posts</h3>
               <ul className="space-y-3">
                 {posts?.map((post, index) => (
                   <li
@@ -117,9 +107,7 @@ const CategoryPage = () => {
 
             {/* Recent Comments */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Comments
-              </h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Recent Comments</h3>
               <p className="text-gray-600 text-sm">No comments to show.</p>
             </div>
 
@@ -130,9 +118,7 @@ const CategoryPage = () => {
 
             {/* Recent Article */}
             <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Recent Article
-              </h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Recent Article</h3>
               <div className="space-y-4">
                 <div className="flex gap-3">
                   <img
@@ -144,9 +130,7 @@ const CategoryPage = () => {
                     <p className="text-sm text-gray-800 hover:text-pink-600 cursor-pointer font-semibold">
                       বাংলা ভাষিকদের বাংলাদেশ ও পশ্চিমবঙ্গের রাজসিংহ
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      January 5, 2025
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">January 5, 2025</p>
                   </div>
                 </div>
               </div>
@@ -154,9 +138,7 @@ const CategoryPage = () => {
 
             {/* Newsletter */}
             <div className="bg-gray-800 rounded-lg shadow-sm p-6 mb-6 text-white">
-              <h3 className="text-xl font-bold mb-2">
-                Subscribe To Our Newsletter
-              </h3>
+              <h3 className="text-xl font-bold mb-2">Subscribe To Our Newsletter</h3>
               <p className="text-sm text-gray-300 mb-4">
                 আমাদের নিউজলেটার সাবস্ক্রাইব করুন এবং নতুন পোস্টের আপডেট পান।
               </p>
