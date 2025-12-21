@@ -1,21 +1,18 @@
-import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import Container from "../components/container/Container";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
 import DateFormatter from "@/components/DateFormatter";
+import { PostContent } from "@/components/post/PostContent";
 
 const CategoryPage = () => {
   const { id } = useParams();
-  const {data:TagsList}=useFetchAllTags()
-  const {data:CategoriesList}=useFetchAllCategories()
-  const {data:posts}=useFetchAllPosts()
-
-
-
+  const { data: TagsList } = useFetchAllTags();
+  const { data: CategoriesList } = useFetchAllCategories();
+  const { data: posts } = useFetchAllPosts();
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -38,42 +35,42 @@ const CategoryPage = () => {
                 className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
               >
                 <img
-                  src={article.image}
+                  src={article?.image?.url}
                   alt={article.title}
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                      {article.category}
-                    </span>
                     {article.category && (
                       <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
                         {article.category.name}
                       </span>
                     )}
                   </div>
-
-                  <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                    {article.title}
-                  </h2>
+                  <Link to={`/single-post/${article._id}`}>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
+                      {article.title}
+                    </h2>
+                  </Link>
 
                   <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                     <span className="flex items-center gap-1">
                       <span className="text-pink-600">👤</span> Author
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="text-pink-600">📅</span> <DateFormatter date={article.createdAt} />
+                      <span className="text-pink-600">📅</span>{" "}
+                      <DateFormatter date={article.createdAt} />
                     </span>
                   </div>
 
-                  <p className="text-gray-700 mb-4 leading-relaxed">
-                    {article.tags?.map((tag) => tag?.name).join(", ")}
+                  <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
+                    <PostContent content={article.content} />
                   </p>
-
-                  <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                    Continue Reading →
-                  </button>
+                  <Link to={`/single-post/${article._id}`}>
+                    <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+                      Continue Reading →
+                    </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -120,66 +117,9 @@ const CategoryPage = () => {
               <p className="text-gray-600 text-sm">No comments to show.</p>
             </div>
 
-            {/* Archives */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                Archives
-              </h3>
-              <ul className="space-y-2">
-                {[
-                  "December 2024",
-                  "November 2024",
-                  "October 2024",
-                  "September 2024",
-                  "August 2024",
-                  "July 2024",
-                  "June 2024",
-                ].map((month, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center justify-between text-sm"
-                  >
-                    <span className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors">
-                      {month}
-                    </span>
-                    {/* <span className="text-gray-500 text-xs">({Math.floor(Math.random() * 10) + 1})</span> */}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             {/* Categories */}
             <div className="">
               <CategoriesCard categories={CategoriesList || []} />
-            </div>
-
-            {/* About Me */}
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
-                About Me
-              </h3>
-              <div className="mb-4">
-                <p className="text-2xl font-bold text-gray-800 mb-2">
-                  Hello, I am Monty Leo
-                </p>
-                <p className="text-gray-600 text-sm mb-4">
-                  Where I welcome you (the readers) of my Blog. নমস্কার
-                  পাঠকবৃন্দ, আপনাদের স্বাগত জানাই আমার ব্লগে। এই ব্লগে আমি নানা
-                  বিষয়ে লিখে থাকি।
-                </p>
-                <div className="flex gap-3 mb-4">
-                  <Facebook className="w-5 h-5 text-gray-600 hover:text-pink-600 cursor-pointer" />
-                  <Twitter className="w-5 h-5 text-gray-600 hover:text-pink-600 cursor-pointer" />
-                  <Instagram className="w-5 h-5 text-gray-600 hover:text-pink-600 cursor-pointer" />
-                  <Youtube className="w-5 h-5 text-gray-600 hover:text-pink-600 cursor-pointer" />
-                  <Linkedin className="w-5 h-5 text-gray-600 hover:text-pink-600 cursor-pointer" />
-                </div>
-                <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop"
-                  alt="Monty Leo"
-                  className="w-16 h-16 rounded-full"
-                />
-              </div>
             </div>
 
             {/* Recent Article */}
