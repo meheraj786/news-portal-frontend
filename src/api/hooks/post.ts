@@ -154,3 +154,42 @@ export const useSearchPosts = (params: SearchParams) => {
     enabled: true,
   });
 };
+// export const useFetchPostsByCategory = (slug: string, limit: number = 6) => {
+//   return useQuery({
+//     queryKey: ["posts", "category", slug, limit],
+//     queryFn: async () => {
+//       const res = await api.get(`post/category/${slug}?limit=${limit}`);
+//       return res.data; // data.data te posts thakbe r data.categoryName e nam
+//     },
+//     enabled: !!slug,
+//   });
+// };
+interface CategoryPostResponse {
+  success: boolean;
+  data: Post[];
+  categoryName: string;
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+  };
+}
+export const useFetchPostsByCategory = (
+  slugOrId: string,
+  page: number = 1,
+  limit: number = 6
+) => {
+  return useQuery({
+    // Query Key-te slug/id r page thaktei hobe jate data unique hoy
+    queryKey: ["posts", "category", slugOrId, { page, limit }],
+    queryFn: async (): Promise<CategoryPostResponse> => {
+      const res = await api.get(`post/category/${slugOrId}`, {
+        params: { page, limit },
+      });
+      return res.data;
+    },
+    enabled: !!slugOrId, // slugOrId thaklei shudhu fetch hobe
+    staleTime: 1000 * 60 * 5, // 5 minute por por data refresh hobe
+  });
+};

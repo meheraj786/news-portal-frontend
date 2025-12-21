@@ -14,7 +14,7 @@ import {
   Search,
 } from "lucide-react";
 import { useParams } from "react-router";
-import { useFetchPostById } from "@/api/hooks/post";
+import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
 
 // --- Types ---
@@ -134,7 +134,23 @@ const RECENT_ARTICLES_THUMBS: BlogPost[] = [
 
 // --- Sub-components ---
 
-const ArticleLayout: React.FC = ({ post }) => {
+const ArticleLayout: React.FC<{ post: any }> = ({ post }) => {
+  // ১. Category ID or Slug extraction
+  const categoryId = post?.category?._id;
+  const currentPostId = post?._id;
+
+  // ২. Related Posts Fetch kora (Hook call)
+  const { data: relatedData, isLoading } = useFetchPostsByCategory(
+    categoryId,
+    1,
+    5
+  );
+
+  // ৩. Current post-ta list theke bad dewa (Filter logic)
+  const relatedPosts = relatedData?.data
+    ?.filter((item: any) => item._id !== currentPostId)
+    .slice(0, 4);
+
   const ads = useRandomAd("BANNER");
   return (
     <article className="w-full">
@@ -290,57 +306,72 @@ const ArticleLayout: React.FC = ({ post }) => {
       </div> */}
 
       {/* Related Posts Bottom Section */}
+      {/* Title */}
+      <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+        {post?.title}
+      </h1>
+
+      {/* Meta Header, Author and Hero Image ... (Eshob thik thakbe) */}
+
+      <div className="relative w-full h-[300px] md:h-[450px] bg-gray-100 mb-8 rounded-lg overflow-hidden group">
+        <img
+          src={post?.image?.url}
+          alt={post?.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+      </div>
+
+      {/* Article Body */}
+      <div className="prose prose-lg max-w-none text-gray-700 font-normal leading-relaxed">
+        <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+      </div>
+
+      {/* Tags Section ... (thik thakbe) */}
+
+      {/* Related Posts Bottom Section - এখানি ম্যাপিং করা হয়েছে */}
       <div className="mt-12">
         <h3 className="text-lg font-bold mb-6 border-l-4 border-black pl-3 uppercase">
           Related Posts
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          <div className="flex gap-4 group cursor-pointer">
-            <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-              <img
-                src="https://picsum.photos/id/55/200/200"
-                className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                alt="rel"
-              />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">
-                কলকাতা এক শহরের ভেতরে হাজার গল্প
-              </h4>
-              <span className="text-xs text-gray-500">September 14, 2025</span>
-            </div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-gray-100 rounded"></div>
+            ))}
           </div>
-          <div className="flex gap-4 group cursor-pointer">
-            <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-              <img
-                src="https://picsum.photos/id/66/200/200"
-                className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                alt="rel"
-              />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">
-                Sikkim Travel Guide: A Complete Experience in the Himalayas
-              </h4>
-              <span className="text-xs text-gray-500">September 14, 2025</span>
-            </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            {relatedPosts && relatedPosts.length > 0 ? (
+              relatedPosts.map((relPost: any) => (
+                <div
+                  key={relPost._id}
+                  className="flex gap-4 group cursor-pointer"
+                >
+                  <div className="w-24 h-24 overflow-hidden flex-shrink-0 rounded-sm">
+                    <img
+                      src={
+                        relPost?.image?.url || "https://via.placeholder.com/200"
+                      }
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      alt={relPost.title}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2 line-clamp-2">
+                      <a href={`/post/${relPost._id}`}>{relPost.title}</a>
+                    </h4>
+                    <span className="text-xs text-gray-500">
+                      {new Date(relPost.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-400">No related posts found.</p>
+            )}
           </div>
-          <div className="flex gap-4 group cursor-pointer">
-            <div className="w-24 h-24 overflow-hidden flex-shrink-0">
-              <img
-                src="https://picsum.photos/id/77/200/200"
-                className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                alt="rel"
-              />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2">
-                বান্দরবান পাহাড়ের বুকে এক টুকরো স্বর্গ
-              </h4>
-              <span className="text-xs text-gray-500">September 14, 2025</span>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </article>
   );
