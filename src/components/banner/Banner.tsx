@@ -3,6 +3,7 @@ import MiniCard from "./MiniCart";
 import Container from "../container/Container";
 import Slider from "react-slick";
 import { useFetchTrendingPosts } from "@/api/hooks/post";
+import DateFormatter from "../DateFormatter";
 
 interface Post {
   _id: string;
@@ -84,9 +85,7 @@ const Banner: React.FC = () => {
                       <div className="flex items-center gap-x-1.5 text-gray-300 text-xs sm:text-sm">
                         <MdWatchLater />
                         <span>
-                          {item.createdAt
-                            ? new Date(item.createdAt).toLocaleDateString()
-                            : ""}
+                          <DateFormatter date={item.createdAt} /> 
                         </span>
                       </div>
                     </div>

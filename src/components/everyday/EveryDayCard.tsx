@@ -2,6 +2,7 @@ import type { CardProps } from "@/types/CardProps";
 import { Clock } from "lucide-react";
 import { PostContent } from "../post/PostContent";
 import { Link } from "react-router";
+import DateFormatter from "../DateFormatter";
 
 function EveryDayCard({
   _id,
@@ -36,7 +37,7 @@ function EveryDayCard({
             {createdAt && (
               <div className="flex items-center gap-1.5 text-gray-500 mb-3">
                 <Clock className="w-3.5 h-3.5" />
-                <span className="text-xs font-medium">{createdAt}</span>
+                <span className="text-xs font-medium"><DateFormatter date={createdAt} /></span>
               </div>
             )}
 

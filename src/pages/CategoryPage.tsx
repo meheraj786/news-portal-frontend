@@ -6,6 +6,7 @@ import { useFetchAllCategories } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
+import DateFormatter from "@/components/DateFormatter";
 
 const CategoryPage = () => {
   const { id } = useParams();
@@ -62,7 +63,7 @@ const CategoryPage = () => {
                       <span className="text-pink-600">👤</span> Author
                     </span>
                     <span className="flex items-center gap-1">
-                      <span className="text-pink-600">📅</span> {article.createdAt}
+                      <span className="text-pink-600">📅</span> <DateFormatter date={article.createdAt} />
                     </span>
                   </div>
 

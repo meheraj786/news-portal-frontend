@@ -14,6 +14,7 @@ import {
 import { useParams } from "react-router";
 import { useFetchPostById } from "@/api/hooks/post";
 import { useRandomAd } from "@/components/ads/RandomAds";
+import DateFormatter from "@/components/DateFormatter";
 
 // --- Types ---
 
@@ -96,7 +97,7 @@ const ArticleLayout= ({ post }: { post: BlogPost }) => {
           {post?.category?.name}
         </span>
         <span className="flex items-center gap-1">
-          <Clock size={14} /> {post?.createdAt}
+          <Clock size={14} /> <DateFormatter date={post?.createdAt} />
         </span>
         <span className="flex items-center gap-1">
           <Eye size={14} /> {post?.views}
@@ -116,7 +117,7 @@ const ArticleLayout= ({ post }: { post: BlogPost }) => {
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={14} />
-          <span>{post?.createdAt}</span>
+          <span><DateFormatter date={post?.createdAt} /></span>
         </div>
         <div className="flex items-center gap-2">
           <MessageCircle size={14} />
