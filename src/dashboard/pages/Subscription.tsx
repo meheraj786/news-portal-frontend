@@ -11,7 +11,6 @@ interface Subscription {
 export default function Subscription() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { data: subscriptions } = useFetchAllSubscriptions();
-
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -29,8 +28,8 @@ export default function Subscription() {
   );
 
   return (
-    <div className="min-h-full  bg-gradient-to-br from-red-50 to-rose-100 p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-full   rounded-2xl bg-gradient-to-br from-red-50 to-rose-100 p-6">
+      <div className="max-w-6xl  mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-red-900 mb-2">

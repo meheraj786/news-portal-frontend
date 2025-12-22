@@ -1,24 +1,67 @@
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
-import SquareAds from "../ads/SquareAds";
-import { useFetchAllPosts } from "@/api/hooks/post";
-import { useState } from "react";
+import CategoriesCard from "../../components/categoriescard/CategoriesCard";
+import { CategoriesList } from "../../components/categoriescard/CategoriesList";
+import TagCard from "../tag/tagcard/TagCard";
+import { TagList } from "../tag/tagdata/TagList";
+import NewsCard from "../newsitems/NewsCard";
 import { useSubscribe } from "@/api/hooks/subscribtion";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const EveryDay = () => {
-  const { data: posts } = useFetchAllPosts();
-  const [email, setEmail] = useState("");
-  const { mutate: postsubscription, isPending, isError } = useSubscribe();
-
-  const handleSubscribe = () => {
-    if (!email) return;
-
-    postsubscription(email, {
+  const subscripMutation = useSubscribe();
+  const [subEmail, setSubEmail] = useState("");
+  const handleSubmit = () => {
+    subscripMutation.mutate(subEmail, {
       onSuccess: () => {
-        setEmail("");
+        toast.success("subscrip");
+        setSubEmail("");
       },
     });
   };
+  const everyday: CardProps[] = [
+    {
+      image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
+      tag: "অর্থনীতি",
+      time: "1 Hour ago",
+      title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ",
+      description: "ঢাকায় নতুন স্কাইটাওয়ার উদ্বোধন",
+    },
+    {
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPuH1kQAHVumAHPRWTTiKwatTPA81-bT_M_Q&s",
+      tag: "অর্থনীতি",
+      time: "৩ ঘণ্টা আগে",
+      title: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
+      description: "শিক্ষায় নতুন বাজারের সৃষ্টি",
+    },
+    {
+      image:
+        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
+      tag: "অর্থনীতি",
+      title: "বাজারে আসছে নতুন রেকর্ড",
+      time: "৪ ঘণ্টা আগে",
+      description: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
+    },
+    {
+      image:
+        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
+      tag: "অর্থনীতি",
+      title: "বাজারে আসছে নতুন রেকর্ড",
+      time: "৪ ঘণ্টা আগে",
+      description: "অর্থনীতিতে গুরুত্বপূর্ণ প্রবৃদ্ধি",
+    },
+    {
+      image:
+        "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
+      tag: "অর্থনীতি",
+      title: "বাজারে আসছে নতুন রেকর্ড",
+      time: "৪ ঘণ্টা আগে",
+      description: "ঢাকায় নতুন মেডিকেল স্টোরে দোকান উদ্বোধন",
+    },
+  ];
+
   return (
     <div className="py-8 bg-gray-50  ">
       <Container>
@@ -51,19 +94,19 @@ const EveryDay = () => {
                 </p>
 
                 <input
-                  type="email"
+                  type="text"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
                   placeholder="Your Email..."
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                 />
-
                 <button
-                  onClick={handleSubscribe}
-                  disabled={isPending}
-                  className="font-semibold font-primary text-[15px] text-black bg-white py-3 rounded-lg disabled:opacity-50"
+                  onClick={handleSubmit}
+                  className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg"
                 >
-                  {isPending ? "Subscribing..." : "Subscribe"}
+                  Subscrip
                 </button>
                 {isError && (
                   <p className="text-sm text-white mt-2">

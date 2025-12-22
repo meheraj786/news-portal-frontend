@@ -10,7 +10,6 @@ export type Tag = {
   updatedAt: string;
 };
 
-
 type FetchTagsParams = {
   page?: number;
   limit?: number;
@@ -26,7 +25,6 @@ export const useFetchAllTags = (params?: FetchTagsParams) => {
   });
 };
 
-
 export const useSearchTags = (name: string) => {
   return useQuery({
     queryKey: ["tags", "search", name],
@@ -40,7 +38,6 @@ export const useSearchTags = (name: string) => {
   });
 };
 
-
 export const useFetchPopularTags = (limit = 5) => {
   return useQuery({
     queryKey: ["tags", "popular", limit],
@@ -52,7 +49,6 @@ export const useFetchPopularTags = (limit = 5) => {
     },
   });
 };
-
 
 export type PostByTag = {
   _id: string;
@@ -76,7 +72,6 @@ export const useFetchPostsByTag = (tagName: string) => {
     enabled: !!tagName,
   });
 };
-
 
 export const useFetchTagById = (tagId: string) => {
   return useQuery({

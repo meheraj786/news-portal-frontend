@@ -47,6 +47,7 @@ export function AddPost() {
   const config = useMemo(
     () => ({
       readonly: false,
+      minHeight: 280,
       height: 400,
       placeholder: "Start typing...",
     }),
@@ -104,13 +105,16 @@ export function AddPost() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto p-6">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold">Add Post</h2>
         <p className="text-gray-600">Create a new post.</p>
       </div>
 
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-5 sm:space-y-6"
+      >
         {/* Title */}
         <div className="grid gap-3">
           <Label htmlFor="title">Title</Label>
@@ -122,7 +126,7 @@ export function AddPost() {
           )}
         </div>
 
-        {/* Image Upload */}
+        {/* Image */}
         <div className="grid gap-3">
           <Label htmlFor="image">Feature Image</Label>
           <Input
@@ -132,25 +136,21 @@ export function AddPost() {
             onChange={handleImageChange}
           />
           {imagePreview && (
-            <div className="mt-2">
-              <img
-                src={imagePreview}
-                alt="Preview"
-                className="w-48 h-32 object-cover rounded-md border"
-              />
-            </div>
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="w-full max-w-[220px] aspect-square object-cover rounded-md"
+            />
           )}
         </div>
 
-        {/* Category Select - ফিক্সড করা হয়েছে */}
+        {/* Category */}
         <div className="grid gap-3">
           <Label>Category</Label>
           <Select
-            // ৪. value কানেক্ট করা হয়েছে যাতে reset() দিলে এটিও ফাঁকা হয়
-            value={form.watch("category") || ""}
-            onValueChange={(value) => {
-              form.setValue("category", value, { shouldValidate: true });
-            }}
+            onValueChange={(value) =>
+              form.setValue("category", value, { shouldValidate: true })
+            }
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select category" />
@@ -196,20 +196,21 @@ export function AddPost() {
           )}
         </div>
 
-        {/* Content - Jodit Editor */}
+        {/* Content */}
         <div className="grid gap-3">
           <Label>Content</Label>
-          <div className="prose max-w-none">
+          <div className="w-full max-w-full overflow-hidden">
             <JoditEditor
               ref={editor}
               value={form.watch("content")}
               config={config}
-              onBlur={(newContent) => {
+              tabIndex={1}
+              onBlur={(newContent) =>
                 form.setValue("content", newContent, {
                   shouldValidate: true,
                   shouldDirty: true,
-                });
-              }}
+                })
+              }
             />
           </div>
           {form.formState.errors.content && (
@@ -219,14 +220,10 @@ export function AddPost() {
           )}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-4 border-t">
-          <Button
-            type="submit"
-            className="bg-green-600 hover:bg-green-700 px-8"
-            disabled={postMutation.isPending}
-          >
-            {postMutation.isPending ? "Posting..." : "Publish News"}
+        {/* Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <Button type="submit" className="bg-green-500">
+            Post
           </Button>
           <Button
             type="button"

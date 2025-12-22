@@ -8,7 +8,8 @@ import { useFetchNavMenu, useUpdateNavMenu } from "@/api/hooks/navMenu";
 import { toast } from "sonner";
 
 export default function NavMenu() {
-  const { data: categories = [], isLoading: categoriesLoading } = useFetchAllCategories();
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useFetchAllCategories();
   const { data: navMenu, isLoading: navMenuLoading } = useFetchNavMenu();
   const { mutate: updateNavMenu, isPending } = useUpdateNavMenu();
   
@@ -18,9 +19,11 @@ export default function NavMenu() {
   }, [navMenu]);
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  
-  // Determine actual selected items (use initialIds if selectedItems is empty)
-  const actualSelectedItems = selectedItems.length > 0 ? selectedItems : initialIds;
+
+  const actualSelectedItems =
+    selectedItems.length === 0 && initialItems.length > 0
+      ? initialItems
+      : selectedItems;
 
   const handleCheckboxChange = (id: string) => {
     const current = actualSelectedItems;
@@ -61,11 +64,9 @@ export default function NavMenu() {
     setSelectedItems([]);
   };
 
-  // Calculate if there are changes
-  const hasChanges = 
-    actualSelectedItems.length !== initialIds.length ||
-    actualSelectedItems.some((id) => !initialIds.includes(id)) ||
-    initialIds.some((id) => !actualSelectedItems.includes(id));
+  const hasChanges =
+    actualSelectedItems.length !== initialItems.length ||
+    actualSelectedItems.some((id) => !initialItems.includes(id));
 
   const isLoading = categoriesLoading || navMenuLoading;
 
@@ -78,7 +79,7 @@ export default function NavMenu() {
   }
 
   return (
-    <div className="border-2 px-5 rounded-md">
+    <div className="border-2 px-5 rounded-2xl bg-gradient-to-br from-red-50 to-rose-100 ">
       <div className="py-5">
         <h2 className="text-lg font-semibold mb-4">
           Navigation Menu Categories (Max 10)
@@ -86,17 +87,17 @@ export default function NavMenu() {
         <p className="text-sm text-muted-foreground mb-4">
           Selected: <span className="font-medium">{actualSelectedItems.length}</span> / 10
         </p>
-        
+
         <div className="flex flex-wrap gap-6">
           {categories.map((item) => {
             const isSelected = actualSelectedItems.includes(item._id);
             const canSelect = actualSelectedItems.length < 10 || isSelected;
-            
+
             return (
               <div
                 key={item._id}
-                className={`flex items-center gap-3 border py-3 px-7 rounded transition-all ${
-                  isSelected ? "border-primary bg-primary/5 shadow-sm" : "border-gray-200"
+                className={`flex items-center gap-3 border py-3 px-7 rounded transition-colors bg-white ${
+                  isSelected ? "border-primary bg-primary/5" : ""
                 } ${!item.isActive ? "opacity-50" : ""}`}
               >
                 <Checkbox
@@ -105,10 +106,7 @@ export default function NavMenu() {
                   onCheckedChange={() => handleCheckboxChange(item._id)}
                   disabled={!item.isActive || (!canSelect && !isSelected)}
                 />
-                <Label 
-                  htmlFor={item._id}
-                  className={`cursor-pointer ${!item.isActive || (!canSelect && !isSelected) ? "cursor-not-allowed" : ""}`}
-                >
+                <Label htmlFor={item._id} className="cursor-pointer">
                   {item.name}
                   {!item.isActive && (
                     <span className="ml-2 text-xs text-muted-foreground">
@@ -131,8 +129,8 @@ export default function NavMenu() {
           Cancel
         </Button>
 
-        <Button 
-          onClick={handleSubmit} 
+        <Button
+          onClick={handleSubmit}
           disabled={isPending || !hasChanges || actualSelectedItems.length > 10}
         >
           {isPending ? "Saving..." : "Save Changes"}
