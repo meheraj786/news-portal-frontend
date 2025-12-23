@@ -1,6 +1,7 @@
 import { useFetchAllPosts } from "@/api/hooks/post";
 import Container from "../components/container/Container";
 import EveryDayCard from "../components/everyday/EveryDayCard";
+import type { CardProps } from "@/types/CardProps";
 
 const FavoriteNews = () => {
 const {data:posts}=useFetchAllPosts()
@@ -16,7 +17,7 @@ const {data:posts}=useFetchAllPosts()
           </div>
         </div>
         <div className="grid grid-cols-1  sm:grid-colss-2 lg:grid-cols-3 xl:grid-cols-4 mt-5 gap-5">
-          {posts?.map((card, i) => (
+          {posts?.map((card : CardProps, i: number) => (
             <EveryDayCard key={i} {...card} />
           ))}
         </div>

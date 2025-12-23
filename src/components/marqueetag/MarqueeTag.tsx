@@ -2,6 +2,7 @@ import React from "react";
 import Container from "../container/Container";
 import Marquee from "react-fast-marquee";
 import { useFetchAllPosts } from "@/api/hooks/post";
+import type { CardProps } from "@/types/CardProps";
 
 const MarqueeTag: React.FC = () => {
   const {data}=useFetchAllPosts()
@@ -27,7 +28,7 @@ const MarqueeTag: React.FC = () => {
               gradient={false}
               className="text-white text-xs md:text-sm"
             >{
-              data?.map((post,i:number)=><span key={i} className="px-2">{post.title}</span>)
+              data?.map((post : CardProps,i:number)=><span key={i} className="px-2">{post.title}</span>)
             }
             </Marquee>
           </div>

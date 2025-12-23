@@ -1,12 +1,12 @@
 export interface CardProps {
-  _id: string;
+  _id?: string;
 
   title: string;
   content?: string;
   createdAt?: string;
 
   image?: {
-    url?: string;
+    url: string;
   };
 
   category?: {
