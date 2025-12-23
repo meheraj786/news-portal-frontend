@@ -33,7 +33,7 @@ const NewsItems = () => {
                 ))}
               </div>
               <div className="text-center mt-10 mb-10 md:mb-0">
-                <Link to="/news">
+                <Link to="/category/all">
                   <Button>সব সংবাদ দেখুন</Button>
                 </Link>
               </div>

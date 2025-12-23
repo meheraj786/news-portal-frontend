@@ -15,7 +15,7 @@ const CategoryPage = () => {
   const { data: posts } = useFetchAllPosts();
   const {data: categoryPosts} = useFetchPostsByCategory(id as string)
   const {data:category}=useFetchCategoryById(id as string)
-  console.log(category);
+  console.log(categoryPosts);
   
 
   
@@ -27,7 +27,7 @@ const CategoryPage = () => {
         {/* Category Header */}
         <div className="text-center mb-8 bg-white py-6">
           <h1 className="text-2xl font-bold text-gray-800">
-            Category : <span className="text-pink-600">{category?.name}</span>
+            Category : <span className="text-pink-600">{id=="all" ? "All" : category?.name || ""}</span>
           </h1>
         </div>
 

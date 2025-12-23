@@ -11,6 +11,7 @@ const EveryDay = () => {
   const [subEmail, setSubEmail] = useState("");
   const { data: posts, isError } = useFetchAllPosts();
   const [email, setEmail] = useState("");
+  console.log(posts, "post")
 
   const handleSubmit = () => {
     subscripMutation.mutate(subEmail, {
