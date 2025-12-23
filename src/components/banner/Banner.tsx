@@ -41,7 +41,8 @@ const Banner: React.FC = () => {
     autoplaySpeed: 3000,
   };
 
-  if (isLoading) return <div className="text-center py-10">Loading Banner...</div>;
+  if (isLoading)
+    return <div className="text-center py-10">Loading Banner...</div>;
   if (posts.length === 0) return null;
 
   return (
@@ -92,11 +93,7 @@ const Banner: React.FC = () => {
             <div className="w-full bg-red-500 h-0.5"></div>
 
             <div className="flex flex-col gap-y-2.5">
-<<<<<<< HEAD
-              {posts?.slice(0, 4).map((item) => (
-=======
               {posts.map((item: Post) => (
->>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
                 <MiniCard
                   key={item._id}
                   _id={item._id}

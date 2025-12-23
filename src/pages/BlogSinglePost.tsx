@@ -13,6 +13,8 @@ import { useFetchPostById, useFetchPostsByCategory } from "@/api/hooks/post";
 import DateFormatter from "@/components/DateFormatter";
 import Loader from "@/components/Loader/Loader";
 import type { CardProps } from "@/types/CardProps";
+import RecentPost from "@/components/recentpost/RecentPost";
+import SquareAds from "@/components/ads/SquareAds";
 
 // --- Types ---
 
@@ -58,7 +60,9 @@ const useMetaTags = (metaData: {
     const setMetaTag = (property: string, content: string, isName = false) => {
       if (!content) return;
       const attribute = isName ? "name" : "property";
-      let element = document.querySelector(`meta[${attribute}="${property}"]`) as HTMLMetaElement;
+      let element = document.querySelector(
+        `meta[${attribute}="${property}"]`
+      ) as HTMLMetaElement;
       if (!element) {
         element = document.createElement("meta");
         element.setAttribute(attribute, property);
@@ -74,10 +78,13 @@ const useMetaTags = (metaData: {
     setMetaTag("og:description", metaData.description || "");
     setMetaTag("og:image", metaData.image || "");
     setMetaTag("twitter:card", "summary_large_image");
-    
-    if (metaData.publishedTime) setMetaTag("article:published_time", metaData.publishedTime);
-    
-    return () => { document.title = "Dainik Bangali"; };
+
+    if (metaData.publishedTime)
+      setMetaTag("article:published_time", metaData.publishedTime);
+
+    return () => {
+      document.title = "Dainik Bangali";
+    };
   }, [metaData]);
 };
 
@@ -100,7 +107,8 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   // 1. CALL HOOKS AT THE TOP (Before early returns)
   // We pass an empty string if post is null to prevent error, hook handles empty string
   const categoryId = post?.category?._id || "";
-  const { data: relatedPostData, isLoading } = useFetchPostsByCategory(categoryId);
+  const { data: relatedPostData, isLoading } =
+    useFetchPostsByCategory(categoryId);
 
   // 2. CONVERT DATA TO ARRAY (Fixes .length and .filter errors)
   const relatedPosts = (relatedPostData as unknown as CardProps[]) || [];
@@ -110,15 +118,32 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
   const shareTitle = post?.title || "";
 
   const handleFacebookShare = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, "fb-share", "width=600,height=400");
+    window.open(
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}`,
+      "fb-share",
+      "width=600,height=400"
+    );
   };
 
   const handleTwitterShare = () => {
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`, "tw-share", "width=600,height=400");
+    window.open(
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+        shareUrl
+      )}&text=${encodeURIComponent(shareTitle)}`,
+      "tw-share",
+      "width=600,height=400"
+    );
   };
 
   const handleWhatsAppShare = () => {
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTitle + " - " + shareUrl)}`, "_blank");
+    window.open(
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        shareTitle + " - " + shareUrl
+      )}`,
+      "_blank"
+    );
   };
 
   const handleCopyLink = async () => {
@@ -165,7 +190,9 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={14} />
-          <span><DateFormatter date={post.createdAt} /></span>
+          <span>
+            <DateFormatter date={post.createdAt} />
+          </span>
         </div>
       </div>
 
@@ -187,7 +214,10 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
           <span className="font-bold text-gray-900">Tags:</span>
           <div className="flex wrap gap-2">
             {post.tags?.map((tag) => (
-              <span key={tag?._id} className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded">
+              <span
+                key={tag?._id}
+                className="px-3 py-1 bg-gray-50 border border-gray-200 text-gray-600 text-sm rounded"
+              >
                 {tag?.name}
               </span>
             ))}
@@ -195,20 +225,44 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
         </div>
 
         <div className="flex gap-3">
-          <button onClick={handleFacebookShare} className="w-9 h-9 rounded-full bg-[#1877F2] flex items-center justify-center"><Facebook size={20} className="text-white" /></button>
-          <button onClick={handleTwitterShare} className="w-9 h-9 rounded-full bg-[#1DA1F2] flex items-center justify-center"><Twitter size={20} className="text-white" /></button>
-          <button onClick={handleWhatsAppShare} className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center"><Search size={20} className="text-white" /></button>
-          <button onClick={handleCopyLink} className="w-9 h-9 rounded-full bg-gray-600 flex items-center justify-center text-white">🔗</button>
+          <button
+            onClick={handleFacebookShare}
+            className="w-9 h-9 rounded-full bg-[#1877F2] flex items-center justify-center"
+          >
+            <Facebook size={20} className="text-white" />
+          </button>
+          <button
+            onClick={handleTwitterShare}
+            className="w-9 h-9 rounded-full bg-[#1DA1F2] flex items-center justify-center"
+          >
+            <Twitter size={20} className="text-white" />
+          </button>
+          <button
+            onClick={handleWhatsAppShare}
+            className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center"
+          >
+            <Search size={20} className="text-white" />
+          </button>
+          <button
+            onClick={handleCopyLink}
+            className="w-9 h-9 rounded-full bg-gray-600 flex items-center justify-center text-white"
+          >
+            🔗
+          </button>
         </div>
       </div>
 
       {/* Related Posts Bottom Section */}
       <div className="mt-12">
-        <h3 className="text-lg font-bold mb-6 border-l-4 border-black pl-3 uppercase">Related Posts</h3>
+        <h3 className="text-lg font-bold mb-6 border-l-4 border-black pl-3 uppercase">
+          Related Posts
+        </h3>
 
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-pulse">
-            {[1, 2, 3, 4].map((i) => <div key={i} className="h-24 bg-gray-100 rounded"></div>)}
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-gray-100 rounded"></div>
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -217,17 +271,25 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
                 .filter((p: CardProps) => p?._id !== post?._id)
                 .slice(0, 4)
                 .map((relPost: CardProps) => (
-                  <div key={relPost._id} className="flex gap-4 group cursor-pointer">
+                  <div
+                    key={relPost._id}
+                    className="flex gap-4 group cursor-pointer"
+                  >
                     <div className="w-24 h-24 overflow-hidden flex-shrink-0 rounded-sm">
                       <img
-                        src={relPost?.image?.url || "https://via.placeholder.com/200"}
+                        src={
+                          relPost?.image?.url ||
+                          "https://via.placeholder.com/200"
+                        }
                         className="w-full h-full object-cover transition-transform group-hover:scale-110"
                         alt={relPost.title}
                       />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-800 group-hover:text-blue-600 leading-snug mb-2 line-clamp-2">
-                        <Link to={`/single-post/${relPost._id}`}>{relPost.title}</Link>
+                        <Link to={`/single-post/${relPost._id}`}>
+                          {relPost.title}
+                        </Link>
                       </h4>
                       <span className="text-xs text-gray-500">
                         <DateFormatter date={relPost.createdAt} />
@@ -248,17 +310,15 @@ const ArticleLayout = ({ post }: { post: BlogPost | null }) => {
 const Sidebar: React.FC = () => {
   return (
     <aside className="w-full space-y-8">
-      <div className="relative">
+      {/* <div className="relative">
         <input type="text" placeholder="Search" className="w-full bg-gray-50 border border-gray-200 pl-4 pr-10 py-3 text-sm focus:outline-none" />
         <button className="absolute right-0 top-0 h-full px-3 bg-[#1e293b] text-white"><Search size={16} /></button>
+      </div> */}
+      <div className="widget">
+        <RecentPost />
       </div>
       <div className="widget">
-        <h3 className="text-lg font-bold mb-4">Recent Posts</h3>
-        <ul className="space-y-3">
-          {SIDEBAR_DATA.recentPosts.map((post, idx) => (
-            <li key={idx} className="text-gray-600 text-[13px] hover:text-blue-600 border-b border-gray-100 pb-2">{post}</li>
-          ))}
-        </ul>
+        <SquareAds />
       </div>
     </aside>
   );
@@ -269,7 +329,8 @@ export default function BlogSinglePost() {
   const { data: post, isLoading } = useFetchPostById(id || "");
 
   const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-  const shareDescription = post?.content?.replace(/<[^>]*>/g, "").substring(0, 200) || "";
+  const shareDescription =
+    post?.content?.replace(/<[^>]*>/g, "").substring(0, 200) || "";
 
   useMetaTags({
     title: post?.title,

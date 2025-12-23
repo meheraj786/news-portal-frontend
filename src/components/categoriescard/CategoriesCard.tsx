@@ -1,8 +1,11 @@
+import { Link } from "react-router";
+
 export type cat = {
-  name:string;
+  name: string;
+  _id: string;
 };
 
-const CategoriesCard=({ categories }: { categories: cat[] }) => {
+const CategoriesCard = ({ categories }: { categories: cat[] }) => {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
       <h3 className="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
@@ -12,9 +15,12 @@ const CategoriesCard=({ categories }: { categories: cat[] }) => {
       <ul className="space-y-2">
         {categories?.map((cat, i) => (
           <li key={i}>
-            <span className="text-gray-700 hover:text-pink-600 cursor-pointer">
+            <Link
+              to={`/category/${cat._id}`}
+              className="text-gray-700 hover:text-pink-600 cursor-pointer"
+            >
               {cat.name}
-            </span>
+            </Link>
           </li>
         ))}
       </ul>

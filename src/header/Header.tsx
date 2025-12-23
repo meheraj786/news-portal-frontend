@@ -21,20 +21,6 @@ import { Loader2 } from "lucide-react";
 import Loader from "@/components/Loader/Loader";
 import type { CardProps } from "@/types/CardProps";
 
-
-
-
-<<<<<<< HEAD
-interface Post {
-  _id: string;
-  title: string;
-  content: string;
-  image?: PostImage;
-  createdAt?: string;
-}
-=======
->>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
-
 interface NavItem {
   _id: string;
   name: string;
@@ -53,15 +39,9 @@ export default function Header() {
     limit: 5,
   });
 
-
-
-
   return (
     <header className="w-full bg-white shadow-md fixed top-9 left-0 z-50 shadow-gray-200">
-      {
-        loading &&
-        <Loader/>
-      }
+      {loading && <Loader />}
       <Container>
         <div className="w-full">
           <div className="mx-auto py-5 flex justify-between items-center">
@@ -118,26 +98,13 @@ export default function Header() {
                     {(searchResults?.data as CardProps[])?.map((item) => (
                       <NewsCard
                         key={item._id}
-<<<<<<< HEAD
-                        comments={0}
-                        date={
-                          item.createdAt
-                            ? new Date(item.createdAt).toLocaleDateString(
-                                "bn-BD"
-                              )
-                            : ""
-                        }
-                        description={
-                          item.content
-                            .replace(/<[^>]*>/g, "")
+                        createdAt={item?.createdAt}
+                        content={
+                          item?.content
+                            ?.replace(/<[^>]*>/g, "")
                             .substring(0, 150) + "..."
                         }
-                        image={item.image?.url || ""}
-=======
-                        createdAt={item?.createdAt}
-                        content={item?.content?.replace(/<[^>]*>/g, '').substring(0, 150) + "..."}
-                        image={item.image} 
->>>>>>> a66fd9d1031d397ac21c7a82d5be2f4b8ab162e4
+                        image={item.image}
                         title={item.title}
                       />
                     ))}

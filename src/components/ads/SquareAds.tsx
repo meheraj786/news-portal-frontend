@@ -1,12 +1,10 @@
 import React from "react";
 import { useRandomAd } from "./RandomAds";
 
-
 const SquareAds: React.FC = () => {
   // ডাটা আনা এবং টাইপ কাস্টিং
   const ad = useRandomAd("SIDEBAR");
   console.log(ad, "ad");
-  
 
   // সেফটি চেক: ডাটা না থাকলে বা টাইপ স্কোয়ার না হলে রেন্ডার হবে না
   if (!ad || !ad.isActive || ad.type !== "square" || !ad.image?.url) {
@@ -16,7 +14,7 @@ const SquareAds: React.FC = () => {
   return (
     <div className="w-full flex justify-center py-4">
       {/* মেইন অ্যাড কন্টেইনার - নিউজপেপার স্টাইল */}
-      <div className="w-full max-w-[300px] bg-white border border-gray-200 shadow-sm overflow-hidden">
+      <div className="w-full max-w-[400px] bg-white border border-gray-200 shadow-sm overflow-hidden">
         {/* অ্যাড লেবেল - নিউজপেপারের মতো ছোট করে উপরে */}
         <div className="bg-gray-50 border-b border-gray-100 px-2 py-1 flex justify-between items-center">
           <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">
