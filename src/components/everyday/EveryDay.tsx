@@ -1,24 +1,26 @@
+import { useFetchAllPosts } from "@/api/hooks/post";
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
-import SquareAds from "../ads/SquareAds";
-import { useFetchAllPosts } from "@/api/hooks/post";
-import { useState } from "react";
 import { useSubscribe } from "@/api/hooks/subscribtion";
+import { useState } from "react";
+import { toast } from "sonner";
+import SquareAds from "../ads/SquareAds";
 
 const EveryDay = () => {
-  const { data: posts } = useFetchAllPosts();
+  const subscripMutation = useSubscribe();
+  const [subEmail, setSubEmail] = useState("");
+  const { data: posts, isError } = useFetchAllPosts();
   const [email, setEmail] = useState("");
-  const { mutate: postsubscription, isPending, isError } = useSubscribe();
 
-  const handleSubscribe = () => {
-    if (!email) return;
-
-    postsubscription(email, {
+  const handleSubmit = () => {
+    subscripMutation.mutate(subEmail, {
       onSuccess: () => {
-        setEmail("");
+        toast.success("subscrip");
+        setSubEmail("");
       },
     });
   };
+
   return (
     <div className="py-8 bg-gray-50  ">
       <Container>
@@ -51,19 +53,19 @@ const EveryDay = () => {
                 </p>
 
                 <input
-                  type="email"
+                  type="text"
+                  value={subEmail}
+                  onChange={(e) => setSubEmail(e.target.value)}
                   placeholder="Your Email..."
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                 />
-
                 <button
-                  onClick={handleSubscribe}
-                  disabled={isPending}
-                  className="font-semibold font-primary text-[15px] text-black bg-white py-3 rounded-lg disabled:opacity-50"
+                  onClick={handleSubmit}
+                  className="font-semibold  font-primary  text-[15px] text-black  cursor-pointer   bg-white py-3 rounded-lg"
                 >
-                  {isPending ? "Subscribing..." : "Subscribe"}
+                  Subscrip
                 </button>
                 {isError && (
                   <p className="text-sm text-white mt-2">

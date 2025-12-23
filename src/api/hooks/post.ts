@@ -1,13 +1,32 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 import type { Post } from "@/validators/post";
+import { z } from "zod";
+
+export const PostSchema = z.object({
+  _id: z.string(),
+  title: z.string(),
+  content: z.string(),
+  category: {
+    name: z.string()
+  },
+  createdAt: z.string(),
+  image:{
+    url:z.string()
+  }
+});
+
+export const PostArraySchema = z.array(PostSchema);
+
+export type AllPostsData = z.infer<typeof PostArraySchema>;
+export type SinglePostData = z.infer<typeof PostSchema>;    
 
 export const useFetchAllPosts = () => {
   return useQuery({
     queryKey: ["posts", "all"],
-    queryFn: async (): Promise<Post[]> => {
+    queryFn: async (): Promise<AllPostsData> => { 
       const res = await api.get("post");
-      return res.data.data;
+      return PostArraySchema.parse(res.data.data); 
     },
   });
 };
@@ -15,7 +34,7 @@ export const useFetchAllPosts = () => {
 export const useFetchPostById = (id: string) => {
   return useQuery({
     queryKey: ["posts", id],
-    queryFn: async (): Promise<Post> => {
+    queryFn: async (): Promise<SinglePostData> => {
       const res = await api.get(`post/${id}`);
       return res.data.data;
     },
