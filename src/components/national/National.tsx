@@ -3,6 +3,7 @@ import Container from "../container/Container";
 import { useFetchAllCategories } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts } from "@/api/hooks/post";
+import type { CardProps } from "@/types/CardProps";
 
 const National = () => {
   const {data:CategoriesList}=useFetchAllCategories()
@@ -146,7 +147,7 @@ const National = () => {
                 Recent Posts
               </h3>
               <ul className="space-y-3">
-                {recentPosts?.slice(0, 3)?.map((post, index) => (
+                {recentPosts?.slice(0, 3)?.map((post : CardProps, index : number) => (
                   <li
                     key={index}
                     className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"

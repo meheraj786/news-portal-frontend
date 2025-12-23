@@ -80,7 +80,7 @@ const Categories = () => {
   ];
 
   return (
-    <div className=" p-5 rounded-2xl border-1 ">
+    <div className=" p-5 rounded-2xl border-1">
       <div className="flex justify-between mb-5 items-center   ">
         <h2 className="font-bold text-2xl">Categories</h2>
         <AddCategory />

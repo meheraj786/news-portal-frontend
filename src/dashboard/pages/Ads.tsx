@@ -1,4 +1,4 @@
-import React, { useState, type ReactNode } from "react";
+import { useState} from "react";
 import {
   Plus,
   Edit,
@@ -9,11 +9,6 @@ import {
   EyeOff,
   Maximize2,
   Square,
-  X,
-  Upload,
-  Link as LinkIcon,
-  CheckCircle2,
-  AlertCircle,
 } from "lucide-react";
 
 import {
@@ -111,7 +106,7 @@ export default function Ads() {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-rose-100 p-4 md:p-8">
+    <div className="min-h-screen rounded-2xl bg-gradient-to-br from-red-50 to-rose-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -144,11 +139,7 @@ export default function Ads() {
             value={horizontalAds.length}
             icon={<Maximize2 size={20} />}
           />
-          <Stat
-            label="Square"
-            value={squareAds.length}
-            icon={<Square size={20} />}
-          />
+          <Stat label="Square Ads" value={squareAds.length} icon={<Square />} />
         </div>
 
         {/* Ad Sections */}
@@ -188,49 +179,24 @@ export default function Ads() {
   );
 }
 
-// --- Responsive Stat Card ---
-const Stat = ({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: number;
-  icon: ReactNode;
-}) => (
-  <div className="bg-white p-5 rounded-2xl shadow-sm border border-red-50 flex items-center gap-4">
-    <div className="bg-red-50 p-3 rounded-xl text-red-600 shrink-0">{icon}</div>
-    <div>
-      <p className="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-wider">
-        {label}
-      </p>
-      <p className="text-xl md:text-2xl font-black text-gray-800 leading-none mt-1">
-        {value}
-      </p>
+const Stat = ({ label, value, icon }: { label: string; value: number; icon: any }) => (
+  <div className="bg-white p-6 rounded-xl shadow border">
+    <div className="flex items-center gap-3">
+      <div className="bg-red-100 p-3 rounded-lg">{icon}</div>
+      <div>
+        <p className="text-sm text-gray-600">{label}</p>
+        <p className="text-2xl font-bold">{value}</p>
+      </div>
     </div>
   </div>
 );
 
-// --- Responsive Ad Section ---
 const AdSection = ({ title, ads, grid, onEdit, onDelete, onToggle }: any) => (
-  <div className="mb-12">
-    <h2 className="text-lg md:text-xl font-black text-gray-800 mb-5 flex items-center gap-3">
-      <span className="w-1.5 h-6 bg-red-600 rounded-full block"></span>
-      {title}
-      <span className="bg-gray-200 text-gray-600 text-[10px] px-2 py-0.5 rounded-full">
-        {ads.length}
-      </span>
-    </h2>
+  <div className="mb-10">
+    <h2 className="text-xl font-semibold mb-4">{title}</h2>
 
-    {/* Responsive Layout: Mobile rows, MD grids */}
-    <div
-      className={
-        grid
-          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          : "space-y-4"
-      }
-    >
-      {ads.map((ad: any) => (
+    <div className={grid ? "grid md:grid-cols-3 gap-4" : "space-y-4"}>
+      {ads.map((ad: Ad) => (
         <div
           key={ad._id}
           className="bg-white border border-gray-100 rounded-2xl p-3 md:p-4 flex gap-3 md:gap-4 items-center shadow-sm hover:shadow-md transition-all group"
@@ -306,175 +272,50 @@ const AdModal = ({
   loading,
   isEdit,
 }: any) => (
-  <div className="fixed inset-0 bg-gray-900/70 backdrop-blur-md flex items-center justify-center z-50 p-3 md:p-4 animate-in fade-in duration-300">
-    <div className="bg-white w-full max-w-lg rounded-[24px] shadow-2xl overflow-hidden transform animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
-      {/* Modal Header */}
-      <div className="bg-gradient-to-r from-red-600 to-rose-600 px-6 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-white/20 p-2 rounded-lg">
-            <ImageIcon className="text-white" size={20} />
-          </div>
-          <h3 className="text-lg md:text-xl font-bold text-white tracking-tight">
-            {isEdit ? "Edit Ad Details" : "New Advertisement"}
-          </h3>
-        </div>
-        <button
-          onClick={onClose}
-          className="text-white/80 hover:text-white p-2 hover:bg-white/10 rounded-full transition-colors"
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white w-full max-w-lg rounded-xl p-6">
+      <h3 className="text-xl font-bold mb-4">
+        {isEdit ? "Edit Ad" : "Create Ad"}
+      </h3>
+
+      <div className="space-y-3">
+        <input
+          className="w-full border px-3 py-2 rounded"
+          placeholder="Title"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
+
+        <select
+          className="w-full border px-3 py-2 rounded"
+          value={form.type}
+          onChange={(e) => setForm({ ...form, type: e.target.value })}
         >
-          <X size={24} />
-        </button>
-      </div>
+          <option value="horizontal">Horizontal</option>
+          <option value="square">Square</option>
+        </select>
 
-      <div className="p-5 md:p-7 space-y-5 max-h-[75vh] overflow-y-auto">
-        {/* Title */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest ml-1">
-            Ad Title
-          </label>
-          <input
-            className="w-full border-2 border-gray-100 px-4 py-3 rounded-2xl focus:border-red-500 focus:outline-none transition-all bg-gray-50 focus:bg-white font-medium"
-            placeholder="Promotion Name..."
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-          />
-        </div>
+        <input
+          className="w-full border px-3 py-2 rounded"
+          placeholder="Link URL"
+          value={form.link}
+          onChange={(e) => setForm({ ...form, link: e.target.value })}
+        />
 
-        {/* Type Selection - Responsive Buttons */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest ml-1">
-            Layout Style
-          </label>
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <button
-              onClick={() => setForm({ ...form, type: "horizontal" })}
-              className={`flex flex-col md:flex-row items-center justify-center gap-2 p-3 md:p-4 rounded-2xl border-2 transition-all ${
-                form.type === "horizontal"
-                  ? "border-red-500 bg-red-50 text-red-700 shadow-sm"
-                  : "border-gray-100 text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              <Maximize2 size={18} />{" "}
-              <span className="font-bold text-sm">Horizontal</span>
-            </button>
-            <button
-              onClick={() => setForm({ ...form, type: "square" })}
-              className={`flex flex-col md:flex-row items-center justify-center gap-2 p-3 md:p-4 rounded-2xl border-2 transition-all ${
-                form.type === "square"
-                  ? "border-red-500 bg-red-50 text-red-700 shadow-sm"
-                  : "border-gray-100 text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              <Square size={18} />{" "}
-              <span className="font-bold text-sm">Square</span>
-            </button>
-          </div>
-        </div>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (!f) return;
+            setFile(f);
+            setPreview(URL.createObjectURL(f));
+          }}
+        />
 
-        {/* Link */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest ml-1">
-            Redirect Link
-          </label>
-          <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <LinkIcon size={18} />
-            </div>
-            <input
-              className="w-full border-2 border-gray-100 pl-12 pr-4 py-3 rounded-2xl focus:border-red-500 focus:outline-none transition-all bg-gray-50 focus:bg-white font-medium"
-              placeholder="https://..."
-              value={form.link}
-              onChange={(e) => setForm({ ...form, link: e.target.value })}
-            />
-          </div>
-        </div>
-
-        {/* File Upload */}
-        <div className="space-y-2">
-          <label className="text-xs font-black uppercase text-gray-400 tracking-widest ml-1">
-            Creative Asset
-          </label>
-          {!preview ? (
-            <label className="flex flex-col items-center justify-center w-full h-32 md:h-40 border-2 border-dashed border-gray-300 rounded-[20px] cursor-pointer hover:border-red-400 hover:bg-red-50/50 transition-all">
-              <div className="bg-red-100 p-3 rounded-full mb-2 text-red-600">
-                <Upload size={20} />
-              </div>
-              <p className="text-xs font-bold text-gray-600">
-                Click to upload banner
-              </p>
-              <input
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (!f) return;
-                  setFile(f);
-                  setPreview(URL.createObjectURL(f));
-                }}
-              />
-            </label>
-          ) : (
-            <div className="relative group rounded-2xl overflow-hidden border-2 border-gray-100 bg-gray-50">
-              <img
-                src={preview}
-                className={`w-full ${
-                  form.type === "horizontal" ? "h-20" : "h-40"
-                } object-contain mx-auto p-2`}
-              />
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                <button
-                  onClick={() => {
-                    setPreview("");
-                    setFile(null);
-                  }}
-                  className="bg-white text-red-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-red-50"
-                >
-                  Remove & Change
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Toggle - Active Status */}
-        <div className="bg-gray-50 p-4 rounded-2xl border-2 border-gray-100 flex items-center justify-between">
-          <div className="flex items-center gap-3 pr-2 min-w-0">
-            <div
-              className={`shrink-0 p-2 rounded-lg ${
-                form.isActive
-                  ? "bg-green-100 text-green-600"
-                  : "bg-gray-200 text-gray-500"
-              }`}
-            >
-              {form.isActive ? (
-                <CheckCircle2 size={18} />
-              ) : (
-                <AlertCircle size={18} />
-              )}
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-gray-800">Live Status</p>
-              <p className="text-[10px] text-gray-500 truncate">
-                {form.isActive ? "Visible to public" : "Draft / Hidden"}
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setForm({ ...form, isActive: !form.isActive })}
-            className={`shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-              form.isActive ? "bg-green-500" : "bg-gray-300"
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow-md ${
-                form.isActive ? "translate-x-6" : "translate-x-1"
-              }`}
-            />
-          </button>
-        </div>
+        {preview && (
+          <img src={preview} className="w-full h-40 object-cover rounded" />
+        )}
       </div>
 
       {/* Modal Footer */}

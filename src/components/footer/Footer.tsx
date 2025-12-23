@@ -11,8 +11,11 @@ import { IoLogoTwitter } from "react-icons/io5";
 import MiniCard from "../banner/MiniCart";
 import type { CardProps } from "../../types/CardProps";
 import Container from "../container/Container";
+import { useFetchAllPosts } from "@/api/hooks/post";
+import { useFetchNavMenu } from "@/api/hooks/navMenu";
 
 type NavItems = {
+  _id: number;
   name: string;
   path?: string;
 };
@@ -22,28 +25,7 @@ type Contract = {
   path?: string;
 };
 
-const navItems: NavItems[] = [
-  {
-    name: " জাতীয়",
-    path: "/",
-  },
-  {
-    name: " রাজনীতি",
-    path: "",
-  },
-  {
-    name: "  বিনোদন",
-    path: "",
-  },
-  {
-    name: " খেলাধুলা",
-    path: "",
-  },
-  {
-    name: "আন্তর্জাতিক",
-    path: "",
-  },
-];
+
 const contract: Contract[] = [
   { name: "Facebook", icon: <FaFacebookF />, path: "" },
   {
@@ -63,30 +45,9 @@ const contract: Contract[] = [
     path: "",
   },
 ];
-const latestNews: CardProps[] = [
-  {
-    image: "https://theunitedindian.com/images/crime-13-04-24-M-hero.webp",
-    tag: "অর্থনীতি",
-    title: "সংসদে আজ গুরুত্বপূর্ণ বিল পাশ, দেশের উন্নয়নে নতুন মাইলফলক",
-
-    time: "1 Hour ago",
-  },
-  {
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPuH1kQAHVumAHPRWTTiKwatTPA81-bT_M_Q&s",
-    tag: "অর্থনীতি",
-    title: "জাতীয় ক্রিকেট দলের ঐতিহাসিক জয়",
-    time: "৩ ঘণ্টা আগে",
-  },
-  {
-    image:
-      "https://static.cricbuzz.com/a/img/v1/i1/c796689/pat-cummins-included-in-squad-for-adelaide-test.jpg?d=high&p=det",
-    tag: "অর্থনীতি",
-    title: "বাজারে আসছে নতুন রেকর্ড",
-    time: "৪ ঘণ্টা আগে",
-  },
-];
 const Footer = () => {
+  const {data:latestNews}=useFetchAllPosts()
+  const {data:navItems}=useFetchNavMenu()
   return (
     <div className=" bg-gray-200 ">
       <Container>
@@ -103,10 +64,10 @@ const Footer = () => {
               বিভাগ
             </h2>
             <div className="group  flex flex-col  gap-5 text-gray-700 font-medium transition duration-200 ">
-              {navItems.map((nav, i) =>
-                nav.path ? (
+              { Array.isArray(navItems) && navItems?.slice(0, 6).map((nav: NavItems, i: number) =>
+                nav._id ? (
                   <Link
-                    to={nav.path}
+                    to={`/category/${nav._id}`}
                     key={i}
                     className="cursor-pointer hover:text-red-600 border border-gray-300 hover:border-red-500 transition duration-200  text-center rounded py-1 px-2"
                   >
@@ -161,7 +122,7 @@ const Footer = () => {
               Latest News
             </h2>
             <div className="  flex flex-col gap-y-2.5  ">
-              {latestNews.map((card, i) => (
+              {latestNews?.slice(0, 2)?.map((card: CardProps, i: number) => (
                 <MiniCard key={i} {...card} />
               ))}
             </div>

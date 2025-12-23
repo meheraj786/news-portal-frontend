@@ -1,13 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
 import type { Post } from "@/validators/post";
+   
 
 export const useFetchAllPosts = () => {
   return useQuery({
     queryKey: ["posts", "all"],
-    queryFn: async (): Promise<Post[]> => {
+    queryFn: async () => { 
       const res = await api.get("post");
-      return res.data.data;
+      return res.data.data; 
     },
   });
 };
@@ -15,7 +16,7 @@ export const useFetchAllPosts = () => {
 export const useFetchPostById = (id: string) => {
   return useQuery({
     queryKey: ["posts", id],
-    queryFn: async (): Promise<Post> => {
+    queryFn: async () => {
       const res = await api.get(`post/${id}`);
       return res.data.data;
     },
@@ -170,7 +171,11 @@ export const useFetchPostsByCategory = (id: string, page: number = 1, limit: num
   return useQuery({
     queryKey: ["posts", "category", id, { page, limit }],
     queryFn: async (): Promise<CategoryPostResponse> => {
+<<<<<<< HEAD
       const res = await api.get(`post/filter/${id}`, {
+=======
+      const res = await api.get(`post/filter/${slugOrId}`, {
+>>>>>>> bed7cd075f06cb2e5dcaea2976eb6ab60af14a81
         params: { page, limit },
       });
 

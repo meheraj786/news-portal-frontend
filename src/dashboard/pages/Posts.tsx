@@ -51,6 +51,13 @@ const Posts = () => {
   const posts = data as unknown as Post[];
   const deletePost = useDeletePost();
 
+  // type Tag = {
+  //   id: string;
+  //   name: string;
+
+  //   _id: string;
+  // };
+
   const column = [
     {
       accessorKey: "title",
@@ -68,7 +75,7 @@ const Posts = () => {
       header: "Tags",
       cell: ({ row }: { row: { original: Post } }) => (
         <div className="flex gap-1 flex-wrap w-40">
-          {row.original.tags?.map((tag) => (
+          {row.original.tags?.map((tag: any) => (
             <Badge key={tag._id}>{tag.name}</Badge>
           ))}
         </div>
@@ -95,7 +102,7 @@ const Posts = () => {
     {
       header: "Actions",
       cell: ({ row }: { row: { original: Post } }) => (
-        <div className="flex justify-center text-center items-center gap-2">
+        <div className="flex justify-center text-center items-center gap-2 ">
           <Dialog>
             <DialogTrigger asChild>
               <Button className="bg-secondary" size={"sm"}>
@@ -165,13 +172,14 @@ const Posts = () => {
 
   return (
     <div>
-      <div className="flex justify-between mb-5 items-center">
+      <div className="flex justify-between mb-5 items-center ">
         <h2 className="font-bold text-2xl">Post</h2>
         <Link to={"/dashboard/add-post"}>
           <Button>Add Post</Button>
         </Link>
       </div>
       <DataTable
+        className="bg-gradient-to-br from-red-50 to-rose-100 "
         loading={isLoading}
         search="title"
         data={posts || []}
