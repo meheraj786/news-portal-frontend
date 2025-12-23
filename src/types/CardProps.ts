@@ -12,4 +12,5 @@ export interface CardProps {
   category?: {
     name?: string;
   };
+  views?: number;
 }

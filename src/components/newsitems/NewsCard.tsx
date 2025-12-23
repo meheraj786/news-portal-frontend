@@ -1,15 +1,9 @@
 import { Clock, User } from "lucide-react";
 import { PostContent } from "../post/PostContent";
 import DateFormatter from "../DateFormatter";
+import type { CardProps } from "@/types/CardProps";
 
-interface NewsCardProps {
-  image: { url: string };
-  title: string;
-  date: string;
-  views: number;
-  content: string;
-  createdAt: string;
-}
+
 
 function NewsCard({
   image,
@@ -17,14 +11,14 @@ function NewsCard({
   content,
   createdAt,
   views
-}: NewsCardProps) {
+}: CardProps) {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group border border-gray-100">
       <div className="flex flex-col sm:flex-row gap-0 sm:gap-4">
         {/* Image Section */}
         <div className="w-full  lg:w-50 lg:h-full aspect-video sm:aspect-square overflow-hidden bg-gray-100">
           <img
-            src={image.url || ""}
+            src={image?.url || ""}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           />

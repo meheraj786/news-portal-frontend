@@ -5,13 +5,13 @@ import { useSubscribe } from "@/api/hooks/subscribtion";
 import { useState } from "react";
 import { toast } from "sonner";
 import SquareAds from "../ads/SquareAds";
+import type { CardProps } from "@/types/CardProps";
 
 const EveryDay = () => {
   const subscripMutation = useSubscribe();
   const [subEmail, setSubEmail] = useState("");
   const { data: posts, isError } = useFetchAllPosts();
-  const [email, setEmail] = useState("");
-  console.log(posts, "post")
+  console.log(posts, "post");
 
   const handleSubmit = () => {
     subscripMutation.mutate(subEmail, {
@@ -36,7 +36,7 @@ const EveryDay = () => {
         <div className="  flex flex-col lg:flex-row justify-between py-8  ">
           <div className=" py-8 w-full lg:w-[67%] ">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">
-              {posts?.slice(0, 6).map((card, i) => (
+              {posts?.slice(0, 6).map((card: CardProps, i: number) => (
                 <EveryDayCard key={i} {...card} />
               ))}
             </div>
@@ -58,8 +58,6 @@ const EveryDay = () => {
                   value={subEmail}
                   onChange={(e) => setSubEmail(e.target.value)}
                   placeholder="Your Email..."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
                 />
                 <button
@@ -70,8 +68,7 @@ const EveryDay = () => {
                 </button>
                 {isError && (
                   <p className="text-sm text-white mt-2">
-                    {(isError as any)?.response?.data?.message ||
-                      "Please write your correct email"}
+                    Please write your correct email
                   </p>
                 )}
               </div>

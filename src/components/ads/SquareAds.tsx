@@ -1,22 +1,12 @@
 import React from "react";
 import { useRandomAd } from "./RandomAds";
 
-// ব্যাকএন্ড স্কিমা অনুযায়ী ইন্টারফেস
-interface AdData {
-  _id: string;
-  title: string;
-  image: {
-    url: string;
-    publicId: string;
-  };
-  type: "horizontal" | "square";
-  link: string;
-  isActive: boolean;
-}
 
 const SquareAds: React.FC = () => {
   // ডাটা আনা এবং টাইপ কাস্টিং
-  const ad = useRandomAd("SIDEBAR") as AdData | undefined;
+  const ad = useRandomAd("SIDEBAR");
+  console.log(ad, "ad");
+  
 
   // সেফটি চেক: ডাটা না থাকলে বা টাইপ স্কোয়ার না হলে রেন্ডার হবে না
   if (!ad || !ad.isActive || ad.type !== "square" || !ad.image?.url) {

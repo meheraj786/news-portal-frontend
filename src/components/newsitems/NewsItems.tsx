@@ -7,11 +7,15 @@ import NewsCard from "./NewsCard";
 import { useFetchAllCategories } from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts } from "@/api/hooks/post";
+import type { CardProps } from "@/types/CardProps";
 
 const NewsItems = () => {
   const { data: categories } = useFetchAllCategories();
   const { data: tags } = useFetchAllTags();
   const { data: posts } = useFetchAllPosts();
+
+  console.log(tags, "tags");
+  
   return (
     <div>
       <div className=" bg-gray-50  pb-15">
@@ -28,7 +32,7 @@ const NewsItems = () => {
             {/* News Cards */}
             <div className="w-full lg:w-[67%]">
               <div className="space-y-6">
-                {posts?.slice(0, 6).map((item, index) => (
+                {posts?.slice(0, 6).map((item :CardProps, index: number) => (
                   <NewsCard key={index} {...item} />
                 ))}
               </div>

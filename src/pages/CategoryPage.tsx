@@ -1,24 +1,27 @@
 import Container from "../components/container/Container";
 import { Link, useParams } from "react-router";
 import CategoriesCard from "../components/categoriescard/CategoriesCard";
-import { useFetchAllCategories, useFetchCategoryById } from "@/api/hooks/category";
+import {
+  useFetchAllCategories,
+  useFetchCategoryById,
+} from "@/api/hooks/category";
 import { useFetchAllTags } from "@/api/hooks/tag";
 import { useFetchAllPosts, useFetchPostsByCategory } from "@/api/hooks/post";
 import TagCard from "@/components/tag/tagcard/TagCard";
 import DateFormatter from "@/components/DateFormatter";
 import { PostContent } from "@/components/post/PostContent";
+import type { CardProps } from "@/types/CardProps";
 
 const CategoryPage = () => {
   const { id } = useParams();
   const { data: TagsList } = useFetchAllTags();
   const { data: CategoriesList } = useFetchAllCategories();
   const { data: posts } = useFetchAllPosts();
-  const {data: categoryPosts} = useFetchPostsByCategory(id as string)
-  const {data:category}=useFetchCategoryById(id as string)
+  const { data: categoryPosts } = useFetchPostsByCategory(id as string);
+  const { data: category } = useFetchCategoryById(id as string);
   console.log(categoryPosts);
-  
 
-  
+  const displayPosts = id === "all" ? posts : categoryPosts;
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -27,7 +30,10 @@ const CategoryPage = () => {
         {/* Category Header */}
         <div className="text-center mb-8 bg-white py-6">
           <h1 className="text-2xl font-bold text-gray-800">
-            Category : <span className="text-pink-600">{id=="all" ? "All" : category?.name || ""}</span>
+            Category :{" "}
+            <span className="text-pink-600">
+              {id == "all" ? "All" : category?.name || ""}
+            </span>
           </h1>
         </div>
 
@@ -35,51 +41,97 @@ const CategoryPage = () => {
           {/* Main Content Area */}
           <div className="lg:col-span-2">
             {/* Articles */}
-            {categoryPosts?.map((article) => (
-              <div
-                key={article._id}
-                className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <img
-                  src={article?.image?.url}
-                  alt={article.title}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    {article.category && (
-                      <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
-                        {article.category.name}
-                      </span>
-                    )}
-                  </div>
-                  <Link to={`/single-post/${article._id}`}>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
-                      {article.title}
-                    </h2>
-                  </Link>
+            {Array.isArray(displayPosts)
+              ? displayPosts.map((article: CardProps) => (
+                  <div
+                    key={article._id}
+                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    <img
+                      src={article?.image?.url}
+                      alt={article.title}
+                      className="w-full h-64 object-cover"
+                    />
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        {article.category && (
+                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
+                            {article.category.name}
+                          </span>
+                        )}
+                      </div>
+                      <Link to={`/single-post/${article._id}`}>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
+                          {article.title}
+                        </h2>
+                      </Link>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                    <span className="flex items-center gap-1">
-                      <span className="text-pink-600">👤</span> Author
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <span className="text-pink-600">📅</span>{" "}
-                      <DateFormatter date={article.createdAt} />
-                    </span>
-                  </div>
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600">👤</span> Author
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600">📅</span>{" "}
+                          <DateFormatter date={article.createdAt} />
+                        </span>
+                      </div>
 
-                  <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
-                    <PostContent content={article.content} />
-                  </p>
-                  <Link to={`/single-post/${article._id}`}>
-                    <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
-                      Continue Reading →
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            ))}
+                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
+                        <PostContent content={article.content} />
+                      </p>
+                      <Link to={`/single-post/${article._id}`}>
+                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+                          Continue Reading →
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                ))
+              : displayPosts?.posts?.map((article: CardProps) => (
+                  <div
+                    key={article._id}
+                    className="bg-white rounded-lg shadow-sm mb-6 overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    <img
+                      src={article?.image?.url}
+                      alt={article.title}
+                      className="w-full h-64 object-cover"
+                    />
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        {article.category && (
+                          <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded text-sm font-semibold">
+                            {article.category.name}
+                          </span>
+                        )}
+                      </div>
+                      <Link to={`/single-post/${article._id}`}>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-3 hover:text-pink-600 cursor-pointer transition-colors">
+                          {article.title}
+                        </h2>
+                      </Link>
+
+                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600">👤</span> Author
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <span className="text-pink-600">📅</span>{" "}
+                          <DateFormatter date={article.createdAt} />
+                        </span>
+                      </div>
+
+                      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-2">
+                        <PostContent content={article.content} />
+                      </p>
+                      <Link to={`/single-post/${article._id}`}>
+                        <button className="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+                          Continue Reading →
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
           </div>
 
           {/* Sidebar */}
@@ -104,7 +156,7 @@ const CategoryPage = () => {
                 Recent Posts
               </h3>
               <ul className="space-y-3">
-                {posts?.map((post, index) => (
+                {posts?.map((post: CardProps, index: number) => (
                   <li
                     key={index}
                     className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"

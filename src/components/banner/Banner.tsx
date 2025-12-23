@@ -6,27 +6,29 @@ import Slider from "react-slick";
 import { useFetchTrendingPosts } from "@/api/hooks/post";
 import DateFormatter from "../DateFormatter";
 
+// 1. Update interface to match your Console Log
 interface Post {
   _id: string;
   viewCount: number;
+  category: {
+    _id: string;
+    name: string;
+  };
   postDetails: {
-    tag: string;
     title: string;
+    content: string;
     image: {
       url: string;
-      publicId: string;
     };
     createdAt: string;
-    slug: string;
-  };
-  category: {
-    name: string;
-    slug: string;
   };
 }
 
 const Banner: React.FC = () => {
-  const { data: posts, isLoading } = useFetchTrendingPosts();
+  const { data, isLoading } = useFetchTrendingPosts();
+
+  // Based on your console, data is already the array
+  const posts = (data as unknown as Post[]) || [];
 
   const settings = {
     dots: true,
@@ -37,16 +39,10 @@ const Banner: React.FC = () => {
     arrows: false,
     autoplay: true,
     autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: { dots: false },
-      },
-    ],
   };
 
-  if (isLoading)
-    return <div className="text-center py-10">Loading Banner...</div>;
+  if (isLoading) return <div className="text-center py-10">Loading Banner...</div>;
+  if (posts.length === 0) return null;
 
   return (
     <Container>
@@ -54,42 +50,33 @@ const Banner: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start gap-5">
           {/* Main trending slider */}
           <div className="relative w-full md:w-[70%] overflow-hidden rounded">
-            <Slider {...settings} className="overflow-hidden">
-              {posts?.map((item) => (
+            <Slider {...settings}>
+              {posts.map((item: Post) => (
                 <div key={item._id}>
                   <div className="relative overflow-hidden rounded-lg group">
-                    {/* IMAGE: postDetails theke nite hobe */}
                     <img
-                      src={
-                        item.postDetails?.image?.url ||
-                        "https://via.placeholder.com/800x500"
-                      }
-                      alt={item.postDetails?.title}
-                      className="w-full h-80 sm:h-[360px] md:h-[400px] xl:h-[530px] object-cover transition-transform duration-300 rounded-lg md:group-hover:scale-105"
+                      // FIX: Accessing via postDetails
+                      src={item.postDetails.image?.url || ""}
+                      alt={item.postDetails.title}
+                      className="w-full h-80 sm:h-[360px] md:h-[400px] xl:h-[530px] object-cover rounded-lg"
                     />
 
-                    {/* OVERLAY */}
                     <div className="absolute inset-0 bg-black/50" />
 
-                    {/* CONTENT */}
-                    <div className="absolute inset-0 flex flex-col justify-end px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 gap-2 rounded-lg">
-                      {/* CATEGORY: Backend theke direct object asche */}
-                      <span className="bg-red-500 text-white text-xs sm:text-sm px-3 py-1 rounded-full w-fit">
-                        {typeof item.category === "object"
-                          ? item.category?.name
-                          : item.category}
+                    <div className="absolute inset-0 flex flex-col justify-end px-8 pb-6 gap-2">
+                      <span className="bg-red-500 text-white text-sm px-3 py-1 rounded-full w-fit">
+                        {item.category?.name || "General"}
                       </span>
 
-                      {/* TITLE: postDetails theke */}
-                      <h2 className="text-white font-medium text-sm sm:text-base md:text-xl leading-snug line-clamp-2">
-                        {item.postDetails?.title}
+                      <h2 className="text-white font-medium text-xl leading-snug line-clamp-2">
+                        {/* FIX: Accessing via postDetails */}
+                        {item.postDetails.title}
                       </h2>
 
-                      {/* TIME */}
-                      <div className="flex items-center gap-x-1.5 text-gray-300 text-xs sm:text-sm">
+                      <div className="flex items-center gap-x-1.5 text-gray-300 text-sm">
                         <MdWatchLater />
                         <span>
-                          <DateFormatter date={item.createdAt} />
+                          <DateFormatter date={item.postDetails.createdAt} />
                         </span>
                       </div>
                     </div>
@@ -105,15 +92,14 @@ const Banner: React.FC = () => {
             <div className="w-full bg-red-500 h-0.5"></div>
 
             <div className="flex flex-col gap-y-2.5">
-              {posts?.map((item) => (
+              {posts.map((item: Post) => (
                 <MiniCard
                   key={item._id}
-                  // MiniCard-er props gulo backend onujayi pathate hobe
-                  title={item.postDetails?.title}
-                  tag={item.postDetails?.tag}
-                  image={item.postDetails?.image}
-                  category={item.category}
-                  createdAt={item.postDetails?.createdAt}
+                  _id={item._id}
+                  title={item.postDetails.title}
+                  createdAt={item.postDetails.createdAt}
+                  image={item.postDetails.image} // Pass the object {url: string}
+                  category={item.category} // Pass the object {name: string}
                 />
               ))}
             </div>
