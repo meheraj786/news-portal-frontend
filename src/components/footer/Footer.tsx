@@ -99,13 +99,19 @@ const Footer = () => {
             <div className="flex flex-col gap-y-4">
               {/* postDetails?.title use kora hoyeche apnar backend pattern onujayi */}
               {latestNews?.slice(0, 3).map((post: any) => (
-                <MiniCard
-                  key={post?._id}
-                  title={post?.title}
-                  image={post?.image}
-                  category={post?.category}
-                  createdAt={post?.createdAt}
-                />
+                <Link
+                  key={post._id}
+                  to={`/single-post/${post._id}`}
+                  className="block hover:bg-gray-50 transition-all rounded-lg" // block use kora hoyeche jate pura card click kaj kore
+                >
+                  <MiniCard
+                    key={post?._id}
+                    title={post?.title}
+                    image={post?.image}
+                    category={post?.category}
+                    createdAt={post?.createdAt}
+                  />
+                </Link>
               ))}
             </div>
           </div>

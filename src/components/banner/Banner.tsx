@@ -97,14 +97,20 @@ const Banner: React.FC = () => {
 
             <div className="flex flex-col gap-y-2.5">
               {posts.map((item: Post) => (
-                <MiniCard
+                // Link tag-ti ekhane boshbe
+                <Link
                   key={item._id}
-                  _id={item._id}
-                  title={item.postDetails.title}
-                  createdAt={item.postDetails.createdAt}
-                  image={item.postDetails.image} // Pass the object {url: string}
-                  category={item.category} // Pass the object {name: string}
-                />
+                  to={`/single-post/${item._id}`}
+                  className="block hover:bg-gray-50 transition-all rounded-lg" // block use kora hoyeche jate pura card click kaj kore
+                >
+                  <MiniCard
+                    _id={item._id}
+                    title={item.postDetails.title}
+                    createdAt={item.postDetails.createdAt}
+                    image={item.postDetails.image}
+                    category={item.category}
+                  />
+                </Link>
               ))}
             </div>
           </div>

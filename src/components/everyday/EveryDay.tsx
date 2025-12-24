@@ -37,7 +37,7 @@ const EveryDay = () => {
         <div className="  flex flex-col lg:flex-row justify-between py-8  ">
           <div className=" py-8 w-full lg:w-[67%] ">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">
-              {posts?.slice(0, 4).map((card: CardProps, i: number) => (
+              {posts?.slice(0, 6).map((card: CardProps, i: number) => (
                 <EveryDayCard key={i} {...card} />
               ))}
             </div>

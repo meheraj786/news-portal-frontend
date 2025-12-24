@@ -6,9 +6,9 @@ import { useFetchAllPosts } from "@/api/hooks/post";
 import type { CardProps } from "@/types/CardProps";
 
 const National = () => {
-  const {data:CategoriesList}=useFetchAllCategories()
-  const {data:TagList}=useFetchAllTags()
-  const {data:recentPosts}=useFetchAllPosts()
+  const { data: CategoriesList } = useFetchAllCategories();
+  const { data: TagList } = useFetchAllTags();
+  const { data: recentPosts } = useFetchAllPosts();
   const articles = [
     {
       id: 1,
@@ -58,10 +58,6 @@ const National = () => {
         "কলকাতা, পশ্চিমবঙ্গের রাজধানী শহরটি, একটি সমৃদ্ধ ইতিহাস এবং সংস্কৃতির কেন্দ্র। এই শহরটি তার ঐতিহ্যবাহী রাস্তা, পুরানো দালানকোঠা এবং ঐতিহাসিক স্মৃতিস্তম্ভের জন্য বিখ্যাত। কলকাতার রাস্তায় হাঁটলে মনে হয় যেন সময় থমকে আছে।",
     },
   ];
-
-
-
-
 
   return (
     <div className="bg-gray-50 pt-35 min-h-screen">
@@ -147,14 +143,16 @@ const National = () => {
                 Recent Posts
               </h3>
               <ul className="space-y-3">
-                {recentPosts?.slice(0, 3)?.map((post : CardProps, index : number) => (
-                  <li
-                    key={index}
-                    className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"
-                  >
-                    {post.title}
-                  </li>
-                ))}
+                {recentPosts
+                  ?.slice(0, 3)
+                  ?.map((post: CardProps, index: number) => (
+                    <li
+                      key={index}
+                      className="text-gray-700 hover:text-pink-600 cursor-pointer transition-colors text-sm"
+                    >
+                      {post.title}
+                    </li>
+                  ))}
               </ul>
             </div>
 

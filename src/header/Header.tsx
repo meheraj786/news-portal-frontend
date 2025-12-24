@@ -24,7 +24,6 @@ import type { CardProps } from "@/types/CardProps";
 interface NavItem {
   _id: string;
   name: string;
-  path?: string;
 }
 
 export default function Header() {
@@ -34,6 +33,7 @@ export default function Header() {
   const { data: navData, isLoading: loading } = useFetchNavMenu();
   const navItems = navData as unknown as NavItem[];
 
+  // সার্চ এপিআই কল
   const { data: searchResults, isLoading } = useSearchPosts({
     query: searchTerm,
     limit: 5,
@@ -47,11 +47,12 @@ export default function Header() {
           <div className="mx-auto py-5 flex justify-between items-center">
             <Logo />
 
+            {/* Desktop Navigation */}
             <div className="hidden md:flex gap-6 items-center text-gray-700 font-medium">
               {Array.isArray(navItems) &&
-                navItems.map((nav, i) => (
+                navItems.map((nav) => (
                   <Link
-                    key={i}
+                    key={nav._id}
                     to={`/category/${nav._id}`}
                     className="cursor-pointer hover:text-red-600 transition"
                   >
@@ -60,6 +61,7 @@ export default function Header() {
                 ))}
             </div>
 
+            {/* Search Section */}
             <div className="mx-4 hidden lg:flex max-w-[250px]">
               <Dialog onOpenChange={(open) => !open && setSearchTerm("")}>
                 <DialogTrigger className="ms-auto" asChild>
@@ -86,6 +88,7 @@ export default function Header() {
                     )}
                   </div>
 
+                  {/* Search Results Area */}
                   <div className="space-y-4 mt-6">
                     {!isLoading &&
                       searchTerm &&
@@ -95,18 +98,25 @@ export default function Header() {
                         </p>
                       )}
 
+                    {/* ক্লিক করলে সিঙ্গেল পোস্টে যাবে এবং ডায়ালগ বন্ধ হবে */}
                     {(searchResults?.data as CardProps[])?.map((item) => (
-                      <NewsCard
-                        key={item._id}
-                        createdAt={item?.createdAt}
-                        content={
-                          item?.content
-                            ?.replace(/<[^>]*>/g, "")
-                            .substring(0, 150) + "..."
-                        }
-                        image={item.image}
-                        title={item.title}
-                      />
+                      <DialogClose asChild key={item._id}>
+                        <Link
+                          to={`/single-post/${item._id}`}
+                          className="block hover:bg-slate-50 transition rounded-xl p-1"
+                        >
+                          <NewsCard
+                            createdAt={item?.createdAt}
+                            content={
+                              item?.content
+                                ?.replace(/<[^>]*>/g, "")
+                                .substring(0, 150) + "..."
+                            }
+                            image={item.image}
+                            title={item.title}
+                          />
+                        </Link>
+                      </DialogClose>
                     ))}
 
                     {!searchTerm && (
@@ -125,6 +135,7 @@ export default function Header() {
               </Dialog>
             </div>
 
+            {/* Mobile Menu Button */}
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -151,14 +162,15 @@ export default function Header() {
             </div>
           </div>
 
+          {/* Mobile Menu Content */}
           {isOpen && (
             <div className="md:hidden bg-white border-t border-gray-200 py-3 grid grid-cols-2 gap-2">
               {Array.isArray(navItems) &&
-                navItems.map((nav, i) => (
+                navItems.map((nav) => (
                   <Link
-                    key={i}
-                    to={`/category/${nav.name}`}
-                    className="hover:text-red-600 p-2"
+                    key={nav._id}
+                    to={`/category/${nav._id}`}
+                    className="hover:text-red-600 p-2 text-center border rounded-md"
                     onClick={() => setIsOpen(false)}
                   >
                     {nav.name}

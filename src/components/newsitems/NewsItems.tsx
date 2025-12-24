@@ -15,7 +15,7 @@ const NewsItems = () => {
   const { data: posts } = useFetchAllPosts();
 
   console.log(tags, "tags");
-  
+
   return (
     <div>
       <div className=" bg-gray-50  pb-15">
@@ -32,7 +32,7 @@ const NewsItems = () => {
             {/* News Cards */}
             <div className="w-full lg:w-[67%]">
               <div className="space-y-6">
-                {posts?.slice(0, 6).map((item :CardProps, index: number) => (
+                {posts?.slice(0, 4).map((item: CardProps, index: number) => (
                   <NewsCard key={index} {...item} />
                 ))}
               </div>
