@@ -25,7 +25,7 @@ import Ads from "./dashboard/pages/Ads";
 import AddPost from "./dashboard/pages/AddPost";
 import EmailVerification from "./dashboard/pages/EmailVerification";
 import ResetPassword from "./dashboard/pages/ResetPassword";
-
+import { HelmetProvider } from "react-helmet-async";
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   /* ----------------------------------------------------------------
@@ -104,10 +104,14 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <RouterProvider router={router} />
-      </QueryClientProvider>
+      {/* ২. HelmetProvider দিয়ে সবকিছু মুড়িয়ে দিন */}
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          {/* ৩. এটি RouterProvider-এর মাধ্যমে আপনার সব পেজে এসইও ডাটা পাঠাবে */}
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </HelmetProvider>
     </>
   );
 }
