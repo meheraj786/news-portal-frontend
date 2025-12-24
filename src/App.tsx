@@ -1,7 +1,6 @@
 import "./App.css";
 import Login from "./dashboard/pages/Login";
 import {
-  BrowserRouter,
   createBrowserRouter,
   RouterProvider,
 } from "react-router";
