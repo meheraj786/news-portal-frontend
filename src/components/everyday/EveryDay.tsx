@@ -1,27 +1,14 @@
 import { useFetchAllPosts } from "@/api/hooks/post";
 import Container from "../container/Container";
 import EveryDayCard from "./EveryDayCard";
-import { useSubscribe } from "@/api/hooks/subscribtion";
-import { useState } from "react";
-import { toast } from "sonner";
 import SquareAds from "../ads/SquareAds";
 import type { CardProps } from "@/types/CardProps";
 import Subcribtion from "../subscribtion/Subcribtion";
 
 const EveryDay = () => {
-  const subscripMutation = useSubscribe();
-  const [subEmail, setSubEmail] = useState("");
-  const { data: posts, isError } = useFetchAllPosts();
+  const { data: posts } = useFetchAllPosts();
   console.log(posts, "post");
 
-  const handleSubmit = () => {
-    subscripMutation.mutate(subEmail, {
-      onSuccess: () => {
-        toast.success("subscrip");
-        setSubEmail("");
-      },
-    });
-  };
 
   return (
     <div className="py-8 bg-gray-50  ">

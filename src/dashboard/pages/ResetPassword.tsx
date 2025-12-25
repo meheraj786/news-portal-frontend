@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Eye, EyeOff, Lock, CheckCircle, X } from "lucide-react";
+import { Eye, EyeOff, Lock, CheckCircle } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate, useSearchParams } from "react-router";
@@ -18,7 +18,6 @@ export default function ResetPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // URL থেকে ইমেইল সংগ্রহ করা (Email-based Session Reset)
   const email = searchParams.get("email");
 
   useEffect(() => {
