@@ -1,11 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../axios";
-import { useNavigate } from "react-router";
 
 // logOut.ts hook file
 export const useLogout = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async () => {
