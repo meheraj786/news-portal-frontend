@@ -55,6 +55,11 @@ const data = {
       url: "/dashboard/ads",
       icon: IconDashboard,
     },
+    {
+      title: "Social Media",
+      url: "socialmedia",
+      icon: IconDashboard,
+    },
   ],
   // navClouds: [
   //   {
