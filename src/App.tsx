@@ -25,6 +25,8 @@ import AddPost from "./dashboard/pages/AddPost";
 import EmailVerification from "./dashboard/pages/EmailVerification";
 import ResetPassword from "./dashboard/pages/ResetPassword";
 import { HelmetProvider } from "react-helmet-async";
+import SocialMediaDashboard from "./dashboard/pages/SocialMediaDashboard";
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter([
   /* ----------------------------------------------------------------
@@ -67,6 +69,7 @@ const router = createBrowserRouter([
           { path: "add-post", element: <AddPost /> },
           { path: "subscription", element: <Subscription /> },
           { path: "ads", element: <Ads /> },
+          { path: "socialmedia", element: <SocialMediaDashboard /> },
         ],
       },
     ],

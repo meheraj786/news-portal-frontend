@@ -75,13 +75,13 @@ const FavoriteNews = () => {
           <div className="flex items-center gap-x-2">
             <div className="w-[5px]  bg-red-500 h-7 "></div>
             <h2 className=" font-extrabold text-[27px] font-primary text-black  ">
-              বিশেষ প্রতিবেদন
+              সম্পাদকের পছন্দ
             </h2>
           </div>
         </div>
 
         {/* Slider Section */}
-        <div className="slider-container relative">
+        <div className="slider-container  relative">
           <Slider {...settings}>
             {Array.isArray(posts) &&
               posts.map((card: CardProps, i: number) => (

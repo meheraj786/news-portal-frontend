@@ -1,45 +1,51 @@
-import { useFetchAllPosts } from "@/api/hooks/post";
-import Container from "../container/Container";
-import EveryDayCard from "./EveryDayCard";
-import SquareAds from "../ads/SquareAds";
-import type { CardProps } from "@/types/CardProps";
-import Subcribtion from "../subscribtion/Subcribtion";
+import { useSubscribe } from "@/api/hooks/subscribtion";
+import { useState } from "react";
+import { toast } from "sonner";
 
-const EveryDay = () => {
-  const { data: posts } = useFetchAllPosts();
-  console.log(posts, "post");
+const Subcribtion = () => {
+  const [subEmail, setSubEmail] = useState("");
+  const { mutate, isPending } = useSubscribe();
 
+  const handleJoin = (e: React.FormEvent) => {
+    e.preventDefault(); // Form reload bondho korbe
+
+    if (!subEmail) {
+      return toast.error("Please enter your email!");
+    }
+
+    mutate(subEmail, {
+      onSuccess: () => {
+        toast.success("Subscribed successfully!");
+        setSubEmail(""); // Input field empty kore dibe
+      },
+      onError: () => {
+        toast.error("Something went wrong!");
+      },
+    });
+  };
 
   return (
-    <div className="py-8 bg-gray-50  ">
-      <Container>
-        <div className="  flex flex-col gap-x-2">
-          <div className="flex items-center gap-x-2">
-            <div className="w-[5px]  bg-red-500 h-7 "></div>
-            <h2 className=" font-extrabold text-[27px] font-primary text-black  ">
-              বিশেষ প্রতিবেদন
-            </h2>
-          </div>
-        </div>
-        <div className="  flex flex-col lg:flex-row justify-between py-8  ">
-          <div className=" py-8 w-full lg:w-[67%] ">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 ">
-              {posts?.slice(0, 6).map((card: CardProps, i: number) => (
-                <EveryDayCard key={i} {...card} />
-              ))}
-            </div>
-          </div>
-
-          <div className=" w-full lg:w-[30%] ">
-            <div className=" flex flex-col gap-y-5 ">
-              <Subcribtion />
-              <SquareAds />
-            </div>
-          </div>
-        </div>
-      </Container>
+    <div className="p-4 bg-white shadow rounded-lg">
+      <h3 className="text-lg font-bold mb-2">Subscribe to News</h3>
+      <form onSubmit={handleJoin} className="flex flex-col gap-2">
+        <input
+          type="email"
+          value={subEmail}
+          onChange={(e) => setSubEmail(e.target.value)}
+          placeholder="Enter your email"
+          className="border p-2 rounded"
+          required
+        />
+        <button
+          type="submit"
+          disabled={isPending}
+          className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition"
+        >
+          {isPending ? "Joining..." : "Join Now"}
+        </button>
+      </form>
     </div>
   );
 };
 
-export default EveryDay;
+export default Subcribtion;
