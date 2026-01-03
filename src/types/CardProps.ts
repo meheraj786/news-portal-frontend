@@ -9,6 +9,7 @@ export interface CardProps {
     url: string;
   };
 
+
   category?: {
     name?: string;
   };
